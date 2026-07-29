@@ -5,7 +5,7 @@
     "source": "debian",
     "color": {
       "1": "38;2;255;255;255",
-      "2": "38;2;224;72;61"
+      "2": "38;2;161;28;18"
     },
     "padding": {
       "top": 1,
@@ -16,8 +16,35 @@
   "display": {
     "separator": " -> ",
     "color": {
-      "keys": "38;2;224;72;61",
+      "keys": "38;2;161;28;18",
       "title": "38;2;255;106;26"
     }
-  }
+  },
+
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "host",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "display",
+    "wm",
+    "theme",
+    "icons",
+    "font",
+    "cursor",
+    "terminal",
+    "terminalfont",
+    "cpu",
+    "gpu",
+    "memory",
+    "swap",
+    "disk",
+    "localip",
+    "battery",
+    "locale"
+  ]
 }

@@ -59,7 +59,7 @@ i3-msg '[con_mark="ff"] focus; split v' >/dev/null
 launch cava "$S/win-cava.sh" "cava"
 
 # 6) Groessen setzen
-i3-msg '[con_mark="ff"]   focus; resize set height 30 ppt' >/dev/null
+i3-msg '[con_mark="ff"]   focus; resize set height 40 ppt' >/dev/null
 i3-msg '[con_mark="left"] focus; resize set width  50 ppt' >/dev/null
 
 # 7) Titelleisten einschalten, damit die Namen sichtbar sind

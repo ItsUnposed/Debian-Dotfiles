@@ -4,8 +4,8 @@
   "logo": {
     "source": "debian_small",
     "color": {
-      "1": "38;2;255;255;255",
-      "2": "38;2;224;72;61"
+      "1": "38;2;161;28;18",
+      "2": "38;2;255;255;255"
     },
     "padding": {
       "top": 1,
@@ -17,7 +17,7 @@
   "display": {
     "separator": " -> ",
     "color": {
-      "keys": "38;2;224;72;61",
+      "keys": "38;2;161;28;18",
       "title": "38;2;255;106;26"
     }
   },
@@ -27,6 +27,7 @@
     { "type": "os",     "key": "OS " },
     { "type": "kernel", "key": "KRN" },
     { "type": "cpu",    "key": "CPU" },
+    { "type": "gpu",    "key": "GPU" },
     { "type": "memory", "key": "MEM" },
     { "type": "uptime", "key": "UP " }
   ]
