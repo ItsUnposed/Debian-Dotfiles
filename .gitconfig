@@ -1,0 +1,16 @@
+[user]
+	name = unposed
+	email = mathis_meyer@gmx.de
+[core]
+	editor = pycharm --wait
+[diff]
+	tool = pycharm
+[difftool "pycharm"]
+	cmd = pycharm diff \"$LOCAL\" \"$REMOTE\"
+[merge]
+	tool = pycharm
+[mergetool "pycharm"]
+	cmd = pycharm merge \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+	trustExitCode = true
+[mergetool]
+	keepBackup = false

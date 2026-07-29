@@ -1,0 +1,91 @@
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    icon-theme: "Flat-Remix-Blue-Dark";
+    display-drun: "Apps";
+    font: "DejaVu Sans Mono 12";
+
+}
+
+* {
+    bg: #1e1e2e;
+    bg-alt: #292c3c;
+    fg: #ffffff;
+    accent: #0088FF;
+    border-color: @accent;
+}
+
+window {
+    background-color: @bg;
+    border: 2px;
+    border-color: @border-color;
+    border-radius: 12px;
+    padding: 20px;
+    width: 35%;
+}
+
+mainbox {
+    background-color: transparent;
+    children: [inputbar, listview];
+    spacing: 15px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 8px;
+    padding: 10px;
+    children: [prompt, entry];
+}
+
+prompt {
+    background-color: transparent;
+    text-color: @accent;
+    padding: 0 10px 0 0;
+}
+
+entry {
+    background-color: transparent;
+    text-color: @fg;
+    placeholder: "Search...";
+    placeholder-color: #888888;
+}
+
+listview {
+    background-color: transparent;
+    lines: 6;
+    spacing: 5px;
+    cycle: true;
+}
+
+element {
+    background-color: transparent;
+    text-color: @fg;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+element selected {
+    background-color: @accent;
+    text-color: #ffffff;
+}
+
+element-icon {
+    size: 24px;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+error-message {
+    background-color: @bg;
+    text-color: #ffffff;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+textbox {
+    text-color: #ffffff;
+}
