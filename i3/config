@@ -1,3 +1,16 @@
+set $bg     #1A120F
+set $fg     #F2E4DC
+set $red    #E0483D
+set $orange #FF8C42
+set $inact  #3A2A24
+set $dim    #8A7A72
+
+client.focused          $orange  $orange  $bg     $red      $orange
+client.focused_inactive $inact   $inact   $fg     $inact    $inact
+client.unfocused        $bg      $bg      $dim    $bg       $bg
+client.urgent           $red     $red     $fg     $red      $red
+
+exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
 
 # i3 config file
@@ -18,6 +31,7 @@ bindsym $mod+q kill
 
 # Programm-Starter (rofi)
 bindsym $mod+space exec ~/.config/i3/scripts/rofi-launcher.sh
+bindsym $mod+d exec --no-startup-id rofi -show drun -theme ~/.config/rofi/ember
 
 # Fokus wechseln
 bindsym $mod+Left focus left
@@ -128,10 +142,10 @@ exec --no-startup-id nm-applet
 bindsym $mod+n exec --restart nm-applet
 
 # Fensterrahmen-Farben: Rahmen, Hintergrund, Text, Indikator, untere Linie
-client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
-client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
-client.unfocused        #333333 #222222 #888888 #292d2e #222222
-client.urgent           #2f343a #900000 #ffffff #900000 #900000
+# client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
+# client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
+# client.unfocused        #333333 #222222 #888888 #292d2e #222222
+# client.urgent           #2f343a #900000 #ffffff #900000 #900000
 
 new_window normal
 new_float normal

@@ -145,7 +145,7 @@
       </property>
     </property>
     <property name="plugin-15" type="string" value="genmon">
-      <property name="command" type="string" value="/usr/share/kali-themes/xfce4-panel-genmon-vpnip.sh"/>
+      <property name="command" type="string" value="/home/unposed/.config/i3/scripts/vpnip.sh"/>
       <property name="use-label" type="bool" value="true"/>
       <property name="update-period" type="int" value="1000"/>
       <property name="enable-single-row" type="bool" value="true"/>
