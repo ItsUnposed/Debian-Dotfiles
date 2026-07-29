@@ -1,12 +1,12 @@
 #!/bin/bash
-CH=$(printf "Sperren\nAbmelden\nStandby\nNeustart\nAusschalten\n" \
+CH=$(printf "Lock\nLog Out\nSuspend\nReboot\nPower Off\n" \
      | rofi -dmenu -i -no-custom -lines 5 -p "Power" \
             -theme "$HOME/.config/rofi/ember")
 
 case "$CH" in
-    Sperren)     command -v i3lock >/dev/null && i3lock -c 0d0a09 || xset s activate ;;
-    Abmelden)    i3-msg exit ;;
-    Standby)     systemctl suspend ;;
-    Neustart)    systemctl reboot ;;
-    Ausschalten) systemctl poweroff ;;
+    "Lock")      command -v i3lock >/dev/null && i3lock -c 0d0a09 || xset s activate ;;
+    "Log Out")   i3-msg exit ;;
+    "Suspend")   systemctl suspend ;;
+    "Reboot")    systemctl reboot ;;
+    "Power Off") systemctl poweroff ;;
 esac

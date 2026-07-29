@@ -120,7 +120,7 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 # Config neu laden / i3 neustarten / beenden
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Willst du wirklich ausloggen?' -B 'Ja' 'i3-msg exit'"
+# bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Willst du wirklich ausloggen?' -B 'Ja' 'i3-msg exit'"
 
 # Fenstergröße ändern
 mode "resize" {

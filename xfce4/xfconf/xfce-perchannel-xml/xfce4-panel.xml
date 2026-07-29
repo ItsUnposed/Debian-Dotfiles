@@ -31,6 +31,7 @@
         <value type="int" value="25"/>
         <value type="int" value="19"/>
         <value type="int" value="21"/>
+        <value type="int" value="22"/>
       </property>
     </property>
   </property>
@@ -135,7 +136,7 @@
     </property>
     <property name="plugin-19" type="string" value="clock">
       <property name="digital-layout" type="uint" value="3"/>
-      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#FF6B5E&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
+      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#FFFFFF&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
       <property name="digital-time-font" type="string" value="Cantarell 11"/>
       <property name="timezone" type="string" value="Europe/Berlin"/>
     </property>
@@ -184,8 +185,8 @@
     <property name="plugin-25" type="string" value="separator"/>
     <property name="plugin-3" type="string" value="genmon">
       <property name="command" type="string" value="/home/unposed/.config/i3/scripts/spotify-panel.sh"/>
-      <property name="use-label" type="bool" value="false"/>
-      <property name="text" type="string" value=""/>
+      <property name="use-label" type="bool" value="true"/>
+      <property name="text" type="string" value="(genmon)"/>
       <property name="update-period" type="int" value="2000"/>
       <property name="enable-single-row" type="bool" value="false"/>
       <property name="font" type="string" value="Sans 10"/>
