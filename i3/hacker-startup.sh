@@ -26,7 +26,6 @@ launch() {
     i3-msg "mark $mark" >/dev/null
 
     wid=$(xdotool getactivewindow)
-    xdotool set_window --name "$wname" "$wid"
     if [ -n "$op" ]; then
         xprop -id "$wid" -f _NET_WM_WINDOW_OPACITY 32c \
               -set _NET_WM_WINDOW_OPACITY $(( 0xffffffff * op / 100 ))

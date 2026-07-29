@@ -4,11 +4,16 @@ set $red    #E0483D
 set $orange #FF8C42
 set $inact  #3A2A24
 set $dim    #8A7A72
+set $dkred  #A11C12
+set $ltred  #FF6B5E
 
-client.focused          $red     $red     $fg     $orange   $red
-client.focused_inactive $inact   $inact   $fg     $inact    $inact
-client.unfocused        $bg      $bg      $dim    $bg       $bg
-client.urgent           $red     $red     $fg     $red      $red
+client.focused          $red     $bg      $ltred  $red      $red
+client.focused_inactive $inact   $bg      $red    $inact    $inact
+client.unfocused        $bg      $bg      $dkred  $bg       $bg
+client.urgent           $red     $bg      $ltred  $red      $red
+
+default_border normal 2
+default_floating_border normal 2
 
 exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd

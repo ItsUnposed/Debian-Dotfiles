@@ -1,6 +1,8 @@
 #!/bin/bash
-if   command -v btop  >/dev/null; then btop
-elif command -v htop  >/dev/null; then htop
+printf '\033]0;taskmanager\007'
+if   command -v btop >/dev/null; then btop
+elif command -v htop >/dev/null; then htop
 else echo "FEHLER: weder btop noch htop installiert"
 fi
+printf '\033]0;taskmanager\007'
 echo; echo "beendet - Taste zum Schliessen"; read -r -n1

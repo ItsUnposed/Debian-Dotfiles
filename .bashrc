@@ -123,6 +123,15 @@ RESET='\[\e[0m\]'
 PS1="${ORANGE}\u${WHITE}@${RED}\h${RESET}:${AMBER}\w${RESET}\$ "
 
 # --- fastfetch beim Start ---
-if [[ $- == *i* ]]; then
+if [[ $- == *i* ]] && [[ -z "$NO_FASTFETCH" ]]; then
     fastfetch
+fi
+
+# --- Ember Prompt: Benutzername in hellerem Rot ---
+LTRED='\[\e[38;2;255;107;94m\]'
+PS1="${LTRED}\u${WHITE}@${RED}\h${RESET}:${AMBER}\w${RESET}\$ "
+
+# --- Fenstertitel: "Terminal", ausser WIN_TITLE ist gesetzt ---
+if [[ $- == *i* ]]; then
+    PROMPT_COMMAND='printf "\033]0;%s\007" "${WIN_TITLE:-Terminal}"'
 fi

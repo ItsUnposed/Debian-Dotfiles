@@ -16,13 +16,19 @@
   "display": {
     "separator": " -> ",
     "color": {
-      "keys": "38;2;161;28;18",
-      "title": "38;2;255;106;26"
+      "keys": "38;2;161;28;18"
     }
   },
 
   "modules": [
-    "title",
+    {
+      "type": "title",
+      "color": {
+        "user": "1;38;2;255;107;94",
+        "at":   "1;38;2;255;255;255",
+        "host": "1;38;2;224;72;61"
+      }
+    },
     "separator",
     "os",
     "host",
@@ -32,19 +38,12 @@
     "shell",
     "display",
     "wm",
-    "theme",
-    "icons",
-    "font",
-    "cursor",
     "terminal",
-    "terminalfont",
     "cpu",
     "gpu",
     "memory",
-    "swap",
     "disk",
     "localip",
-    "battery",
-    "locale"
+    "battery"
   ]
 }
