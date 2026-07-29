@@ -11,8 +11,6 @@
       <property name="size" type="uint" value="34"/>
       <property name="plugin-ids" type="array">
         <value type="int" value="1"/>
-        <value type="int" value="2"/>
-        <value type="int" value="9"/>
         <value type="int" value="10"/>
         <value type="int" value="4"/>
         <value type="int" value="6"/>
@@ -29,35 +27,24 @@
         <value type="int" value="26"/>
         <value type="int" value="24"/>
         <value type="int" value="15"/>
-        <value type="int" value="18"/>
-        <value type="int" value="17"/>
-        <value type="int" value="16"/>
         <value type="int" value="20"/>
         <value type="int" value="25"/>
         <value type="int" value="19"/>
         <value type="int" value="21"/>
-        <value type="int" value="22"/>
       </property>
     </property>
   </property>
   <property name="plugins" type="empty">
     <property name="plugin-1" type="string" value="whiskermenu">
       <property name="favorites" type="array">
-        <value type="string" value="root-terminal.desktop"/>
-        <value type="string" value="kali-www.desktop"/>
-        <value type="string" value="kali-tools.desktop"/>
-        <value type="string" value="kali-docs.desktop"/>
-        <value type="string" value="kali-bugs.desktop"/>
-        <value type="string" value="offsec-training.desktop"/>
-        <value type="string" value="exploit-database.desktop"/>
-        <value type="string" value="vulnhub.desktop"/>
       </property>
       <property name="recent" type="array">
-        <value type="string" value="kali-hydra.desktop"/>
+        <value type="string" value="nm-connection-editor.desktop"/>
         <value type="string" value="com.anthropic.Claude.desktop"/>
       </property>
+      <property name="view-mode" type="int" value="2"/>
+      <property name="button-icon" type="string" value="emblem-debian"/>
     </property>
-    <property name="plugin-2" type="string" value="separator"/>
     <property name="plugin-4" type="string" value="directorymenu">
       <property name="icon-name" type="string" value="system-file-manager"/>
       <property name="base-directory" type="string" value="/home/unposed"/>
@@ -79,13 +66,6 @@
       <property name="move-first" type="bool" value="true"/>
     </property>
     <property name="plugin-8" type="string" value="separator"/>
-    <property name="plugin-9" type="string" value="pager">
-      <property name="miniature-view" type="bool" value="false"/>
-    </property>
-    <property name="plugin-900" type="string" value="pager">
-      <property name="miniature-view" type="bool" value="true"/>
-      <property name="rows" type="uint" value="2"/>
-    </property>
     <property name="plugin-10" type="string" value="separator"/>
     <property name="plugin-11" type="string" value="tasklist">
       <property name="show-handle" type="bool" value="false"/>
@@ -102,6 +82,7 @@
       <property name="square-icons" type="bool" value="true"/>
       <property name="symbolic-icons" type="bool" value="false"/>
       <property name="known-legacy-items" type="array">
+        <value type="string" value="claude-desktop"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (70%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (81%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (78%)"/>
@@ -152,15 +133,9 @@
       <property name="font" type="string" value="Fira Code Medium 8"/>
       <property name="text" type="string" value=""/>
     </property>
-    <property name="plugin-16" type="string" value="pulseaudio">
-      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
-      <property name="known-players" type="string" value="Chromium;spotify"/>
-    </property>
-    <property name="plugin-17" type="string" value="notification-plugin"/>
-    <property name="plugin-18" type="string" value="power-manager-plugin"/>
     <property name="plugin-19" type="string" value="clock">
       <property name="digital-layout" type="uint" value="3"/>
-      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#FFFFFF&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
+      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#FF6B5E&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
       <property name="digital-time-font" type="string" value="Cantarell 11"/>
       <property name="timezone" type="string" value="Europe/Berlin"/>
     </property>
@@ -210,7 +185,7 @@
     <property name="plugin-3" type="string" value="genmon">
       <property name="command" type="string" value="/home/unposed/.config/i3/scripts/spotify-panel.sh"/>
       <property name="use-label" type="bool" value="false"/>
-      <property name="text" type="string" value="(genmon)"/>
+      <property name="text" type="string" value=""/>
       <property name="update-period" type="int" value="2000"/>
       <property name="enable-single-row" type="bool" value="false"/>
       <property name="font" type="string" value="Sans 10"/>
