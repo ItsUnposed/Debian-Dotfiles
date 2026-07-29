@@ -1,6 +1,6 @@
 #!/bin/bash
 export NO_FASTFETCH=1
-printf '\033]0;fastfetch\007'
+printf '\033]0;Debian\007'
 clear
 fastfetch -c ~/.config/fastfetch/hacker.jsonc
 tput civis 2>/dev/null

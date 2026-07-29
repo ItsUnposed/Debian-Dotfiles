@@ -6,10 +6,12 @@ set $inact  #3A2A24
 set $dim    #8A7A72
 set $dkred  #A11C12
 set $ltred  #FF6B5E
+set $dkred  #A11C12
+set $ltred  #FF6B5E
 
 client.focused          $red     $bg      $ltred  $red      $red
-client.focused_inactive $inact   $bg      $red    $inact    $inact
-client.unfocused        $bg      $bg      $dkred  $bg       $bg
+client.focused_inactive $inact   $bg      $ltred  $inact    $inact
+client.unfocused        $bg      $bg      $ltred  $bg       $bg
 client.urgent           $red     $bg      $ltred  $red      $red
 
 default_border normal 2
