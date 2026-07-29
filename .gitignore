@@ -1,0 +1,4 @@
+.ssh/
+id_*
+*.key
+.env
