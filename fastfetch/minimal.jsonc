@@ -1,0 +1,25 @@
+{
+  "logo": {
+    "type": "small"
+  },
+  "modules": [
+    "os",
+    "host",
+    "kernel",
+    "packages",
+    "shell",
+    "cpu",
+    "gpu",
+    "memory",
+    "swap",
+    "disk",
+    "localip",
+    "publicip",
+    "terminal",
+    "wm",
+    "de",
+    "theme",
+    "icons",
+    "font"
+  ]
+}

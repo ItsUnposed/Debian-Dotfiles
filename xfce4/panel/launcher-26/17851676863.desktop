@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Next
+Comment=
+Exec=playerctl -p spotify next
+Icon=media-skip-forward
+Path=
+Terminal=false
+StartupNotify=false

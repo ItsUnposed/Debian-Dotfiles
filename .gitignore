@@ -2,3 +2,5 @@
 id_*
 *.key
 .env
+*.save
+*.save.*
