@@ -1,44 +1,42 @@
 #!/bin/bash
+# Hackerstartup: 2x2-Grid auf Workspace 1
+#   links oben: fastfetch (kleines Fenster)   rechts oben:  btop
+#   links unten: cava (grosses Fenster)       rechts unten: cmatrix
 
-i3-msg 'workspace number 1'
-sleep 0.2
+WS="1"          # Name deines Workspace, ggf. anpassen
+D=1.6           # Wartezeit pro Fenster in Sekunden
 
-# Fenster 1: nvim mit i3-Config (ganz links, volle Höhe, transparent)
-i3-msg 'exec --no-startup-id i3-sensible-terminal -e ~/.config/i3/scripts/win-editor.sh'
-sleep 0.6
-i3-msg 'mark left'
+# Alte Instanzen aufraeumen, damit nichts doppelt laeuft
+pkill -x cava    2>/dev/null
+pkill -x cmatrix 2>/dev/null
 
-# Horizontal splitten -> Fenster 2 rechts oben: Performance (btop)
-i3-msg '[con_mark="left"] focus'
-i3-msg 'split h'
-i3-msg 'exec --no-startup-id i3-sensible-terminal -e ~/.config/i3/scripts/win-shell1.sh'
-sleep 0.6
-i3-msg 'mark rtop'
+i3-msg "workspace $WS" >/dev/null
+sleep 0.5
 
-# Vertikal splitten -> Fenster 3 rechts unten: Fastfetch
-i3-msg '[con_mark="rtop"] focus'
-sleep 0.1
-i3-msg 'split v'
-i3-msg 'exec --no-startup-id i3-sensible-terminal -e ~/.config/i3/scripts/win-fastfetch.sh'
-sleep 0.6
-i3-msg 'mark fastfetch'
+# 1) Fenster A: normales Terminal. Fastfetch kommt aus der .bashrc
+qterminal &
+sleep $D
 
-# Matrix neben Fastfetch
-i3-msg '[con_mark="fastfetch"] focus'
-sleep 0.1
-i3-msg 'split h'
-i3-msg 'exec --no-startup-id i3-sensible-terminal -e ~/.config/i3/scripts/win-matrix.sh'
-sleep 0.6
-i3-msg 'mark matrix'
+# 2) Fenster B rechts daneben: btop
+i3-msg "split h" >/dev/null
+qterminal -e bash -c 'btop' &
+sleep $D
 
-# Cava unter Fastfetch (40% Höhe)
-i3-msg '[con_mark="fastfetch"] focus'
-sleep 0.1
-i3-msg 'split v'
-i3-msg 'exec --no-startup-id i3-sensible-terminal -e ~/.config/i3/scripts/win-cava.sh'
-sleep 0.4
-i3-msg 'mark cava'
-i3-msg '[con_mark="cava"] resize set height 40 ppt'
+# 3) zurueck nach links, Fenster C darunter: cava
+i3-msg "focus left" >/dev/null
+i3-msg "split v" >/dev/null
+qterminal -e bash -c 'cava' &
+sleep $D
 
-# Zum Schluss Fokus auf den Config-Editor
-i3-msg '[con_mark="left"] focus'
+# 4) cava bekommt den frei gewordenen Platz von fastfetch
+i3-msg "resize grow height 15 px or 15 ppt" >/dev/null
+
+# 5) rechte Spalte, Fenster D darunter: cmatrix in Rot
+i3-msg "focus right" >/dev/null
+i3-msg "split v" >/dev/null
+qterminal -e bash -c 'cmatrix -ab -C red' &
+sleep $D
+
+# 6) Fokus zurueck auf das Terminal links oben
+i3-msg "focus left" >/dev/null
+i3-msg "focus up"   >/dev/null

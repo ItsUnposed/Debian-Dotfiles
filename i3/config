@@ -10,6 +10,7 @@ client.focused_inactive $inact   $inact   $fg     $inact    $inact
 client.unfocused        $bg      $bg      $dim    $bg       $bg
 client.urgent           $red     $red     $fg     $red      $red
 
+exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
 
@@ -136,8 +137,9 @@ smart_gaps off
 
 # Autostart
 exec_always --no-startup-id xfce4-panel
-exec_always --no-startup-id killall picom; picom -b
+exec_always --no-startup-id sh -c "pkill -x picom; sleep 1; picom -b"
 exec --no-startup-id ~/.config/i3/hacker-startup.sh
+bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec --no-startup-id nm-applet
 bindsym $mod+n exec --restart nm-applet
 

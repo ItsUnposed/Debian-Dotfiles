@@ -289,11 +289,10 @@
 ; gradient = 0
 gradient = 1
 gradient_count = 4
-gradient_color_1 = '#8C2F1E'
-gradient_color_2 = '#E0483D'
-gradient_color_3 = '#FF8C42'
-gradient_color_4 = '#FFC96B'
-
+gradient_color_1 = '#5C0F0A'
+gradient_color_2 = '#8C1F12'
+gradient_color_3 = '#C4331C'
+gradient_color_4 = '#FF6A1A'
 # Horizontal is only supported on noncurses output.
 # Only one color will be calculated per bar.
 ; horizontal_gradient = 0

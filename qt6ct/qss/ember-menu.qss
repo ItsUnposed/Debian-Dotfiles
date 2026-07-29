@@ -1,0 +1,41 @@
+QMenuBar {
+    background-color: #0D0A09;
+    color: #FF6B5E;
+    border: 0px;
+}
+QMenuBar::item {
+    background: transparent;
+    color: #FF6B5E;
+    padding: 4px 10px;
+}
+QMenuBar::item:selected {
+    background-color: #2A100C;
+    color: #FF9A8C;
+}
+QMenu {
+    background-color: #0D0A09;
+    color: #FF6B5E;
+    border: 1px solid #4A1712;
+}
+QMenu::item:selected {
+    background-color: #2A100C;
+    color: #FF9A8C;
+}
+QMenu::separator {
+    background-color: #4A1712;
+    height: 1px;
+}
+QToolBar, QStatusBar {
+    background-color: #0D0A09;
+    color: #FF6B5E;
+    border: 0px;
+}
+QTabBar::tab {
+    background-color: #0D0A09;
+    color: #FF6B5E;
+    padding: 4px 12px;
+}
+QTabBar::tab:selected {
+    background-color: #2A100C;
+    color: #FF9A8C;
+}
