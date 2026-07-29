@@ -270,6 +270,52 @@
 ; waveform = 0
 
 
+[color]
+
+# Colors can be one of seven predefined: black, blue, cyan, green, magenta, red, white, yellow.
+# Or defined by hex code '#xxxxxx' (hex code must be within ''). User defined colors require
+# a terminal that can change color definitions such as Gnome-terminal or rxvt.
+# default is to keep current terminal color
+; background = default
+; foreground = default
+
+# SDL and sdl_glsl only support hex code colors, these are the default:
+; background = '#111111'
+; foreground = '#33ffff'
+
+# Gradient mode, only hex defined colors are supported,
+# background must also be defined in hex or remain commented out. 1 = on, 0 = off.
+# You can define as many as 8 different colors. They range from bottom to top of the screen
+; gradient = 0
+gradient = 1
+gradient_count = 4
+gradient_color_1 = '#5C0F0A'
+gradient_color_2 = '#8C1F12'
+gradient_color_3 = '#C4331C'
+gradient_color_4 = '#FF6A1A'
+# Horizontal is only supported on noncurses output.
+# Only one color will be calculated per bar.
+; horizontal_gradient = 0
+; horizontal_gradient_color_1 = '#c45161'
+; horizontal_gradient_color_2 = '#e094a0'
+; horizontal_gradient_color_3 = '#f2b6c0'
+; horizontal_gradient_color_4 = '#f2dde1'
+; horizontal_gradient_color_5 = '#cbc7d8'
+; horizontal_gradient_color_6 = '#8db7d2'
+; horizontal_gradient_color_7 = '#5e62a9'
+; horizontal_gradient_color_8 = '#434279'
+
+# If both vertical and horizontal gradients are enabled, the vertical one will be blended in this direction.
+# Can be 'up', 'down', 'left' or 'right'. 'up' means the vertical gradient will be blended in from
+# bottom to top. I.e. the bottom will only be the horizontal
+# and top will only be the vertical color of the gradient.
+; blend_direction = 'up'
+
+# use theme file instead of defining colors in this file
+# themes are located in $HOME/.config/cava/themes
+; theme = 'none'
+
+
 [smoothing]
 
 # Disables or enables the so-called "Monstercat smoothing" with or without "waves". Set to 0 to disable.
@@ -293,18 +339,11 @@
 ; 4 = 1
 ; 5 = 1 # treble
 
+[color]
+gradient = 1
+gradient_count = 2
+gradient_color_1 = '#8A2BE2'
+gradient_color_2 = '#0000FF'
+
 [general]
 bars = 0
-
-[color]
-background = default
-gradient = 1
-gradient_count = 8
-gradient_color_1 = '#3D0705'
-gradient_color_2 = '#5C0F0A'
-gradient_color_3 = '#7A1810'
-gradient_color_4 = '#99220F'
-gradient_color_5 = '#B82E12'
-gradient_color_6 = '#D64318'
-gradient_color_7 = '#F0591C'
-gradient_color_8 = '#FF7A1F'

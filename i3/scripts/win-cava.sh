@@ -1,3 +1,3 @@
 #!/bin/bash
-echo -ne "\033]0;Audio\007"
 cava
+echo; echo "cava beendet - Taste zum Schliessen"; read -r -n1

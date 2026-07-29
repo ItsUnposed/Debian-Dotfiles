@@ -137,7 +137,7 @@ smart_gaps off
 
 # Autostart
 exec_always --no-startup-id xfce4-panel
-exec_always --no-startup-id sh -c "pkill -x picom; sleep 1; picom -b"
+exec --no-startup-id sh -c "pkill -x picom; sleep 1; picom -b"
 exec --no-startup-id ~/.config/i3/hacker-startup.sh
 bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec --no-startup-id nm-applet
@@ -156,7 +156,7 @@ exec_always --no-startup-id feh --bg-scale ~/Pictures/Kali-Background.jpeg
 bindsym Print exec --no-startup-id flameshot gui -p ~/Pictures/Screenshots
 bindsym $mod+Shift+x exec betterlockscreen -l blur
 
-bindsym $mod+o exec ~/.config/i3/scripts/rebuild-layout.sh
+bindsym $mod+o exec --no-startup-id ~/.config/i3/hacker-startup.sh
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 bindsym Control+Mod1+m exec --no-startup-id xfce4-popup-whiskermenu
