@@ -18,3 +18,16 @@ danach: setxkbmap -layout deumlaut -option lv3:ralt_switch
 ## Wallpaper
 wallpaper/Kali-Background.jpeg nach ~/Pictures/
 Layout ist NICHT in xkb/rules registriert - reines Kopieren nach symbols/ reicht
+/Gtk/ButtonImages       true
+/Gtk/CursorThemeName    Adwaita
+/Gtk/CursorThemeSize    24
+/Gtk/FontName           Cantarell 11
+/Gtk/MenuImages         true
+/Gtk/MonospaceFontName  Fira Code Medium 10
+/Net/IconThemeName      Flat-Remix-Blue-Dark
+/Net/ThemeName          Kali-Dark
+/Xfce/SyncThemes        true
+/Xft/Antialias          1
+/Xft/Hinting            1
+/Xft/HintStyle          hintslight
+/Xft/RGBA               rgb
