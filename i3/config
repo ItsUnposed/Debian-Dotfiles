@@ -150,7 +150,7 @@ bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec --no-startup-id nm-applet
 bindsym $mod+n exec --restart nm-applet
 
-# Fensterrahmen-Farben: Rahmen, Hintergrund, Text, Indikator, untere Linie
+exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Omen-Red.png"
 # client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
 # client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
 # client.unfocused        #333333 #222222 #888888 #292d2e #222222
