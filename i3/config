@@ -5,7 +5,7 @@ set $orange #FF8C42
 set $inact  #3A2A24
 set $dim    #8A7A72
 
-client.focused          $orange  $orange  $bg     $red      $orange
+client.focused          $red     $red     $fg     $orange   $red
 client.focused_inactive $inact   $inact   $fg     $inact    $inact
 client.unfocused        $bg      $bg      $dim    $bg       $bg
 client.urgent           $red     $red     $fg     $red      $red
@@ -24,7 +24,7 @@ font pango:DejaVu Sans Mono 10
 floating_modifier $mod
 
 # Terminal starten
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec qterminal
 
 # Fenster schließen
 bindsym $mod+q kill

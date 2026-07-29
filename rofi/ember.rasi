@@ -2,7 +2,7 @@
     bg:      #1A120FEE;
     surface: #241A16;
     fg:      #F2E4DC;
-    accent:  #FF8C42;
+    accent:  #E0483D;
     urgent:  #E0483D;
     dim:     #8A7A72;
 
