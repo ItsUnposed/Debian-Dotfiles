@@ -17,3 +17,4 @@ danach: setxkbmap -layout deumlaut -option lv3:ralt_switch
 
 ## Wallpaper
 wallpaper/Kali-Background.jpeg nach ~/Pictures/
+Layout ist NICHT in xkb/rules registriert - reines Kopieren nach symbols/ reicht
