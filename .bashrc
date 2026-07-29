@@ -145,4 +145,4 @@ alias ll='ls -alh --color=auto --group-directories-first'
 alias grep='grep --color=auto'
 export GREP_COLORS='mt=01;38;2;255;107;94:fn=38;2;161;28;18:ln=38;2;255;140;66'
 export PATH="$HOME/.local/bin:$PATH"
-alias matrix='unimatrix -c red -o -s 95'
+alias matrix='unimatrix -c red -n -o -s 95'
