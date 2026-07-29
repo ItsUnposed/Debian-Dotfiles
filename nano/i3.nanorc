@@ -1,0 +1,11 @@
+syntax "i3" "i3/config$" "i3/config\.d/.*$"
+
+# Kommentare
+color #ff6b5e "(^|[[:space:]])#.*"
+# Schluesselwoerter
+color #f2e4dc "^[[:space:]]*(set|bindsym|bindcode|exec|exec_always|for_window|assign|font|mode|bar|workspace|floating_modifier|default_border|default_floating_border|hide_edge_borders|focus_follows_mouse|gaps|smart_gaps)\b"
+color #f2e4dc "^client\.[a-z_]+"
+# Variablen
+color #ffc96b "\$[A-Za-z_][A-Za-z0-9_]*"
+# Hexfarben
+color #a11c12 "#[0-9a-fA-F]{6}\b"

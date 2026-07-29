@@ -1,0 +1,24 @@
+# --- Syntaxdateien, System zuerst ---
+include /usr/share/nano/*.nanorc
+include /usr/share/nano/extra/*.nanorc
+
+# --- eigene Regeln, muessen danach kommen ---
+include ~/.nano/i3.nanorc
+include ~/.nano/red-comments.nanorc
+
+# --- Oberflaeche im Ember-Schema ---
+set titlecolor    #f2e4dc,#a11c12
+set statuscolor   #f2e4dc,#a11c12
+set errorcolor    #ffffff,#8c1f12
+set numbercolor   #a11c12
+set keycolor      #ff6b5e
+set functioncolor #f2e4dc
+set promptcolor   #f2e4dc,#0d0a09
+set selectedcolor #0d0a09,#ff6b5e
+
+# --- Komfort ---
+set linenumbers
+set tabsize 4
+set tabstospaces
+set constantshow
+set softwrap
