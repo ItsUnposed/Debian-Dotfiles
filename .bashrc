@@ -145,4 +145,17 @@ alias ll='ls -alh --color=auto --group-directories-first'
 alias grep='grep --color=auto'
 export GREP_COLORS='mt=01;38;2;255;107;94:fn=38;2;161;28;18:ln=38;2;255;140;66'
 export PATH="$HOME/.local/bin:$PATH"
-alias matrix='unimatrix -c red -o -s 95'
+alias matrix='unimatrix -c magenta -o -s 95'
+alias i3c='nano ~/.config/i3/config'
+
+# --- Ember: Prompt aus der aktiven Palette ---
+if [ -f "$HOME/.config/ember/current.conf" ]; then
+    . "$HOME/.config/ember/current.conf"
+    _h2a() { printf '38;2;%d;%d;%d' 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}; }
+    _U="\[\e[$(_h2a ${C_ACC:-#FF6B5E})m\]"
+    _W="\[\e[38;2;255;255;255m\]"
+    _H="\[\e[$(_h2a ${C_ACC2:-#E0483D})m\]"
+    _P="\[\e[$(_h2a ${C_ACC3:-#A11C12})m\]"
+    _R="\[\e[0m\]"
+    PS1="${_U}\u${_W}@${_H}\h${_R}:${_P}\w${_R}\$ "
+fi

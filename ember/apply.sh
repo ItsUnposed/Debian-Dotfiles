@@ -35,7 +35,22 @@ fi
 # --- 3. fastfetch ---
 for f in "$HOME/.config/fastfetch/config.jsonc" "$HOME/.config/fastfetch/hacker.jsonc"; do
   [ -f "$f" ] || continue
-  sed -i -E "s/38;2;[0-9]+;[0-9]+;[0-9]+/$(hex2ansi $C_ACC2)/g" "$f"
+  python3 - "$f" "$C_ACC" "$C_ACC2" "$C_ACC3" "$C_FG" << 'PYF'
+import sys, json, re
+p, acc, acc2, acc3, fg = sys.argv[1:6]
+def a(h): return "38;2;%d;%d;%d" % (int(h[1:3],16), int(h[3:5],16), int(h[5:7],16))
+d = json.loads(re.sub(r'//.*', '', open(p).read()))
+lg = d.setdefault('logo', {}).setdefault('color', {})
+if lg.get('1', '').startswith('38;2;255;255;255'):
+    lg['1'] = '38;2;255;255;255'; lg['2'] = a(acc3)
+else:
+    lg['1'] = a(acc3); lg['2'] = '38;2;255;255;255'
+d.setdefault('display', {}).setdefault('color', {})['keys'] = a(acc3)
+for m in d.get('modules', []):
+    if isinstance(m, dict) and m.get('type') == 'title':
+        m['color'] = {'user': '1;' + a(acc), 'at': '1;38;2;255;255;255', 'host': '1;' + a(acc2)}
+open(p, 'w').write(json.dumps(d, indent=2))
+PYF
 done
 
 # --- 4. rofi ---
@@ -130,3 +145,37 @@ xfce4-panel -r 2>/dev/null
 i3-msg restart >/dev/null 2>&1
 
 notify-send -a ember "Theme gewechselt" "Palette: $NAME"
+
+# --- 13. matrix ---
+T="${C_TERM:-red}"
+for f in "$HOME/.config/i3/scripts/win-matrix.sh"; do
+  [ -f "$f" ] || continue
+  sed -i -E "s/-c [a-z]+ /-c $T /g; s/-C [a-z]+/-C $T/g" "$f"
+done
+sed -i -E "s/(alias matrix=')([^']*)'/\\1\\2'/" "$HOME/.bashrc" 2>/dev/null
+sed -i -E "s/(alias matrix='[a-z]+ -c )[a-z]+/\\1$T/" "$HOME/.bashrc" 2>/dev/null
+
+# --- 14. nano ---
+if [ -f "$HOME/.nanorc" ]; then
+  sed -i -E "s/^(extendsyntax [^ ]+ color )(bright)?[a-z]+/\\1bright$T/" "$HOME/.nanorc"
+  sed -i -E "s/^(set (title|status)color +)[a-z]+,[a-z]+/\\1white,$T/" "$HOME/.nanorc"
+  sed -i -E "s/^(set keycolor +).*/\\1bright$T/" "$HOME/.nanorc"
+  sed -i -E "s/^(set numbercolor +).*/\\1$T/" "$HOME/.nanorc"
+  sed -i -E "s/^(set selectedcolor +)[a-z]+,[a-z]+/\\1black,bright$T/" "$HOME/.nanorc"
+fi
+if [ -f "$HOME/.nano/i3.nanorc" ]; then
+  sed -i -E "s/color (bright)?[a-z]+ /color bright$T /g" "$HOME/.nano/i3.nanorc"
+fi
+
+# --- 15. Workspace 1 zuruecksetzen ---
+if [ -x "$HOME/.config/i3/scripts/../hacker-startup.sh" ] || [ -x "$HOME/.config/i3/hacker-startup.sh" ]; then
+  ( sleep 2
+    i3-msg "workspace number 1" >/dev/null 2>&1
+    for i in $(seq 1 12); do
+      i3-msg '[workspace="__focused__"] kill' >/dev/null 2>&1
+      sleep 0.2
+    done
+    sleep 1
+    "$HOME/.config/i3/hacker-startup.sh"
+  ) &
+fi
