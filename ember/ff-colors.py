@@ -12,8 +12,9 @@ WHITE = "38;2;255;255;255"
 raw = open(path).read()
 d = json.loads(re.sub(r'^\s*//.*$', '', raw, flags=re.M))
 
+invert = len(sys.argv) > 5 and sys.argv[5] == 'invert'
 lg = d.setdefault('logo', {}).setdefault('color', {})
-if str(lg.get('1','')).startswith(WHITE):
+if invert:
     lg['1'], lg['2'] = WHITE, a(acc3)
 else:
     lg['1'], lg['2'] = a(acc3), WHITE

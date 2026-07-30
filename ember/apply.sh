@@ -33,9 +33,9 @@ EOF
 fi
 
 # --- 3. fastfetch ---
-for f in "$HOME/.config/fastfetch/config.jsonc" "$HOME/.config/fastfetch/hacker.jsonc"; do
-  [ -f "$f" ] && python3 "$E/ff-colors.py" "$f" "$C_ACC" "$C_ACC2" "$C_ACC3" >/dev/null 2>&1
-done
+FF="$HOME/.config/fastfetch"
+[ -f "$FF/hacker.jsonc" ] && python3 "$E/ff-colors.py" "$FF/hacker.jsonc" "$C_ACC" "$C_ACC2" "$C_ACC3" >/dev/null 2>&1
+[ -f "$FF/config.jsonc" ] && python3 "$E/ff-colors.py" "$FF/config.jsonc" "$C_ACC" "$C_ACC2" "$C_ACC3" invert >/dev/null 2>&1
 
 # --- 4. rofi ---
 if [ -f "$E/templates/ember.rasi" ]; then
@@ -62,24 +62,7 @@ if [ -f "$E/templates/notify.css" ]; then
 fi
 
 # --- 7. btop ---
-if [ -f "$HOME/.config/btop/themes/ember.theme" ]; then
-  sed -i -e "s|^theme\[main_fg\]=.*|theme[main_fg]=\"$C_ACC\"|" \
-         -e "s|^theme\[cpu_box\]=.*|theme[cpu_box]=\"$C_ACC3\"|" \
-         -e "s|^theme\[mem_box\]=.*|theme[mem_box]=\"$C_ACC3\"|" \
-         -e "s|^theme\[net_box\]=.*|theme[net_box]=\"$C_ACC3\"|" \
-         -e "s|^theme\[proc_box\]=.*|theme[proc_box]=\"$C_ACC3\"|" \
-         -e "s|^theme\[div_line\]=.*|theme[div_line]=\"$C_DIM\"|" \
-         -e "s|^theme\[selected_bg\]=.*|theme[selected_bg]=\"$C_BG2\"|" \
-         -e "s|^theme\[selected_fg\]=.*|theme[selected_fg]=\"$C_ACC\"|" \
-         -e "s|^theme\[title\]=.*|theme[title]=\"$C_FG\"|" \
-         -e "s|^theme\[download_start\]=.*|theme[download_start]=\"$C_ACC3\"|" \
-         -e "s|^theme\[download_mid\]=.*|theme[download_mid]=\"$C_ACC2\"|" \
-         -e "s|^theme\[download_end\]=.*|theme[download_end]=\"$C_ACC\"|" \
-         -e "s|^theme\[upload_start\]=.*|theme[upload_start]=\"$C_ACC3\"|" \
-         -e "s|^theme\[upload_mid\]=.*|theme[upload_mid]=\"$C_ACC2\"|" \
-         -e "s|^theme\[upload_end\]=.*|theme[upload_end]=\"$C_ACC\"|" \
-         "$HOME/.config/btop/themes/ember.theme"
-fi
+[ -x "$E/btop-theme.sh" ] && "$E/btop-theme.sh"
 
 # --- 8. i3 Fensterrahmen ---
 C="$HOME/.config/i3/config"
@@ -141,14 +124,14 @@ sed -i -E "s/(alias matrix='[a-z]+ -c )[a-z]+/\\1$T/" "$HOME/.bashrc" 2>/dev/nul
 
 # --- 14. nano ---
 if [ -f "$HOME/.nanorc" ]; then
-  sed -i -E "s/^(extendsyntax [^ ]+ color )(bright)?[a-z]+/\\1bright$T/" "$HOME/.nanorc"
+  sed -i -E "s/^(extendsyntax [^ ]+ color )(bright)?[a-z]+/\\1$T/" "$HOME/.nanorc"
   sed -i -E "s/^(set (title|status)color +)[a-z]+,[a-z]+/\\1white,$T/" "$HOME/.nanorc"
   sed -i -E "s/^(set keycolor +).*/\\1bright$T/" "$HOME/.nanorc"
   sed -i -E "s/^(set numbercolor +).*/\\1$T/" "$HOME/.nanorc"
   sed -i -E "s/^(set selectedcolor +)[a-z]+,[a-z]+/\\1black,bright$T/" "$HOME/.nanorc"
 fi
 if [ -f "$HOME/.nano/i3.nanorc" ]; then
-  sed -i -E "s/color (bright)?[a-z]+ /color bright$T /g" "$HOME/.nano/i3.nanorc"
+  sed -i -E "s/color (bright)?[a-z]+ /color $T /g" "$HOME/.nano/i3.nanorc"
 fi
 
 # --- 15. Workspace 1 zuruecksetzen ---
