@@ -1,11 +1,11 @@
 * {
-    bg:        #110A0E;
-    bg-alt:    #221520;
-    bg-sel:    #221520;
+    bg:        #110C07;
+    bg-alt:    #221810;
+    bg-sel:    #221810;
     fg:        #F0EDEB;
-    fg-dim:    #4A2F3E;
-    accent:    #FF8FC4;
-    accent-dk: #A83368;
+    fg-dim:    #4A3A2C;
+    accent:    #FFA557;
+    accent-dk: #A85410;
 
     background-color: transparent;
     text-color:       @fg;
