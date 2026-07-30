@@ -1,0 +1,13 @@
+#!/bin/bash
+. "$HOME/.config/ember/current.conf"
+N="$HOME/.nanorc"
+sed -i -E "s/^(extendsyntax [^ ]+ color )[a-zA-Z#0-9]+/\1$C_ACC/" "$N"
+sed -i -E "s/^(set (title|status)color +).*/\1$C_BG,$C_ACC/" "$N"
+sed -i -E "s/^(set errorcolor +).*/\1$C_FG,$C_ACC3/" "$N"
+sed -i -E "s/^(set keycolor +).*/\1$C_ACC/" "$N"
+sed -i -E "s/^(set numbercolor +).*/\1$C_ACC2/" "$N"
+sed -i -E "s/^(set functioncolor +).*/\1$C_FG/" "$N"
+sed -i -E "s/^(set promptcolor +).*/\1$C_FG,$C_BG/" "$N"
+sed -i -E "s/^(set selectedcolor +).*/\1$C_BG,$C_ACC/" "$N"
+I="$HOME/.nano/i3.nanorc"
+[ -f "$I" ] && sed -i -E "s/color [a-zA-Z#0-9]+ /color $C_ACC /g" "$I"
