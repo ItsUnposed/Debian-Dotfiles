@@ -38,3 +38,21 @@ if [ -f "$I" ]; then
     sed -i -E "s|^(color )[^ ]+|\1${A2}|" "$I"
     sed -i -E "/^color ${A2} .*#/ s|^(color )${A2}|\1bold,${A}|" "$I"
 fi
+
+# 5. Shell-spezifische Hervorhebungen per extendsyntax
+A_VAR="$A2"   # $-Variablen: Keyword-Farbe
+A_STR="$A"    # Strings: Kommentarfarbe
+A_NUM="$A2"   # Zahlen
+A_KW="$A2"    # if, for, while, do, done, then, else, fi, case, esac
+
+for SYN in sh bash; do
+    grep -q "extendsyntax $SYN" "$N" 2>/dev/null || {
+        cat >> "$N" << NANO
+extendsyntax $SYN color bold,$A "(^|[[:space:]])#.*"
+extendsyntax $SYN color $A_KW "\<(if|fi|else|elif|for|while|do|done|case|esac|then|in|return|export|local|function|source)\>"
+extendsyntax $SYN color $A_VAR "\\\$[A-Za-z_][A-Za-z0-9_]*|\\\$\{[^}]+\}|\\\$\([^)]+\)"
+extendsyntax $SYN color $A_STR "\"[^\"]*\"|'[^']*'"
+extendsyntax $SYN color $A_NUM "\b[0-9]+\b"
+NANO
+    }
+done

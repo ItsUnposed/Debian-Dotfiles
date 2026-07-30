@@ -5,3 +5,20 @@ Xft.hintstyle:  hintslight
 Xft.rgba:       rgb
 Xcursor.theme:  Adwaita
 Xcursor.size:   30
+
+! --- xterm Matrix ---
+xterm*faceName: Fira Code
+xterm*faceSize: 10
+xterm*borderWidth: 0
+xterm*internalBorder: 4
+xterm*scrollBar: false
+xterm*saveLines: 0
+xterm*allowWindowOps: true
+
+! --- xterm Transparenz ---
+xterm*depth: 32
+xterm*background: rgba:0d00/0a00/0900/cc00
+
+! xterm Bold-Farbe = exakt die Vordergrundfarbe
+xterm*boldColors: false
+xterm*foreground: rgb:ff/6b/5e

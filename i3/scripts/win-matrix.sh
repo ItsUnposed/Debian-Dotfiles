@@ -15,7 +15,7 @@ elif command -v unimatrix >/dev/null; then CMD="unimatrix -o -s 95"
 else                                       CMD="cmatrix -a -C red"; fi
 
 exec xterm -name "matrix-xterm" -title "Matrix" \
-    -bg "rgb:$BG" \
+
     -fg "rgb:$FG" \
     -fa "Fira Code" -fs 10 +sb \
     -e bash -c "$CMD; echo; read -r -n1"

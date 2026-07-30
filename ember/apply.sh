@@ -116,14 +116,10 @@ i3-msg reload >/dev/null 2>&1
 
 notify-send -a ember "Theme gewechselt" "Palette: $NAME"
 
-# --- 13. matrix ---
-T="${C_TERM:-red}"
-for f in "$HOME/.config/i3/scripts/win-matrix.sh"; do
-  [ -f "$f" ] || continue
-  sed -i -E "s/-c [a-z]+ /-c $T /g; s/-C [a-z]+/-C $T/g" "$f"
-done
-sed -i -E "s/(alias matrix=')([^']*)'/\\1\\2'/" "$HOME/.bashrc" 2>/dev/null
-sed -i -E "s/(alias matrix='[a-z]+ -c )[a-z]+/\\1$T/" "$HOME/.bashrc" 2>/dev/null
+
+# --- 13. matrix fest auf rot-steckplatz ---
+sed -i -E 's/-c [a-z]+/-c red/g; s/-C [a-z]+/-C red/g' "$HOME/.config/i3/scripts/win-matrix.sh"
+sed -i -E "s/(alias matrix=')[^']*/\1unimatrix -c red -o -s 95/" "$HOME/.bashrc"
 
 # --- 14. nano ---
 if [ -f "$HOME/.nanorc" ]; then
@@ -164,3 +160,14 @@ fi
 [ -x "$E/term-scheme.sh" ] && "$E/term-scheme.sh"
 [ -x "$E/nano-colors.sh" ] && "$E/nano-colors.sh"
 [ -x "$E/dircolors.sh" ]   && "$E/dircolors.sh"
+
+# --- 17. qterminal schema sperren ---
+chmod 444 "$HOME/.config/qterminal.org/qterminal.ini" 2>/dev/null
+
+# --- xterm farbe aktualisieren ---
+if [ -f "$HOME/.Xresources" ]; then
+    h=${C_ACC#\#}
+    FG="$(printf '%02x/%02x/%02x' $((0x${h:0:2})) $((0x${h:2:2})) $((0x${h:4:2})))"
+    sed -i -E "s|xterm\*foreground:.*|xterm*foreground: rgb:$FG|" "$HOME/.Xresources" 2>/dev/null
+    xrdb -merge "$HOME/.Xresources" 2>/dev/null
+fi
