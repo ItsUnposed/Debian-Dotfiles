@@ -173,3 +173,5 @@ bindsym $mod+Shift+0 move container to workspace number 10
 bindsym Mod1+minus move scratchpad
 bindsym Mod1+Shift+minus scratchpad show
 bindsym Control+minus exec --no-startup-id ~/.config/ember/menu.sh
+
+for_window [title="Matrix"] floating disable, border normal 2
