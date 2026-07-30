@@ -5,3 +5,201 @@
 @define-color accent_color #FF6B5E;
 @define-color link_color #FF6B5E;
 @define-color visited_link_color #D64318;
+
+/* --- Ember: Menues und Auswahl --- */
+menu, .menu, .context-menu {
+    background-color: #0D0A09;
+    color: #F2E4DC;
+    border: 1px solid #FF6B5E;
+}
+menu menuitem:hover,
+menu menuitem:selected,
+.menu menuitem:hover,
+menuitem:hover {
+    background-color: #A11C12;
+    background-image: none;
+    color: #F2E4DC;
+}
+menu separator { background-color: #4A1712; }
+
+/* Popover-Menues (neuere GTK3-Programme) */
+popover.background { background-color: #0D0A09; border: 1px solid #FF6B5E; }
+popover modelbutton:hover { background-color: #A11C12; color: #F2E4DC; }
+
+/* Auswahl in Listen, Textfeldern, Dateidialogen */
+list row:selected, treeview.view:selected, iconview:selected,
+selection, textview text selection {
+    background-color: #A11C12;
+    color: #F2E4DC;
+}
+entry selection { background-color: #A11C12; color: #F2E4DC; }
+
+/* Fokusrahmen und Schalter */
+checkbutton check:checked, radiobutton radio:checked,
+switch:checked { background-color: #A11C12; }
+
+/* --- Ember: Schieberegler und Balken --- */
+scale trough highlight,
+scale highlight,
+scale fill {
+    background-color: #A11C12;
+    background-image: none;
+}
+scale slider {
+    background-color: #FF6B5E;
+    background-image: none;
+    border: 1px solid #FF6B5E;
+}
+scale slider:hover  { background-color: #FF9A8C; }
+scale slider:active { background-color: #FF9A8C; }
+scale trough {
+    background-color: #2A100C;
+    background-image: none;
+}
+
+progressbar progress,
+levelbar block.filled {
+    background-color: #A11C12;
+    background-image: none;
+}
+progressbar trough,
+levelbar block.empty {
+    background-color: #2A100C;
+    background-image: none;
+}
+
+scrollbar slider          { background-color: #A11C12; }
+scrollbar slider:hover    { background-color: #FF6B5E; }
+scrollbar trough          { background-color: #0D0A09; }
+
+/* --- Ember: runder Reglerknopf --- */
+scale slider {
+    min-width: 13px;
+    min-height: 13px;
+    border-radius: 50%;
+    margin: -7px;
+    background-color: #FF6B5E;
+    background-image: none;
+    border: 1px solid #FF6B5E;
+    box-shadow: none;
+}
+scale slider:hover, scale slider:active {
+    background-color: #FF9A8C;
+    border-color: #FF9A8C;
+}
+scale trough {
+    min-height: 5px;
+    min-width: 5px;
+    border-radius: 3px;
+    background-color: #2A100C;
+    background-image: none;
+}
+scale trough highlight {
+    border-radius: 3px;
+}
+
+/* --- Ember: Popup-Fenster der Panel-Plugins --- */
+window.popup,
+window.popup > decoration,
+.xfce4-panel window,
+#whiskermenu-window {
+    background-color: #363130;
+    border: 1px solid #FF6B5E;
+    border-radius: 6px;
+    color: #F2E4DC;
+}
+popover.background,
+popover.background > contents,
+popover > contents {
+    background-color: #363130;
+    border: 1px solid #FF6B5E;
+    border-radius: 6px;
+    color: #F2E4DC;
+}
+window.popup label,
+popover label,
+#whiskermenu-window label {
+    color: #F2E4DC;
+}
+window.popup button,
+popover button {
+    background-image: none;
+    background-color: #4A4340;
+    color: #F2E4DC;
+    border: 1px solid #FF6B5E;
+    border-radius: 4px;
+}
+window.popup button:hover,
+popover button:hover {
+    background-color: #5C534F;
+    color: #FF9A8C;
+}
+window.popup separator,
+popover separator {
+    background-color: #FF6B5E;
+}
+tooltip, tooltip.background {
+    background-color: #363130;
+    border: 1px solid #FF6B5E;
+    color: #F2E4DC;
+}
+
+/* --- Ember: Popup-Hintergrund hat Vorrang --- */
+window.popup,
+window.popup box,
+window.popup grid,
+window.popup viewport,
+window.popup scrolledwindow,
+popover.background contents,
+popover.background box {
+    background-color: #363130;
+    background-image: none;
+    color: #F2E4DC;
+}
+window.popup, popover.background {
+    border: 1px solid #FF6B5E;
+    border-radius: 6px;
+}
+
+/* --- Ember: innere Container transparent --- */
+window.popup box,
+window.popup grid,
+window.popup viewport,
+window.popup scrolledwindow,
+window.popup stack,
+popover.background box,
+popover.background grid,
+popover.background stack {
+    background-color: transparent;
+    background-image: none;
+}
+
+/* nur das Fenster selbst traegt die Farbe */
+window.popup,
+popover.background,
+popover.background > contents {
+    background-color: #363130;
+    background-image: none;
+    border: 1px solid #FF6B5E;
+    border-radius: 6px;
+    color: #F2E4DC;
+}
+
+/* Regler behalten ihre eigene Rinne */
+scale, scale contents, scale > trough {
+    background-color: transparent;
+    background-image: none;
+}
+scale trough {
+    background-color: #4A4340;
+    background-image: none;
+    min-height: 5px;
+    border-radius: 3px;
+    border: 0;
+}
+scale trough highlight {
+    background-color: #FF6B5E;
+    background-image: none;
+    border-radius: 3px;
+    border: 0;
+}

@@ -147,7 +147,7 @@ exec_always --no-startup-id xfce4-panel
 exec --no-startup-id sh -c "pkill -x picom; sleep 1; picom -b"
 exec --no-startup-id ~/.config/i3/hacker-startup.sh
 bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
-exec --no-startup-id nm-applet
+exec_always --no-startup-id nm-applet
 bindsym $mod+n exec --restart nm-applet
 
 exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Omen-Red.png"
@@ -172,4 +172,4 @@ exec_always --no-startup-id sh -c 'pkill xcape; sleep 1; xcape -e "Super_L=Contr
 bindsym $mod+Shift+e exec --no-startup-id ~/.config/i3/scripts/powermenu.sh
 exec_always --no-startup-id xfce4-power-manager
 
-exec_always --no-startup-id sh -c 'pkill -f brightness-watch; sleep 1; ~/.config/i3/scripts/brightness-watch.sh'
+exec_always --no-startup-id ~/.config/i3/scripts/brightness-watch.sh
