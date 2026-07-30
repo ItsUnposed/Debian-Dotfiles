@@ -154,3 +154,13 @@ if [ -x "$HOME/.config/i3/hacker-startup.sh" ] && mkdir "$LOCK" 2>/dev/null; the
     rmdir "$LOCK" 2>/dev/null
   ) &
 fi
+
+# --- 16. Terminal, nano, ls ---
+[ -x "$E/term-scheme.sh" ] && "$E/term-scheme.sh"
+[ -x "$E/nano-colors.sh" ] && "$E/nano-colors.sh"
+[ -x "$E/dircolors.sh" ]   && "$E/dircolors.sh"
+
+# --- 16. Terminal, nano, ls ---
+[ -x "$E/term-scheme.sh" ] && "$E/term-scheme.sh"
+[ -x "$E/nano-colors.sh" ] && "$E/nano-colors.sh"
+[ -x "$E/dircolors.sh" ]   && "$E/dircolors.sh"
