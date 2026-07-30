@@ -50,7 +50,7 @@ i3-msg '[con_mark="rtop"] focus; split v' >/dev/null
 launch ff "$S/win-fastfetch.sh" "fastfetch"
 
 # 4) rechts daneben: matrix
-i3-msg '[con_mark="ff"] focus; split h' >/dev/null
+launch mx "$S/win-matrix.sh" "Matrix"
 i3-msg "exec --no-startup-id $HOME/.config/i3/scripts/win-matrix.sh" >/dev/null; sleep 1.5; i3-msg "mark mx" >/dev/null
 
 # 5) unter fastfetch: cava

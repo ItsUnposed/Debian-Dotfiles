@@ -164,10 +164,3 @@ fi
 # --- 17. qterminal schema sperren ---
 chmod 444 "$HOME/.config/qterminal.org/qterminal.ini" 2>/dev/null
 
-# --- xterm farbe aktualisieren ---
-if [ -f "$HOME/.Xresources" ]; then
-    h=${C_ACC#\#}
-    FG="$(printf '%02x/%02x/%02x' $((0x${h:0:2})) $((0x${h:2:2})) $((0x${h:4:2})))"
-    sed -i -E "s|xterm\*foreground:.*|xterm*foreground: rgb:$FG|" "$HOME/.Xresources" 2>/dev/null
-    xrdb -merge "$HOME/.Xresources" 2>/dev/null
-fi
