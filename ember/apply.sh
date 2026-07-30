@@ -108,8 +108,11 @@ xfconf-query -c xfce4-panel -p /plugins/plugin-19/digital-time-format \
 pkill xfsettingsd 2>/dev/null; sleep 1; setsid xfsettingsd --daemon >/dev/null 2>&1 &
 pkill -x cava 2>/dev/null
 pkill xfce4-notifyd 2>/dev/null
-xfce4-panel -r 2>/dev/null
-i3-msg restart >/dev/null 2>&1
+if pgrep -x xfce4-panel >/dev/null; then
+  xfce4-panel --quit 2>/dev/null; sleep 2
+fi
+setsid xfce4-panel --disable-wm-check >/dev/null 2>&1 &
+i3-msg reload >/dev/null 2>&1
 
 notify-send -a ember "Theme gewechselt" "Palette: $NAME"
 
@@ -135,14 +138,19 @@ if [ -f "$HOME/.nano/i3.nanorc" ]; then
 fi
 
 # --- 15. Workspace 1 zuruecksetzen ---
-if [ -x "$HOME/.config/i3/scripts/../hacker-startup.sh" ] || [ -x "$HOME/.config/i3/hacker-startup.sh" ]; then
+LOCK="/tmp/ember-ws-reset.lock"
+if [ -x "$HOME/.config/i3/hacker-startup.sh" ] && mkdir "$LOCK" 2>/dev/null; then
   ( sleep 2
     i3-msg "workspace number 1" >/dev/null 2>&1
-    for i in $(seq 1 12); do
+    sleep 0.5
+    for i in 1 2 3 4 5 6; do
       i3-msg '[workspace="__focused__"] kill' >/dev/null 2>&1
-      sleep 0.2
+      sleep 0.4
     done
-    sleep 1
+    sleep 1.5
+    pkill -x cava 2>/dev/null
+    pkill -f unimatrix 2>/dev/null
     "$HOME/.config/i3/hacker-startup.sh"
+    rmdir "$LOCK" 2>/dev/null
   ) &
 fi
