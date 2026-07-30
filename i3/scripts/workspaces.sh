@@ -1,26 +1,27 @@
 #!/bin/bash
 export PATH="/usr/local/bin:/usr/bin:/bin"
 
-FOC="#FF6B5E"; VIS="#D64318"; INA="#8A7A72"; URG="#FFC96B"; EMPTY="#4A4340"
+BOX="#FF6B5E"    # Box des aktuellen Workspace
+BOXFG="#0D0A09"  # Text darin, dunkel fuer Kontrast
+ACT="#E0483D"    # existiert, nicht aktiv
+EMPTY="#4A4340"  # existiert nicht
 
-DATA=$(i3-msg -t get_workspaces 2>/dev/null)
+RAW=$(i3-msg -t get_workspaces 2>/dev/null)
+ACTIVE=$(printf '%s' "$RAW" | grep -o '"name":"[^"]*"' | sed 's/.*:"//; s/"//')
+CUR=$(printf '%s' "$RAW" \
+      | grep -o '"name":"[^"]*"[^}]*"focused":true' \
+      | grep -o '"name":"[^"]*"' | head -1 | sed 's/.*:"//; s/"//')
+
 out=""
 for n in 1 2 3 4 5 6 7 8 9 10; do
-    row=$(printf '%s' "$DATA" | jq -r --arg n "$n" \
-          '.[] | select(.name==$n) | "\(.focused)\t\(.visible)\t\(.urgent)"')
-    if [ -z "$row" ]; then
-        c="$EMPTY"; w="normal"
+    if [ "$n" = "$CUR" ]; then
+        out="$out<span background='$BOX' foreground='$BOXFG' weight='bold'> $n </span>"
+    elif printf '%s\n' "$ACTIVE" | grep -qx "$n"; then
+        out="$out<span foreground='$ACT' weight='bold'> $n </span>"
     else
-        foc=$(printf '%s' "$row" | cut -f1)
-        vis=$(printf '%s' "$row" | cut -f2)
-        urg=$(printf '%s' "$row" | cut -f3)
-        if   [ "$urg" = "true" ]; then c="$URG"; w="bold"
-        elif [ "$foc" = "true" ]; then c="$FOC"; w="bold"
-        elif [ "$vis" = "true" ]; then c="$VIS"; w="normal"
-        else                            c="$INA"; w="normal"
-        fi
+        out="$out<span foreground='$EMPTY'> $n </span>"
     fi
-    out="$out<span foreground='$c' weight='$w'> $n </span>"
+    out="$out<span> </span>"
 done
 
 echo "<txt>$out</txt>"
