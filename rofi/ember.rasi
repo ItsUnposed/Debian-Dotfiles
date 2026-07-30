@@ -1,19 +1,97 @@
 * {
-    bg:      #1A120FEE;
-    surface: #241A16;
-    fg:      #F2E4DC;
-    accent:  #E0483D;
-    urgent:  #E0483D;
-    dim:     #8A7A72;
+    bg:        #0D0A09;
+    bg-alt:    #1A1210;
+    bg-sel:    #2A100C;
+    fg:        #F2E4DC;
+    fg-dim:    #8A7A72;
+    accent:    #FF6B5E;
+    accent-dk: #A11C12;
 
     background-color: transparent;
     text-color:       @fg;
     font:             "Fira Code Medium 11";
 }
-window   { background-color: @bg; border: 2px; border-color: @accent; border-radius: 6px; padding: 12px; width: 40%; }
-inputbar { children: [prompt, entry]; padding: 6px; background-color: @surface; border-radius: 4px; }
-prompt   { text-color: @accent; padding: 0 8px 0 0; }
-listview { lines: 8; padding: 8px 0 0 0; }
-element  { padding: 6px 10px; border-radius: 4px; }
-element selected { background-color: @accent; text-color: @bg; }
-element urgent   { text-color: @urgent; }
+
+window {
+    background-color: @bg;
+    border:           2px;
+    border-color:     @accent;
+    border-radius:    10px;
+    width:            42%;
+    padding:          0px;
+}
+
+mainbox {
+    children: [ inputbar, message, listview ];
+    padding:  10px;
+    spacing:  8px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border:           1px;
+    border-color:     @accent-dk;
+    border-radius:    6px;
+    padding:          8px 10px;
+    spacing:          8px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+    font:       "Fira Code Bold 11";
+}
+
+entry {
+    placeholder:            "Suchen...";
+    placeholder-color:      @fg-dim;
+    cursor:                 text;
+    text-color:             @fg;
+}
+
+message {
+    background-color: @bg-alt;
+    border-radius:    6px;
+    padding:          6px;
+}
+
+listview {
+    lines:        10;
+    columns:      1;
+    scrollbar:    true;
+    spacing:      2px;
+    fixed-height: false;
+}
+
+scrollbar {
+    handle-color:  @accent-dk;
+    handle-width:  4px;
+    background-color: @bg-alt;
+    border-radius: 2px;
+}
+
+element {
+    padding:       7px 10px;
+    border-radius: 6px;
+    spacing:       10px;
+}
+
+element normal.normal   { text-color: @fg;     background-color: transparent; }
+element alternate.normal{ text-color: @fg;     background-color: transparent; }
+element normal.urgent   { text-color: @accent; background-color: transparent; }
+element normal.active   { text-color: @accent; background-color: @bg-alt; }
+
+element selected.normal {
+    background-color: @bg-sel;
+    text-color:       @accent;
+    border:           0px 0px 0px 3px;
+    border-color:     @accent;
+}
+element selected.active,
+element selected.urgent {
+    background-color: @accent-dk;
+    text-color:       @fg;
+}
+
+element-icon { size: 22px; background-color: transparent; }
+element-text { vertical-align: 0.5; background-color: transparent; }

@@ -39,7 +39,7 @@ bindsym $mod+q kill
 
 # Programm-Starter (rofi)
 bindsym $mod+space exec ~/.config/i3/scripts/rofi-launcher.sh
-bindsym $mod+d exec --no-startup-id rofi -show drun -theme ~/.config/rofi/ember
+bindsym $mod+d exec --no-startup-id rofi -show drun -theme ~/.config/rofi/ember.rasi
 
 # Fokus wechseln
 bindsym $mod+Left focus left
