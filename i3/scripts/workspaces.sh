@@ -1,28 +1,24 @@
 #!/bin/bash
 export PATH="/usr/local/bin:/usr/bin:/bin"
 
-BOX="#FF6B5E"    # Box des aktuellen Workspace
-BOXFG="#0D0A09"  # Text darin, dunkel fuer Kontrast
-ACT="#E0483D"    # existiert, nicht aktiv
-EMPTY="#4A4340"  # existiert nicht
+CUR_C="#FF6B5E"
+OTH_C="#F2E4DC"
+PAD=$'\u00a0'          # 1x geschuetztes Leerzeichen je Seite
 
 RAW=$(i3-msg -t get_workspaces 2>/dev/null)
-ACTIVE=$(printf '%s' "$RAW" | grep -o '"name":"[^"]*"' | sed 's/.*:"//; s/"//')
-CUR=$(printf '%s' "$RAW" \
-      | grep -o '"name":"[^"]*"[^}]*"focused":true' \
+CUR=$(printf '%s' "$RAW" | grep -o '"name":"[^"]*"[^}]*"focused":true' \
       | grep -o '"name":"[^"]*"' | head -1 | sed 's/.*:"//; s/"//')
 
 out=""
-for n in 1 2 3 4 5 6 7 8 9 10; do
+while read -r n; do
+    [ -z "$n" ] && continue
+    esc=$(printf '%s' "$n" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
     if [ "$n" = "$CUR" ]; then
-        out="$out<span background='$BOX' foreground='$BOXFG' weight='bold'> $n </span>"
-    elif printf '%s\n' "$ACTIVE" | grep -qx "$n"; then
-        out="$out<span foreground='$ACT' weight='bold'> $n </span>"
+        out="$out<span foreground='$CUR_C' weight='bold'>${PAD}${esc}${PAD}</span>"
     else
-        out="$out<span foreground='$EMPTY'> $n </span>"
+        out="$out<span foreground='$OTH_C'>${PAD}${esc}${PAD}</span>"
     fi
-    out="$out<span> </span>"
-done
+done < <(printf '%s' "$RAW" | grep -o '"name":"[^"]*"' | sed 's/.*:"//; s/"//')
 
 echo "<txt>$out</txt>"
 echo "<tool>i3 Workspaces</tool>"
