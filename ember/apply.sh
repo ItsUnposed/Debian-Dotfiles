@@ -164,3 +164,6 @@ fi
 # --- 17. qterminal schema sperren ---
 chmod 444 "$HOME/.config/qterminal.org/qterminal.ini" 2>/dev/null
 
+# --- 18. grub und login mitwechseln ---
+[ -x "$E/grub-theme.sh" ]  && "$E/grub-theme.sh"  >/dev/null 2>&1 &
+[ -x "$E/login-theme.sh" ] && "$E/login-theme.sh" >/dev/null 2>&1 &

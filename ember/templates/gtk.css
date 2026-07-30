@@ -129,3 +129,29 @@ switch:checked {
 scrollbar trough { background-color: #353535; }
 scrollbar slider { background-color: @@ACC3@@; border-radius: 4px; }
 scrollbar slider:hover { background-color: @@ACC@@; }
+
+/* --- Kalender im Uhr-Plugin --- */
+calendar {
+    background-color: @@BG@@;
+    color: @@FG@@;
+}
+calendar:selected,
+calendar.highlight {
+    background-color: @@ACC@@;
+    color: @@BG@@;
+    border-radius: 4px;
+}
+calendar.header {
+    color: @@ACC@@;
+}
+calendar:indeterminate {
+    color: @@DIM@@;
+}
+calendar.button {
+    color: @@ACC@@;
+    background-image: none;
+    background-color: transparent;
+}
+calendar.button:hover {
+    background-color: @@BG2@@;
+}
