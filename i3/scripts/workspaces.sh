@@ -1,22 +1,27 @@
 #!/bin/bash
-# i3-Workspaces fuer xfce4-genmon
+export PATH="/usr/local/bin:/usr/bin:/bin"
 
-FOC="#FF6B5E"   # aktiv
-VIS="#D64318"   # sichtbar auf anderem Monitor
-INA="#8A7A72"   # existiert, nicht sichtbar
-URG="#FFC96B"   # dringend
+FOC="#FF6B5E"; VIS="#D64318"; INA="#8A7A72"; URG="#FFC96B"; EMPTY="#4A4340"
 
+DATA=$(i3-msg -t get_workspaces 2>/dev/null)
 out=""
-while IFS=$'\t' read -r name foc vis urg; do
-    if   [ "$urg" = "true" ]; then c="$URG"; w="bold"
-    elif [ "$foc" = "true" ]; then c="$FOC"; w="bold"
-    elif [ "$vis" = "true" ]; then c="$VIS"; w="normal"
-    else                            c="$INA"; w="normal"
+for n in 1 2 3 4 5 6 7 8 9 10; do
+    row=$(printf '%s' "$DATA" | jq -r --arg n "$n" \
+          '.[] | select(.name==$n) | "\(.focused)\t\(.visible)\t\(.urgent)"')
+    if [ -z "$row" ]; then
+        c="$EMPTY"; w="normal"
+    else
+        foc=$(printf '%s' "$row" | cut -f1)
+        vis=$(printf '%s' "$row" | cut -f2)
+        urg=$(printf '%s' "$row" | cut -f3)
+        if   [ "$urg" = "true" ]; then c="$URG"; w="bold"
+        elif [ "$foc" = "true" ]; then c="$FOC"; w="bold"
+        elif [ "$vis" = "true" ]; then c="$VIS"; w="normal"
+        else                            c="$INA"; w="normal"
+        fi
     fi
-    esc=$(printf '%s' "$name" | sed 's/&/\&amp;/g; s/</\&lt;/g')
-    out="$out<span foreground='$c' weight='$w'> $esc </span>"
-done < <(i3-msg -t get_workspaces 2>/dev/null \
-         | jq -r '.[] | "\(.name)\t\(.focused)\t\(.visible)\t\(.urgent)"')
+    out="$out<span foreground='$c' weight='$w'> $n </span>"
+done
 
 echo "<txt>$out</txt>"
 echo "<tool>i3 Workspaces</tool>"
