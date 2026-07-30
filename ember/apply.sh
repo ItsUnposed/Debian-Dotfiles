@@ -34,23 +34,7 @@ fi
 
 # --- 3. fastfetch ---
 for f in "$HOME/.config/fastfetch/config.jsonc" "$HOME/.config/fastfetch/hacker.jsonc"; do
-  [ -f "$f" ] || continue
-  python3 - "$f" "$C_ACC" "$C_ACC2" "$C_ACC3" "$C_FG" << 'PYF'
-import sys, json, re
-p, acc, acc2, acc3, fg = sys.argv[1:6]
-def a(h): return "38;2;%d;%d;%d" % (int(h[1:3],16), int(h[3:5],16), int(h[5:7],16))
-d = json.loads(re.sub(r'//.*', '', open(p).read()))
-lg = d.setdefault('logo', {}).setdefault('color', {})
-if lg.get('1', '').startswith('38;2;255;255;255'):
-    lg['1'] = '38;2;255;255;255'; lg['2'] = a(acc3)
-else:
-    lg['1'] = a(acc3); lg['2'] = '38;2;255;255;255'
-d.setdefault('display', {}).setdefault('color', {})['keys'] = a(acc3)
-for m in d.get('modules', []):
-    if isinstance(m, dict) and m.get('type') == 'title':
-        m['color'] = {'user': '1;' + a(acc), 'at': '1;38;2;255;255;255', 'host': '1;' + a(acc2)}
-open(p, 'w').write(json.dumps(d, indent=2))
-PYF
+  [ -f "$f" ] && python3 "$E/ff-colors.py" "$f" "$C_ACC" "$C_ACC2" "$C_ACC3" >/dev/null 2>&1
 done
 
 # --- 4. rofi ---

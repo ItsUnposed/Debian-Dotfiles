@@ -1,32 +1,29 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-
   "logo": {
     "source": "debian",
     "color": {
-      "1": "38;2;224;72;61",
-      "2": "38;2;224;72;61"
+      "1": "38;2;15;142;161",
+      "2": "38;2;255;255;255"
     },
     "padding": {
       "top": 1,
       "right": 3
     }
   },
-
   "display": {
     "separator": " -> ",
     "color": {
-      "keys": "38;2;224;72;61"
+      "keys": "38;2;15;142;161"
     }
   },
-
   "modules": [
     {
       "type": "title",
       "color": {
-        "user": "1;38;2;224;72;61",
-        "at":   "1;38;2;224;72;61",
-        "host": "1;38;2;224;72;61"
+        "user": "1;38;2;107;240;255",
+        "at": "1;38;2;255;255;255",
+        "host": "1;38;2;47;196;217"
       }
     },
     "separator",
