@@ -1,0 +1,43 @@
+@import url("resource:///org/gtk/libgtk/theme/Adwaita/gtk-contained-dark.css");
+
+#panel_window {
+    background-color: #0D0A09;
+    color: #F2E4DC;
+    border-bottom: 1px solid #FF6B5E;
+}
+#panel_window menubar > menuitem:hover {
+    background-color: #A11C12;
+    color: #F2E4DC;
+}
+#login_window, #shutdown_dialog, #restart_dialog {
+    background-color: #1A1210;
+    border: 2px solid #FF6B5E;
+    border-radius: 10px;
+    color: #F2E4DC;
+    padding: 16px;
+}
+#user_image {
+    border: 2px solid #FF6B5E;
+    border-radius: 50%;
+    padding: 2px;
+}
+entry {
+    background-color: #0D0A09;
+    background-image: none;
+    color: #F2E4DC;
+    border: 1px solid #A11C12;
+    border-radius: 6px;
+    caret-color: #FF6B5E;
+    padding: 6px;
+}
+entry:focus { border-color: #FF6B5E; }
+button {
+    background-image: none;
+    background-color: #2A100C;
+    color: #FF6B5E;
+    border: 1px solid #FF6B5E;
+    border-radius: 6px;
+    padding: 4px 10px;
+}
+button:hover { background-color: #4A1712; color: #FF9A8C; }
+label { color: #F2E4DC; }
