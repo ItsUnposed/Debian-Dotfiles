@@ -1,0 +1,40 @@
+desktop-image: "background.png"
+desktop-color: "#0A0A0C"
+title-text: ""
+
++ label {
+    top = 20%
+    left = 0
+    width = 100%
+    align = "center"
+    text = "unposed"
+    color = "#E8E8E8"
+    font = "DejaVu Sans Bold 28"
+}
+
++ boot_menu {
+    left = 30%
+    top = 38%
+    width = 40%
+    height = 32%
+    item_font = "DejaVu Sans Regular 18"
+    item_color = "#8A8A8A"
+    selected_item_color = "#FFFFFF"
+    icon_width = 64
+    icon_height = 64
+    item_icon_space = 20
+    item_height = 80
+    item_spacing = 16
+    selected_item_pixmap_style = "select_*.png"
+    scrollbar = false
+}
+
++ label {
+    top = 86%
+    left = 0
+    width = 100%
+    align = "center"
+    text = "Pfeiltasten bewegen, Enter startet"
+    color = "#6E6E6E"
+    font = "DejaVu Sans Regular 14"
+}
