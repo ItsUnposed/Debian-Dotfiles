@@ -9,18 +9,18 @@ h3() {
         $(( (0x${h:4:2}+8)/17 ))
 }
 
-A=$(h3 "$C_ACC"); A2=$(h3 "$C_ACC2"); A3=$(h3 "$C_ACC3")
-BG=$(h3 "$C_BG"); FG=$(h3 "$C_FG")
+A=$(h3 "$C_ACC")    # Kommentare: hell, fett
+A2=$(h3 "$C_ACC2")  # Keywords: mittel, normal
+A3=$(h3 "$C_ACC3"); BG=$(h3 "$C_BG"); FG=$(h3 "$C_FG")
 N="$HOME/.nanorc"
 
-# 1. Alle extendsyntax: bold entfernen, Farbe setzen
+# 1. bold entfernen, alle auf Keyword-Farbe setzen
 sed -i -E "s|^(extendsyntax [^ ]+ color )bold,([^ ]+)|\1\2|" "$N"
-sed -i -E "s|^(extendsyntax [^ ]+ color )[^ ]+|\1${A}|" "$N"
+sed -i -E "s|^(extendsyntax [^ ]+ color )[^ ]+|\1${A2}|" "$N"
 
-# 2. Nur Kommentarzeilen: bold hinzufuegen
-# Kommentare erkennbar am Muster am Zeilenende: enthalten # // /* oder <!--
-sed -i -E "/^extendsyntax .* color ${A} .*\"(.*#|\/\/|\/\\\*|<!--)/ \
-    s|^(extendsyntax [^ ]+ color )${A}|\1bold,${A}|" "$N"
+# 2. Kommentarzeilen auf Kommentarfarbe + fett
+sed -i -E "/extendsyntax .* \".*(\"|)(#|\/\/|\/\\\*|<!--)/ \
+    s|^(extendsyntax [^ ]+ color )${A2}|\1bold,${A}|" "$N"
 
 # 3. Oberflaeche
 sed -i -E "s|^(set (title\|status)color +).*|\1${BG},${A}|" "$N"
@@ -35,6 +35,6 @@ sed -i -E "s|^(set errorcolor +).*|\1${FG},${A3}|" "$N"
 I="$HOME/.nano/i3.nanorc"
 if [ -f "$I" ]; then
     sed -i -E "s|^(color )bold,([^ ]+)|\1\2|" "$I"
-    sed -i -E "s|^(color )[^ ]+|\1${A}|" "$I"
-    sed -i -E "/^color ${A} .*\".*#/ s|^(color )${A}|\1bold,${A}|" "$I"
+    sed -i -E "s|^(color )[^ ]+|\1${A2}|" "$I"
+    sed -i -E "/^color ${A2} .*#/ s|^(color )${A2}|\1bold,${A}|" "$I"
 fi
