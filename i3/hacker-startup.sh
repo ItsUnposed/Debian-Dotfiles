@@ -33,16 +33,22 @@ launch() {
 
 # launch_xterm: startet xterm direkt mit Palettenfarbe
 launch_xterm() {
-    local mark="$1" script="$2" wname="$3" before i
+    local mark="$1" script="$2" before i
     [ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
-    local h=${C_ACC:-#FF6B5E}; h=${h#\#}
-    local FG="$(printf '%02x/%02x/%02x' $((0x${h:0:2})) $((0x${h:2:2})) $((0x${h:4:2})))"
-    local h2=${C_BG:-#0D0A09}; h2=${h2#\#}
-    local BG="$(printf '%02x/%02x/%02x' $((0x${h2:0:2})) $((0x${h2:2:2})) $((0x${h2:4:2})))"
+
+    local fg=${C_ACC:-#FF6B5E}; fg=${fg#\#}
+    local bg=${C_BG:-#0D0A09};  bg=${bg#\#}
+    local FGrgb="rgb:${fg:0:2}/${fg:2:2}/${fg:4:2}"
+    local BGrgba="rgba:${bg:0:2}/${bg:2:2}/${bg:4:2}/55"
 
     before=$(wcount)
-    xterm -name "matrix-xterm" -title "$wname" \
-        -bg "rgb:$BG" -fg "rgb:$FG" \
+    xterm -name "matrix-xterm" -title "Matrix" \
+        -xrm "xterm*depth: 32" \
+        -xrm "xterm*boldColors: false" \
+        -bg "$BGrgba" \
+        -fg "$FGrgb" \
+        -xrm "xterm*color1: $FGrgb" \
+        -xrm "xterm*color9: $FGrgb" \
         -fa "Fira Code" -fs 10 +sb \
         -e bash -c "exec $script" &
     for i in $(seq 1 60); do
