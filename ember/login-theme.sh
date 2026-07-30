@@ -1,12 +1,9 @@
 #!/bin/bash
 . "$HOME/.config/ember/current.conf"
-
-# Hintergrund aus dem aktuellen Wallpaper, abgedunkelt
 WP="$WALLPAPER"
 [ -f "$WP" ] || WP="$HOME/Pictures/Wallpapers/Red.png"
 sudo convert "$WP" -brightness-contrast -30x0 /usr/share/backgrounds/login-bg.png 2>/dev/null
 
-# GTK-Theme fuer den Greeter
 sudo mkdir -p /usr/share/themes/Ember-Greeter/gtk-3.0
 sudo tee /usr/share/themes/Ember-Greeter/gtk-3.0/gtk.css > /dev/null << T
 @import url("/usr/share/themes/Adwaita-dark/gtk-3.0/gtk.css");

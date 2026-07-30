@@ -1,10 +1,7 @@
 #!/bin/bash
-# erzeugt grub-theme aus aktiver palette, braucht sudo
 . "$HOME/.config/ember/current.conf"
 T="/boot/grub/themes/ember"
 sudo mkdir -p "$T"
-
-# Hintergrund: Verlauf von BG nach ACC3
 sudo convert -size 1920x1200 gradient:"$C_BG"-"$C_ACC3" "$T/background.png" 2>/dev/null
 
 sudo tee "$T/theme.txt" > /dev/null << T2
@@ -22,7 +19,6 @@ terminal-font: "Fira Code Regular 16"
     color = "$C_ACC"
     font = "Fira Code Bold 24"
 }
-
 + boot_menu {
     left = 28%
     top = 32%
@@ -36,10 +32,8 @@ terminal-font: "Fira Code Regular 16"
     item_padding = 10
     icon_width = 0
     icon_height = 0
-    selected_item_pixmap_style = ""
     scrollbar = false
 }
-
 + label {
     top = 84%
     left = 0
@@ -49,7 +43,6 @@ terminal-font: "Fira Code Regular 16"
     color = "$C_ACC3"
     font = "Fira Code Regular 14"
 }
-
 + progress_bar {
     id = "__timeout__"
     top = 78%
@@ -63,7 +56,6 @@ terminal-font: "Fira Code Regular 16"
 }
 T2
 
-# grub font einmalig erzeugen falls fehlt
 [ -f "$T/firacode16.pf2" ] || sudo grub-mkfont -s 16 -o "$T/firacode16.pf2" /usr/share/fonts/truetype/firacode/FiraCode-Regular.ttf 2>/dev/null
 
 sudo sed -i 's|^GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/ember/theme.txt"|' /etc/default/grub

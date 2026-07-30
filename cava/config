@@ -377,11 +377,15 @@ bars = 0
 
 
 
+
+
+
+
 [color]
 background = default
 gradient = 1
 gradient_count = 4
-gradient_color_1 = '#1B5FA8'
-gradient_color_2 = '#3D8FE0'
-gradient_color_3 = '#6BB6FF'
+gradient_color_1 = '#A11C12'
+gradient_color_2 = '#E0483D'
+gradient_color_3 = '#FF6B5E'
 gradient_color_4 = '#F0EDEB'

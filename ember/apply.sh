@@ -165,5 +165,4 @@ fi
 chmod 444 "$HOME/.config/qterminal.org/qterminal.ini" 2>/dev/null
 
 # --- 18. grub und login mitwechseln ---
-[ -x "$E/grub-theme.sh" ]  && "$E/grub-theme.sh"  >/dev/null 2>&1 &
-[ -x "$E/login-theme.sh" ] && "$E/login-theme.sh" >/dev/null 2>&1 &
+sudo /usr/local/sbin/ember-boot-theme "$E/current.conf" "$WALLPAPER" >/dev/null 2>&1 &
