@@ -17,8 +17,8 @@ xterm*allowWindowOps: true
 
 ! --- xterm Transparenz ---
 xterm*depth: 32
-xterm*background: rgba:0d00/0a00/0900/cc00
+xterm*background: rgba:0d00/0a00/0900/8800
 
 ! xterm Bold-Farbe = exakt die Vordergrundfarbe
 xterm*boldColors: false
-xterm*foreground: rgb:ff/6b/5e
+xterm*foreground: rgb:6b/b6/ff
