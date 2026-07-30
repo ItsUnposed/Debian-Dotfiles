@@ -4,6 +4,14 @@
 OUT="$HOME/.local/share/qtermwidget6/color-schemes/Ember.colorscheme"
 mkdir -p "$(dirname "$OUT")"
 
+mix() { # mix <hex> <anteil_bg_prozent>
+  h=${1#\#}; b=${C_BG#\#}
+  r=$(( (0x${h:0:2}*(100-$2) + 0x${b:0:2}*$2)/100 ))
+  g=$(( (0x${h:2:2}*(100-$2) + 0x${b:2:2}*$2)/100 ))
+  bl=$(( (0x${h:4:2}*(100-$2) + 0x${b:4:2}*$2)/100 ))
+  printf '%d,%d,%d' $r $g $bl
+}
+
 rgb() { h=${1#\#}; printf '%d,%d,%d' 0x${h:0:2} 0x${h:2:2} 0x${h:4:2}; }
 
 cat > "$OUT" << T
@@ -25,7 +33,7 @@ Color=$(rgb $C_BG2)
 [Color0Intense]
 Color=$(rgb $C_DIM)
 [Color1]
-Color=$(rgb $C_ACC)
+Color=$(mix $C_ACC 4)
 [Color1Intense]
 Color=$(rgb $C_ACC)
 [Color2]
