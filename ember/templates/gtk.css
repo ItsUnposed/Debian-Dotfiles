@@ -1,0 +1,131 @@
+/* ===== Ember GTK ===== */
+/* BG   #353535  mittleres Grau, wie die Bar   */
+/* BG2  #484848  etwas heller, Rinnen/Knoepfe  */
+/* AKZ  @@ACC@@  hellrot, Raender und Fuellung */
+/* FG   @@FG@@  Text                          */
+
+@define-color theme_selected_bg_color @@ACC3@@;
+@define-color theme_selected_fg_color @@FG@@;
+@define-color accent_bg_color @@ACC3@@;
+@define-color accent_fg_color @@FG@@;
+@define-color accent_color @@ACC@@;
+@define-color link_color @@ACC@@;
+
+/* --- Menues und Popups: mittleres Grau --- */
+menu, .menu, .context-menu,
+window.popup,
+popover.background,
+popover.background > contents,
+tooltip, tooltip.background {
+    background-color: #353535;
+    background-image: none;
+    color: @@FG@@;
+    border: 1px solid @@ACC@@;
+    border-radius: 6px;
+}
+
+/* innere Container duerfen nichts uebermalen */
+menu box, menu grid,
+window.popup box, window.popup grid,
+window.popup viewport, window.popup scrolledwindow,
+window.popup stack,
+popover.background box, popover.background grid,
+popover.background stack {
+    background-color: transparent;
+    background-image: none;
+}
+
+menuitem, menu menuitem, popover modelbutton {
+    background-color: transparent;
+    background-image: none;
+    color: @@FG@@;
+}
+menuitem:hover, menu menuitem:hover, menu menuitem:selected,
+popover modelbutton:hover {
+    background-color: @@ACC3@@;
+    background-image: none;
+    color: @@FG@@;
+}
+menu separator, popover separator, window.popup separator {
+    background-color: @@ACC@@;
+}
+
+/* --- Schieberegler: runder Knopf, schmale Rinne --- */
+scale, scale contents, scale > trough {
+    background-color: transparent;
+    background-image: none;
+}
+scale trough {
+    background-color: #484848;
+    background-image: none;
+    min-height: 5px;
+    min-width: 5px;
+    border: 0;
+    border-radius: 3px;
+}
+scale trough highlight, scale highlight, scale fill {
+    background-color: @@ACC@@;
+    background-image: none;
+    border: 0;
+    border-radius: 3px;
+}
+scale slider {
+    min-width: 13px;
+    min-height: 13px;
+    margin: -7px;
+    border-radius: 50%;
+    background-color: @@ACC@@;
+    background-image: none;
+    border: 1px solid @@ACC@@;
+    box-shadow: none;
+}
+scale slider:hover, scale slider:active {
+    background-color: #FF9A8C;
+    border-color: #FF9A8C;
+}
+
+/* --- Balken --- */
+progressbar trough, levelbar block.empty {
+    background-color: #484848;
+    background-image: none;
+    border: 0;
+}
+progressbar progress, levelbar block.filled {
+    background-color: @@ACC@@;
+    background-image: none;
+    border: 0;
+}
+
+/* --- Auswahl NUR in Listen, nicht global --- */
+list row:selected,
+treeview.view:selected,
+iconview:selected,
+entry selection,
+textview text selection {
+    background-color: @@ACC3@@;
+    color: @@FG@@;
+}
+
+/* --- Knoepfe in Popups --- */
+window.popup button, popover button {
+    background-color: #484848;
+    background-image: none;
+    color: @@FG@@;
+    border: 1px solid @@ACC@@;
+    border-radius: 4px;
+}
+window.popup button:hover, popover button:hover {
+    background-color: #5C534F;
+    color: #FF9A8C;
+}
+
+/* --- Schalter --- */
+checkbutton check:checked, radiobutton radio:checked,
+switch:checked {
+    background-color: @@ACC3@@;
+}
+
+/* --- Scrollleisten --- */
+scrollbar trough { background-color: #353535; }
+scrollbar slider { background-color: @@ACC3@@; border-radius: 4px; }
+scrollbar slider:hover { background-color: @@ACC@@; }

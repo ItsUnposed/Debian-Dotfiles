@@ -1,4 +1,5 @@
 #!/bin/bash
+[ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
 export PATH="/usr/local/bin:/usr/bin:/bin"
 SIZE="medium"
 

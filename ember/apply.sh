@@ -1,0 +1,132 @@
+#!/bin/bash
+# ember/apply.sh <farbe>   -- setzt das gesamte System auf eine Palette
+export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin"
+E="$HOME/.config/ember"
+
+P="$E/palettes/$1.conf"
+[ -f "$P" ] || { echo "Palette $1 nicht gefunden"; exit 1; }
+cp "$P" "$E/current.conf"
+. "$E/current.conf"
+
+hex2rgb() { printf '%d,%d,%d' 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}; }
+hex2ansi() { printf '38;2;%d;%d;%d' 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}; }
+
+# --- 1. Wallpaper ---
+[ -f "$WALLPAPER" ] && feh --no-fehbg --bg-fill "$WALLPAPER"
+
+# --- 2. cava ---
+if [ -f "$HOME/.config/cava/config" ]; then
+  awk '/^[[:space:]]*\[color\]/{s=1;next} s&&/^[[:space:]]*\[/{s=0} !s' \
+      "$HOME/.config/cava/config" > /tmp/cava.new
+  cat >> /tmp/cava.new << EOF
+
+[color]
+background = default
+gradient = 1
+gradient_count = 4
+gradient_color_1 = '$C_ACC3'
+gradient_color_2 = '$C_ACC2'
+gradient_color_3 = '$C_ACC'
+gradient_color_4 = '$C_FG'
+EOF
+  mv /tmp/cava.new "$HOME/.config/cava/config"
+fi
+
+# --- 3. fastfetch ---
+for f in "$HOME/.config/fastfetch/config.jsonc" "$HOME/.config/fastfetch/hacker.jsonc"; do
+  [ -f "$f" ] || continue
+  sed -i -E "s/38;2;[0-9]+;[0-9]+;[0-9]+/$(hex2ansi $C_ACC2)/g" "$f"
+done
+
+# --- 4. rofi ---
+if [ -f "$E/templates/ember.rasi" ]; then
+  sed -e "s|@@BG@@|$C_BG|g" -e "s|@@BG2@@|$C_BG2|g" -e "s|@@DIM@@|$C_DIM|g" \
+      -e "s|@@FG@@|$C_FG|g" -e "s|@@ACC@@|$C_ACC|g" -e "s|@@ACC2@@|$C_ACC2|g" \
+      -e "s|@@ACC3@@|$C_ACC3|g" \
+      "$E/templates/ember.rasi" > "$HOME/.config/rofi/ember.rasi"
+fi
+
+# --- 5. GTK ---
+if [ -f "$E/templates/gtk.css" ]; then
+  sed -e "s|@@BG@@|$C_BG|g" -e "s|@@BG2@@|$C_BG2|g" -e "s|@@DIM@@|$C_DIM|g" \
+      -e "s|@@FG@@|$C_FG|g" -e "s|@@ACC@@|$C_ACC|g" -e "s|@@ACC2@@|$C_ACC2|g" \
+      -e "s|@@ACC3@@|$C_ACC3|g" \
+      "$E/templates/gtk.css" > "$HOME/.config/gtk-3.0/gtk.css"
+  cp "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
+fi
+
+# --- 6. Benachrichtigungen ---
+if [ -f "$E/templates/notify.css" ]; then
+  sed -e "s|@@BG2@@|$C_BG2|g" -e "s|@@FG@@|$C_FG|g" -e "s|@@ACC@@|$C_ACC|g" \
+      -e "s|@@DIM@@|$C_DIM|g" \
+      "$E/templates/notify.css" > "$HOME/.themes/Ember/xfce-notify-4.0/gtk.css"
+fi
+
+# --- 7. btop ---
+if [ -f "$HOME/.config/btop/themes/ember.theme" ]; then
+  sed -i -e "s|^theme\[main_fg\]=.*|theme[main_fg]=\"$C_ACC\"|" \
+         -e "s|^theme\[cpu_box\]=.*|theme[cpu_box]=\"$C_ACC3\"|" \
+         -e "s|^theme\[mem_box\]=.*|theme[mem_box]=\"$C_ACC3\"|" \
+         -e "s|^theme\[net_box\]=.*|theme[net_box]=\"$C_ACC3\"|" \
+         -e "s|^theme\[proc_box\]=.*|theme[proc_box]=\"$C_ACC3\"|" \
+         -e "s|^theme\[div_line\]=.*|theme[div_line]=\"$C_DIM\"|" \
+         -e "s|^theme\[selected_bg\]=.*|theme[selected_bg]=\"$C_BG2\"|" \
+         -e "s|^theme\[selected_fg\]=.*|theme[selected_fg]=\"$C_ACC\"|" \
+         -e "s|^theme\[title\]=.*|theme[title]=\"$C_FG\"|" \
+         -e "s|^theme\[download_start\]=.*|theme[download_start]=\"$C_ACC3\"|" \
+         -e "s|^theme\[download_mid\]=.*|theme[download_mid]=\"$C_ACC2\"|" \
+         -e "s|^theme\[download_end\]=.*|theme[download_end]=\"$C_ACC\"|" \
+         -e "s|^theme\[upload_start\]=.*|theme[upload_start]=\"$C_ACC3\"|" \
+         -e "s|^theme\[upload_mid\]=.*|theme[upload_mid]=\"$C_ACC2\"|" \
+         -e "s|^theme\[upload_end\]=.*|theme[upload_end]=\"$C_ACC\"|" \
+         "$HOME/.config/btop/themes/ember.theme"
+fi
+
+# --- 8. i3 Fensterrahmen ---
+C="$HOME/.config/i3/config"
+sed -i -e "s|^set \$bg .*|set \$bg     $C_BG|" \
+       -e "s|^set \$fg .*|set \$fg     $C_FG|" \
+       -e "s|^set \$red .*|set \$red    $C_ACC2|" \
+       -e "s|^set \$orange .*|set \$orange $C_ACC|" \
+       -e "s|^set \$inact .*|set \$inact  $C_BG2|" \
+       -e "s|^set \$dim .*|set \$dim    $C_DIM|" \
+       -e "s|^set \$ltred .*|set \$ltred  $C_ACC|" \
+       -e "s|^set \$dkred .*|set \$dkred  $C_ACC3|" "$C"
+sed -i "s|Pictures/Wallpapers/[A-Za-z-]*\.png|Pictures/Wallpapers/$(basename $WALLPAPER)|g" "$C"
+[ -f "$HOME/.xsessionrc" ] && sed -i "s|Pictures/Wallpapers/[A-Za-z-]*\.png|Pictures/Wallpapers/$(basename $WALLPAPER)|g" "$HOME/.xsessionrc"
+
+# --- 9. qterminal ---
+Q="$HOME/.local/share/qtermwidget6/color-schemes/Ember.colorscheme"
+if [ -f "$Q" ]; then
+  sed -i -e "0,/^\[Background\]/{}" "$Q"
+  python3 - "$Q" "$C_BG" "$C_FG" "$C_ACC" "$C_ACC2" << 'PY'
+import sys,re
+p,bg,fg,acc,acc2=sys.argv[1:6]
+def rgb(h): return "%d,%d,%d"%(int(h[1:3],16),int(h[3:5],16),int(h[5:7],16))
+s=open(p).read()
+s=re.sub(r'(\[Background\]\nColor=)[\d,]+', r'\g<1>'+rgb(bg), s)
+s=re.sub(r'(\[Foreground\]\nColor=)[\d,]+', r'\g<1>'+rgb(fg), s)
+s=re.sub(r'(\[Color1\]\nColor=)[\d,]+', r'\g<1>'+rgb(acc2), s)
+s=re.sub(r'(\[Color1Intense\]\nColor=)[\d,]+', r'\g<1>'+rgb(acc), s)
+open(p,'w').write(s)
+PY
+fi
+
+# --- 10. flameshot ---
+F="$HOME/.config/flameshot/flameshot.ini"
+[ -f "$F" ] && { pkill flameshot 2>/dev/null; \
+  sed -i -e "s|^uiColor=.*|uiColor=$C_ACC|" -e "s|^contrastUiColor=.*|contrastUiColor=$C_ACC3|" \
+         -e "s|^drawColor=.*|drawColor=$C_ACC|" "$F"; }
+
+# --- 11. Uhr in der Bar ---
+xfconf-query -c xfce4-panel -p /plugins/plugin-19/digital-time-format \
+  -s "<span foreground=\"$C_ACC\" size=\"large\"><b>%H:%M:%S</b></span>" 2>/dev/null
+
+# --- 12. neu laden ---
+pkill xfsettingsd 2>/dev/null; sleep 1; setsid xfsettingsd --daemon >/dev/null 2>&1 &
+pkill -x cava 2>/dev/null
+pkill xfce4-notifyd 2>/dev/null
+xfce4-panel -r 2>/dev/null
+i3-msg restart >/dev/null 2>&1
+
+notify-send -a ember "Theme gewechselt" "Palette: $NAME"

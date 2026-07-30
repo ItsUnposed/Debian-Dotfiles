@@ -1,4 +1,5 @@
 #!/bin/bash
+[ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
 export PATH="/usr/local/bin:/usr/bin:/bin"
 [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && \
     export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
@@ -37,5 +38,5 @@ if [[ "$ART" == http* ]] && command -v convert >/dev/null; then
 fi
 
 [ -f "$COVER" ] && echo "<img>$COVER</img>"
-echo "<txt><span foreground='#FF6B5E' size='$SIZE'>  $SHOW </span></txt>"
+echo "<txt><span foreground='${C_ACC:-#FF6B5E}' size='$SIZE'>  $SHOW </span></txt>"
 echo "<tool>$TOOL</tool>"

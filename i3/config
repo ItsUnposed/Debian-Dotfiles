@@ -1,13 +1,13 @@
-set $bg     #1A120F
-set $fg     #F2E4DC
-set $red    #E0483D
-set $orange #FF8C42
-set $inact  #3A2A24
-set $dim    #8A7A72
-set $dkred  #A11C12
-set $ltred  #FF6B5E
-set $dkred  #A11C12
-set $ltred  #FF6B5E
+set $bg     #110A0E
+set $fg     #F0EDEB
+set $red    #E05A9B
+set $orange #FF8FC4
+set $inact  #221520
+set $dim    #4A2F3E
+set $dkred  #A83368
+set $ltred  #FF8FC4
+set $dkred  #A83368
+set $ltred  #FF8FC4
 
 client.focused          $red     $bg      $ltred  $red      $red
 client.focused_inactive $inact   $bg      $ltred  $inact    $inact
@@ -17,7 +17,7 @@ client.urgent           $red     $bg      $ltred  $red      $red
 default_border normal 2
 default_floating_border normal 2
 
-exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Omen-Red.png
+exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Pink.png
 exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
@@ -122,7 +122,7 @@ bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec_always --no-startup-id nm-applet
 bindsym $mod+n exec --restart nm-applet
 
-exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Omen-Red.png"
+exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Pink.png"
 # client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
 # client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
 # client.unfocused        #333333 #222222 #888888 #292d2e #222222
@@ -167,3 +167,9 @@ bindsym $mod+Shift+7 move container to workspace number 7
 bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
+
+
+# --- Minimieren ---
+bindsym Mod1+minus move scratchpad
+bindsym Mod1+Shift+minus scratchpad show
+bindsym Control+minus exec --no-startup-id ~/.config/ember/menu.sh

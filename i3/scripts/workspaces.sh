@@ -1,8 +1,9 @@
 #!/bin/bash
+[ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
 export PATH="/usr/local/bin:/usr/bin:/bin"
 
-CUR_C="#FF6B5E"
-OTH_C="#F2E4DC"
+CUR_C="${C_ACC:-#FF6B5E}"
+OTH_C="${C_FG:-#F2E4DC}"
 PAD=$'\u00a0'          # 1x geschuetztes Leerzeichen je Seite
 
 RAW=$(i3-msg -t get_workspaces 2>/dev/null)
