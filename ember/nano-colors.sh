@@ -3,22 +3,38 @@
 
 h3() {
     h=${1#\#}
-    r=$((0x${h:0:2})); g=$((0x${h:2:2})); b=$((0x${h:4:2}))
-    printf '#%x%x%x' $(( (r+8)/17 )) $(( (g+8)/17 )) $(( (b+8)/17 ))
+    printf '#%x%x%x' \
+        $(( (0x${h:0:2}+8)/17 )) \
+        $(( (0x${h:2:2}+8)/17 )) \
+        $(( (0x${h:4:2}+8)/17 ))
 }
 
 A=$(h3 "$C_ACC"); A2=$(h3 "$C_ACC2"); A3=$(h3 "$C_ACC3")
 BG=$(h3 "$C_BG"); FG=$(h3 "$C_FG")
 N="$HOME/.nanorc"
 
-sed -i -E "s|^(extendsyntax [^ ]+ color )(bold,)?[a-zA-Z#0-9]+|\1bold,$A|" "$N"
-sed -i -E "s/^(set (title|status)color +).*/\1$BG,$A/" "$N"
-sed -i -E "s/^(set errorcolor +).*/\1$FG,$A3/" "$N"
-sed -i -E "s/^(set keycolor +).*/\1$A/" "$N"
-sed -i -E "s/^(set numbercolor +).*/\1$A2/" "$N"
-sed -i -E "s/^(set functioncolor +).*/\1$FG/" "$N"
-sed -i -E "s/^(set promptcolor +).*/\1$FG,$BG/" "$N"
-sed -i -E "s/^(set selectedcolor +).*/\1$BG,$A/" "$N"
+# 1. Alle extendsyntax: bold entfernen, Farbe setzen
+sed -i -E "s|^(extendsyntax [^ ]+ color )bold,([^ ]+)|\1\2|" "$N"
+sed -i -E "s|^(extendsyntax [^ ]+ color )[^ ]+|\1${A}|" "$N"
 
+# 2. Nur Kommentarzeilen: bold hinzufuegen
+# Kommentare erkennbar am Muster am Zeilenende: enthalten # // /* oder <!--
+sed -i -E "/^extendsyntax .* color ${A} .*\"(.*#|\/\/|\/\\\*|<!--)/ \
+    s|^(extendsyntax [^ ]+ color )${A}|\1bold,${A}|" "$N"
+
+# 3. Oberflaeche
+sed -i -E "s|^(set (title\|status)color +).*|\1${BG},${A}|" "$N"
+sed -i -E "s|^(set keycolor +).*|\1${A}|" "$N"
+sed -i -E "s|^(set numbercolor +).*|\1${A2}|" "$N"
+sed -i -E "s|^(set functioncolor +).*|\1${FG}|" "$N"
+sed -i -E "s|^(set promptcolor +).*|\1${FG},${BG}|" "$N"
+sed -i -E "s|^(set selectedcolor +).*|\1${BG},${A}|" "$N"
+sed -i -E "s|^(set errorcolor +).*|\1${FG},${A3}|" "$N"
+
+# 4. i3-Syntax
 I="$HOME/.nano/i3.nanorc"
-[ -f "$I" ] && sed -i -E "s|color (bold,)?[a-zA-Z#0-9]+ |color bold,$A |g" "$I"
+if [ -f "$I" ]; then
+    sed -i -E "s|^(color )bold,([^ ]+)|\1\2|" "$I"
+    sed -i -E "s|^(color )[^ ]+|\1${A}|" "$I"
+    sed -i -E "/^color ${A} .*\".*#/ s|^(color )${A}|\1bold,${A}|" "$I"
+fi

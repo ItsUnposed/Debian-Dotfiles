@@ -174,4 +174,4 @@ bindsym Mod1+minus move scratchpad
 bindsym Mod1+Shift+minus scratchpad show
 bindsym Control+minus exec --no-startup-id ~/.config/ember/menu.sh
 
-for_window [title="Matrix"] floating disable, border normal 2
+for_window [instance="matrix-xterm"] border normal 2
