@@ -1,8 +1,15 @@
 #!/bin/bash
 . "$HOME/.config/ember/current.conf"
-low() { printf '%s' "$1" | tr 'A-F' 'a-f'; }
-A=$(low "$C_ACC"); A2=$(low "$C_ACC2"); A3=$(low "$C_ACC3")
-BG=$(low "$C_BG"); FG=$(low "$C_FG")
+
+# #RRGGBB -> #rgb, weil nano nur dreistellige Hexcodes kennt
+h3() {
+    h=${1#\#}
+    r=$((0x${h:0:2})); g=$((0x${h:2:2})); b=$((0x${h:4:2}))
+    printf '#%x%x%x' $(( (r+8)/17 )) $(( (g+8)/17 )) $(( (b+8)/17 ))
+}
+
+A=$(h3 "$C_ACC"); A2=$(h3 "$C_ACC2"); A3=$(h3 "$C_ACC3")
+BG=$(h3 "$C_BG"); FG=$(h3 "$C_FG")
 
 N="$HOME/.nanorc"
 sed -i -E "s/^(extendsyntax [^ ]+ color )[a-zA-Z#0-9]+/\1$A/" "$N"
