@@ -1,4 +1,28 @@
 #!/usr/bin/env python3
+import fcntl, os, signal, sys, time
+
+# --- nur eine Instanz: alte beenden, dann Sperre uebernehmen ---
+_lf = open('/tmp/autotile-i3.lock', 'a+')
+try:
+    fcntl.flock(_lf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+except OSError:
+    _lf.seek(0)
+    _alt = _lf.read().strip()
+    if _alt.isdigit():
+        try:
+            os.kill(int(_alt), signal.SIGTERM)
+        except OSError:
+            pass
+    for _ in range(20):
+        try:
+            fcntl.flock(_lf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except OSError:
+            time.sleep(0.1)
+    else:
+        sys.exit(0)
+_lf.seek(0); _lf.truncate(); _lf.write(str(os.getpid())); _lf.flush()
+
 # Waehlt die Teilungsrichtung nach den Fensterproportionen -> Fibonacci-Layout
 import i3ipc
 
