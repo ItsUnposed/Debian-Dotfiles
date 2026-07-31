@@ -6,11 +6,11 @@ THEME="$HOME/.config/rofi/ember.rasi"
 PAL="$EMBER/palettes"
 
 # --- Reihenfolge im Hauptmenue, alles Uebrige landet unter More ---
-HAUPT_ORDER=(black red green blue brown pink)
+HAUPT_ORDER=(black red green blue brown pink gray white)
 
 # --- Vorschaufarbe aus der Palette lesen, sehr dunkle aufhellen ---
 farbe_von() {
-    local f="$PAL/$1" c=""
+    local f="$PAL/$1.conf" c=""
     [ -f "$f" ] && c=$(grep -m1 '^C_ACC=' "$f" | cut -d= -f2 | tr -d "\"' ")
     [ -z "$c" ] && c="#888888"
     local h=${c#\#}
@@ -23,7 +23,7 @@ zeile() { printf '<span foreground="%s">\u25A0</span>  %s\n' "$(farbe_von "$1")"
 
 # --- vorhandene Paletten einsammeln ---
 ALLE=()
-for f in "$PAL"/*; do [ -f "$f" ] && ALLE+=("$(basename "$f")"); done
+for f in "$PAL"/*; do [ -f "$f" ] && ALLE+=("$(basename "$f" .conf)"); done
 [ ${#ALLE[@]} -eq 0 ] && { echo "keine Paletten in $PAL"; exit 1; }
 
 HAUPT=(); MEHR=()
