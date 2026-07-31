@@ -1,4 +1,7 @@
 #!/bin/bash
+exec 9>/tmp/brightness-watch.lock
+flock -n 9 || exit 0
+
 export PATH="/usr/local/bin:/usr/bin:/bin"
 
 PIDFILE="$HOME/.cache/brightness-watch.pid"

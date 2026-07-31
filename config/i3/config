@@ -1,13 +1,13 @@
-set $bg     #080C11
+set $bg     #0A0A0A
 set $fg     #F0EDEB
-set $red    #3D8FE0
-set $orange #6BB6FF
-set $inact  #121A22
-set $dim    #333F4A
-set $dkred  #1B5FA8
-set $ltred  #6BB6FF
-set $dkred  #1B5FA8
-set $ltred  #6BB6FF
+set $red    #B0B0B0
+set $orange #E8E8E8
+set $inact  #1C1C1C
+set $dim    #3E3E3E
+set $dkred  #6E6E6E
+set $ltred  #E8E8E8
+set $dkred  #6E6E6E
+set $ltred  #E8E8E8
 
 client.focused          $red     $bg      $ltred  $red      $red
 client.focused_inactive $inact   $bg      $ltred  $inact    $inact
@@ -17,7 +17,7 @@ client.urgent           $red     $bg      $ltred  $red      $red
 default_border normal 2
 default_floating_border normal 2
 
-exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Blue.png
+exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Black.png
 exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
@@ -122,7 +122,7 @@ bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec_always --no-startup-id sh -c "pkill -x nm-applet; sleep 1; nm-applet"
 bindsym $mod+n exec --restart nm-applet
 
-exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Blue.png"
+exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Black.png"
 # client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
 # client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
 # client.unfocused        #333333 #222222 #888888 #292d2e #222222
@@ -141,7 +141,7 @@ bindsym Control+Mod1+m exec --no-startup-id xfce4-popup-whiskermenu
 exec_always --no-startup-id sh -c 'setxkbmap -layout deumlaut -option "" -option lv3:ralt_switch'
 exec_always --no-startup-id sh -c 'pkill xcape; sleep 1; xcape -e "Super_L=Control_L|Alt_L|m"'
 bindsym $mod+Shift+e exec --no-startup-id ~/.config/i3/scripts/powermenu.sh
-exec_always --no-startup-id xfce4-power-manager
+exec_always --no-startup-id sh -c "pkill -x xfce4-power-manager; sleep 1; xfce4-power-manager"
 
 exec_always --no-startup-id ~/.config/i3/scripts/brightness-watch.sh
 
@@ -192,4 +192,7 @@ for_window [class="^jetbrains-" title="^(?!win0$).*"] floating disable
 bindsym Mod1+minus exec --no-startup-id ~/.config/i3/scripts/semifull.sh
 
 # --- Claude Desktop: i3 zeichnet die fehlende Titelleiste ---
-for_window [class="(?i)^claude$"] border normal 3
+for_window [class="^com\.anthropic\.Claude$"] border normal 3
+
+# --- Fibonacci-Kacheln ---
+exec_always --no-startup-id sh -c "pkill -f autotile.py; sleep 1; python3 ~/.config/i3/scripts/autotile.py"

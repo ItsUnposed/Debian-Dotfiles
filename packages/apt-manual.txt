@@ -1,3 +1,4 @@
+accountsservice
 adduser
 adwaita-qt6
 alsa-utils
@@ -199,7 +200,6 @@ netcat-traditional
 network-manager
 network-manager-gnome
 nftables
-nm-tray
 nodejs
 npm
 openssh-client
@@ -217,7 +217,9 @@ pipewire-pulse
 playerctl
 plymouth
 plymouth-themes
+poppler-utils
 procps
+python3-i3ipc
 python3-pip
 python3-venv
 qt6ct

@@ -1,4 +1,5 @@
 7zip
+accountsservice
 acl
 acpi
 adduser
@@ -250,6 +251,7 @@ liba52-0.7.4:amd64
 libaa1:amd64
 libaacs0:amd64
 libabsl20240722:amd64
+libaccountsservice0:amd64
 libacl1:amd64
 libadwaitaqt6-1:amd64
 libadwaitaqt6priv1:amd64
@@ -1260,7 +1262,6 @@ network-manager-gnome
 network-manager-l10n
 nftables
 nm-connection-editor
-nm-tray
 nm-tray-l10n
 node-abbrev
 node-acorn
@@ -1676,6 +1677,7 @@ plymouth-themes
 pocketsphinx-en-us
 polkitd
 poppler-data
+poppler-utils
 powertop
 ppp
 procps
@@ -1695,6 +1697,7 @@ python3-debianbts
 python3-dev
 python3-gi
 python3-greenlet
+python3-i3ipc
 python3-idna
 python3-minimal
 python3-msgpack
@@ -1708,6 +1711,7 @@ python3-setuptools-whl
 python3-urllib3
 python3-venv
 python3-wheel
+python3-xlib
 python3.13
 python3.13-dev
 python3.13-minimal
