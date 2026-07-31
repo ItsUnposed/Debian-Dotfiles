@@ -1,6 +1,6 @@
-.ssh/
-id_*
-*.key
-.env
-*.save
-*.save.*
+*.bak
+*.bak[0-9]
+*.log
+*~
+.cache/
+current.conf
