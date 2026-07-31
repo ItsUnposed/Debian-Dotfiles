@@ -47,6 +47,10 @@ Alle anderen werden von `save.sh` kopiert.
 | `Alt+-`           | Semi-Vollbild umschalten       |
 | `Alt+m`           | Fenster minimieren             |
 | `Alt+Shift+h`     | Hackerstartup                  |
+
+Neue Fenster kacheln automatisch nach den Proportionen des
+fokussierten Fensters (Fibonacci). Zustaendig ist der Dienst
+`config/i3/scripts/autotile.py`, gestartet per `exec_always`.
 | `Alt+Shift+e`     | Power-Menue                    |
 | `Strg+-`          | Farbpalette wechseln           |
 
