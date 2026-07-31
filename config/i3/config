@@ -195,4 +195,4 @@ bindsym Mod1+minus exec --no-startup-id ~/.config/i3/scripts/semifull.sh
 for_window [class="^com\.anthropic\.Claude$"] border normal 3
 
 # --- Fibonacci-Kacheln ---
-exec_always --no-startup-id sh -c "pkill -f "[a]utotile\.py"; sleep 1; python3 ~/.config/i3/scripts/autotile.py"
+exec_always --no-startup-id sh -c 'pkill -f "[a]utotile[.]py"; sleep 1; exec python3 $HOME/.config/i3/scripts/autotile.py'
