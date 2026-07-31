@@ -1,94 +1,70 @@
 # dotfiles — Ember
 
-Konfiguration eines Debian 13 (Trixie) Desktops mit i3, xfce4-panel und
-einem umschaltbaren Farbsystem namens Ember.
+Debian 13 (Trixie) · i3wm · xfce4-panel · picom v12 · qterminal
 
-Getestet auf: ThinkPad X13 Gen 4, AMD Ryzen 7 PRO 7840U, 1920x1200.
+Dunkles Farbschema mit umschaltbarer Palette. Alle Programme
+teilen sich dieselben Farben, gesteuert über ein zentrales Skript.
 
-## Schnellstart
+## Schnellstart auf einem frischen System
 
-    sudo apt install -y git
-    git clone git@github.com:ItsUnposed/dotfiles.git ~/dotfiles
-    ~/dotfiles/install.sh
+```bash
+sudo apt install -y git
+git clone git@github.com:ItsUnposed/dotfiles.git ~/dotfiles
+~/dotfiles/install.sh
+```
 
-Danach abmelden und neu anmelden. Dauer etwa 5 Minuten.
+Danach abmelden und die Sitzung **i3** wählen.
 
 ## Aufbau
 
-| Ordner | Ziel | Inhalt |
-|---|---|---|
-| config/ | ~/.config/ | i3, picom, rofi, cava, fastfetch, btop, qterminal, ember |
-| home/ | ~/ | .bashrc, .profile, .nanorc, .xsessionrc |
-| system/ | /etc, /usr/share | lightdm-Greeter, Grub-Theme, sudoers, XKB |
-| packages/ | — | apt- und Flatpak-Listen |
-| xfce/ | xfconf | Panel-Aufbau als XML |
+| Ordner      | Inhalt                                        |
+|-------------|-----------------------------------------------|
+| `config/`   | wird nach `~/.config/<name>` verlinkt         |
+| `home/`     | Dateien direkt in `~`                         |
+| `system/`   | `/etc/default/grub`, LightDM                  |
+| `packages/` | APT- und Flatpak-Listen                       |
+| `xfce/`     | xfconf-XML der Panel-Konfiguration            |
 
-## Farbsystem
+`config/i3`, `config/cava`, `config/fastfetch` und `config/rofi` sind
+Symlinks — Änderungen unter `~/.config` landen sofort im Repo.
+Alle anderen werden von `save.sh` kopiert.
 
-Zentrale Ablage: ~/.config/ember/
+## Skripte
 
-    apply.sh          setzt eine Palette systemweit
-    menu.sh           rofi-Auswahl mit Farbvorschau
-    palettes/*.conf   14 Farben
-    templates/        Vorlagen mit Platzhaltern
-    current.conf      Laufzeitzustand, nicht im Repo
-
-Variablen je Palette: C_ACC, C_ACC2, C_ACC3, C_BG, C_BG2, C_DIM, C_FG,
-C_TERM, WALLPAPER. C_BG bleibt immer nahe Schwarz, dadurch ist der Dark
-Mode bei jeder Farbe erhalten.
-
-Skripte, die laufend aufgerufen werden (workspaces.sh, win-*.sh), lesen
-current.conf zur Laufzeit. Statische Configs werden aus templates/ neu
-geschrieben. Direkte Aenderungen an rofi, gtk.css oder notify.css gehen
-deshalb beim naechsten Farbwechsel verloren.
-
-Anwenden: ~/.config/ember/apply.sh aqua   oder   Strg + Minus
+| Befehl        | Wirkung                                      |
+|---------------|----------------------------------------------|
+| `./save.sh`   | sichert alles und pusht                      |
+| `./install.sh`| stellt ein leeres System wieder her          |
 
 ## Tastenbelegung
 
-$mod = Super, Mod1 = Alt.
+| Taste             | Wirkung                        |
+|-------------------|--------------------------------|
+| `Alt+Return`      | Terminal                       |
+| `Alt+d`           | rofi                           |
+| `Alt+q`           | Fenster schliessen, Swipe unten|
+| `Alt+1..0`        | Workspace, Swipe seitlich      |
+| `Alt+-`           | Semi-Vollbild umschalten       |
+| `Alt+m`           | Fenster minimieren             |
+| `Alt+Shift+h`     | Hackerstartup                  |
+| `Alt+Shift+e`     | Power-Menue                    |
+| `Strg+-`          | Farbpalette wechseln           |
 
-| Taste | Wirkung |
-|---|---|
-| $mod + Return | qterminal |
-| $mod + d | rofi |
-| $mod + e | Thunar |
-| $mod + 1..0 | Workspace wechseln, mit Swipe-Animation |
-| $mod + Minus | Fenster nach __min minimieren |
-| $mod + Shift + Minus | zurueckholen |
-| Alt + q | Fenster schliessen, swiped nach unten |
-| Alt + Minus | Semi-Vollbild und zentriert umschalten |
-| Strg + Minus | Farb-Menue |
+## Farbpaletten
 
-## Animationen
+```bash
+~/.config/ember/apply.sh red      # oder green, silver, ...
+```
 
-Braucht picom 12 oder neuer wegen der rules-Syntax.
-
-| Effekt | Ausloeser | Mechanik |
-|---|---|---|
-| Workspace-Swipe | ws-go.sh | setzt _MY_CUSTOM_WORKSPACE_SWITCH, 1 aufwaerts, 2 abwaerts |
-| Schliessen nach unten | close-window.sh | setzt _MY_CUSTOM_CLOSE = 1 |
-
-Die Close-Regel muss vor den Workspace-Regeln stehen, weil picom die
-erste passende Regel nimmt.
-
-Sobald ein rules-Block existiert, ignoriert picom alle alten
-Ausschlusslisten wie shadow-exclude oder rounded-corners-exclude. Alles
-muss in rules stehen.
+`apply.sh` schreibt die Farben in i3, cava, rofi, qterminal, nano,
+fastfetch und die Panel-Skripte. Direkte Aenderungen an diesen
+Dateien werden beim naechsten Wechsel ueberschrieben — Anpassungen
+gehoeren in `apply.sh`.
 
 ## Bekannte Fallstricke
 
-- qterminal.ini steht auf chmod 444, sonst ueberschreibt qterminal sie
-  beim Beenden. Vor dem Bearbeiten 644, danach zurueck auf 444.
-- Das Hackerstartup darf nicht mit exec_always laufen, sonst startet es
-  bei jedem i3-Reload doppelt. apply.sh nutzt aus demselben Grund
-  i3-msg reload statt restart.
-- JetBrains-IDEs brauchen _JAVA_AWT_WM_NONREPARENTING=1 in .xsessionrc,
-  sonst bleiben Menues leer.
-- Die Workspace-Pille braucht einen Nerd Font, Zeichen U+E0B4 und U+E0B6.
-- apt purge bricht komplett ab, wenn ein einziger Platzhalter kein Paket
-  findet.
-
-## Sichern
-
-    ~/dotfiles/save.sh
+- `~/.config/qterminal.org/qterminal.ini` steht auf `chmod 444`,
+  sonst ueberschreibt qterminal Aenderungen beim Beenden.
+- picom v12 mischt `opacity-rule` und `rules` nicht. Alles gehoert
+  in `rules`, Deckkraft dort als Bruchteil (`0.55`), nicht als Prozent.
+- i3 vor jedem Reload pruefen: `i3 -C -c ~/.config/i3/config`
