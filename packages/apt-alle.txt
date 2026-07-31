@@ -667,7 +667,6 @@ libkf6kcmutilsquick6:amd64
 libkf6kiocore6:amd64
 libkf6kiogui6:amd64
 libkf6kiowidgets6:amd64
-libkf6networkmanagerqt6:amd64
 libkf6notifications-data
 libkf6notifications6:amd64
 libkf6parts-data
@@ -1262,7 +1261,6 @@ network-manager-gnome
 network-manager-l10n
 nftables
 nm-connection-editor
-nm-tray-l10n
 node-abbrev
 node-acorn
 node-agent-base
