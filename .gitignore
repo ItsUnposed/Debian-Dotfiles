@@ -1,5 +1,7 @@
 *.bak
 *.bak[0-9]
+*.bak-*
+*.kaputt
 *.log
 *~
 .cache/
