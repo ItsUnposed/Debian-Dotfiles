@@ -62,6 +62,7 @@ fonts-firacode
 fonts-font-awesome
 gcc-14-base
 gettext-base
+gh
 ghostscript
 git
 gnome-themes-extra

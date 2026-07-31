@@ -150,6 +150,7 @@ gcr4
 gdal-data
 gdal-plugins:amd64
 gettext-base
+gh
 ghostscript
 gir1.2-girepository-2.0:amd64
 gir1.2-glib-2.0:amd64

@@ -93,6 +93,8 @@
         <value type="string" value="Claude_status_icon_1"/>
       </property>
       <property name="known-legacy-items" type="array">
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (87%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (42%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (57%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (43%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (47%)"/>
@@ -112,7 +114,7 @@
     </property>
     <property name="plugin-19" type="string" value="clock">
       <property name="digital-layout" type="uint" value="3"/>
-      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#FF8FC4&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
+      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#6BFFC4&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
       <property name="digital-time-font" type="string" value="Cantarell 11"/>
       <property name="timezone" type="string" value="Europe/Berlin"/>
     </property>
