@@ -1,13 +1,13 @@
 set $bg     #0A0A0A
 set $fg     #F0EDEB
-set $red    #B0B0B0
-set $orange #E8E8E8
-set $inact  #1C1C1C
-set $dim    #3E3E3E
-set $dkred  #6E6E6E
-set $ltred  #E8E8E8
-set $dkred  #6E6E6E
-set $ltred  #E8E8E8
+set $red    #CCCCCC
+set $orange #FFFFFF
+set $inact  #1A1A1A
+set $dim    #404040
+set $dkred  #8A8A8A
+set $ltred  #FFFFFF
+set $dkred  #8A8A8A
+set $ltred  #FFFFFF
 
 client.focused          $red     $bg      $ltred  $red      $red
 client.focused_inactive $inact   $bg      $ltred  $inact    $inact
@@ -17,7 +17,7 @@ client.urgent           $red     $bg      $ltred  $red      $red
 default_border normal 2
 default_floating_border normal 2
 
-exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Black.png
+exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/White.png
 exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
@@ -122,7 +122,7 @@ bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec_always --no-startup-id nm-applet
 bindsym $mod+n exec --restart nm-applet
 
-exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Black.png"
+exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/White.png"
 # client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
 # client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
 # client.unfocused        #333333 #222222 #888888 #292d2e #222222
@@ -170,7 +170,7 @@ bindsym $mod+Shift+0 move container to workspace number 10
 
 
 # --- Minimieren ---
-bindsym Mod1+minus move to workspace __min
+bindsym Mod1+m move to workspace __min
 bindsym Mod1+Shift+minus [workspace="__min"] move workspace to current
 bindsym Control+minus exec --no-startup-id ~/.config/ember/menu.sh
 
