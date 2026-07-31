@@ -12,6 +12,7 @@ amd64-microcode
 anacron
 apparmor
 apt
+apt-forktracer
 apt-listchanges
 apt-transport-https
 apt-utils
