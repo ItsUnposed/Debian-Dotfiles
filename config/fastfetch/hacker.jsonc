@@ -36,7 +36,8 @@
       "key": "KRN"
     },
     {
-      "type": "cpu", "format": "{1} ({4})",
+      "type": "cpu",
+      "format": "{1} ({4})",
       "key": "CPU"
     },
     {

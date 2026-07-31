@@ -88,6 +88,7 @@
       <property name="square-icons" type="bool" value="true"/>
       <property name="symbolic-icons" type="bool" value="false"/>
       <property name="known-legacy-items" type="array">
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (87%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (62%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (90%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (42%)"/>
@@ -201,7 +202,7 @@
       <property name="update-period" type="int" value="10000"/>
       <property name="use-label" type="bool" value="false"/>
       <property name="text" type="string" value=""/>
-      <property name="font" type="string" value="Fira Code Medium 10"/>
+      <property name="font" type="string" value="FiraCode Nerd Font Medium 11"/>
       <property name="enable-single-row" type="bool" value="true"/>
       <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
       <property name="known-players" type="string" value="Chromium;firefox;spotify"/>

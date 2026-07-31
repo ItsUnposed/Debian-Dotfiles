@@ -8,6 +8,7 @@ sudo tee "$T/theme.txt" > /dev/null << T2
 desktop-image: "background.png"
 desktop-color: "$C_BG"
 title-text: ""
+terminal-font: "Fira Code Regular 16"
 
 + label {
     top = 14%
@@ -42,11 +43,21 @@ title-text: ""
     color = "$C_ACC3"
     font = "Fira Code Regular 14"
 }
++ progress_bar {
+    id = "__timeout__"
+    top = 78%
+    left = 30%
+    width = 40%
+    height = 12
+    show_text = false
+    fg_color = "$C_ACC"
+    bg_color = "$C_BG2"
+    border_color = "$C_ACC3"
+}
 T2
 
 [ -f "$T/firacode16.pf2" ] || sudo grub-mkfont -s 16 -o "$T/firacode16.pf2" /usr/share/fonts/truetype/firacode/FiraCode-Regular.ttf 2>/dev/null
 
 sudo sed -i 's|^GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/ember/theme.txt"|' /etc/default/grub
 grep -q "^GRUB_THEME=" /etc/default/grub || echo 'GRUB_THEME="/boot/grub/themes/ember/theme.txt"' | sudo tee -a /etc/default/grub >/dev/null
-sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=-1/' /etc/default/grub
 sudo update-grub 2>/dev/null

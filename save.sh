@@ -1,38 +1,40 @@
-#!/bin/bash
-# Sichert den aktuellen Systemzustand ins Repo. Aufruf: ~/dotfiles/save.sh
-set -e
-D="$HOME/dotfiles"
-mkdir -p "$D"/{config,home,system,packages,xfce}
+#!/usr/bin/env bash
+set -uo pipefail
+R="$HOME/dotfiles"
+say(){ printf '\033[38;2;255;107;94m>> %s\033[0m\n' "$*"; }
 
-# --- ~/.config ---
-for x in i3 ember rofi fastfetch cava btop flameshot gtk-3.0 qterminal.org; do
-    [ -e "$HOME/.config/$x" ] && rsync -a --delete "$HOME/.config/$x" "$D/config/"
+say "1/5  ~/.config"
+for E in "$R"/config/*; do
+    N=$(basename "$E"); T="$HOME/.config/$N"
+    if [ -L "$T" ]; then echo "     symlink, uebersprungen: $N"; continue; fi
+    if [ ! -e "$T" ];  then echo "     fehlt im System:     $N"; continue; fi
+    if [ -d "$T" ]; then rsync -a --delete "$T/" "$E/"; else cp -a "$T" "$E"; fi
+    echo "     gesichert: $N"
 done
-cp "$HOME/.config/picom.conf" "$D/config/" 2>/dev/null || true
 
-# --- Home ---
-for f in .bashrc .profile .nanorc .xsessionrc; do
-    [ -f "$HOME/$f" ] && cp "$HOME/$f" "$D/home/"
+say "2/5  Home"
+mkdir -p "$R/home"
+for F in .bashrc .bash_aliases .dircolors .face .gitconfig .xsessionrc .profile .Xresources; do
+    [ -e "$HOME/$F" ] && cp -a "$HOME/$F" "$R/home/$F" && echo "     $F"
 done
-[ -d "$HOME/.nano" ] && rsync -a --delete "$HOME/.nano" "$D/home/"
 
-# --- System ---
-mkdir -p "$D/system/lightdm" "$D/system/themes" "$D/system/sudoers.d"
-sudo cp /etc/lightdm/lightdm-gtk-greeter.conf "$D/system/lightdm/" 2>/dev/null || true
-sudo cp -r /usr/share/themes/Ember-Greeter "$D/system/themes/" 2>/dev/null || true
-sudo cp /etc/sudoers.d/ember-theme "$D/system/sudoers.d/" 2>/dev/null || true
-sudo cp /etc/default/grub "$D/system/" 2>/dev/null || true
-sudo cp -r /usr/share/X11/xkb/symbols/deumlaut "$D/system/" 2>/dev/null || true
-sudo chown -R "$USER:$USER" "$D/system"
+say "3/5  /etc"
+mkdir -p "$R/system"
+for S in /etc/default/grub /etc/lightdm/lightdm.conf /etc/lightdm/lightdm-gtk-greeter.conf; do
+    [ -f "$S" ] && sudo cp "$S" "$R/system/$(basename $S)" && echo "     $S"
+done
+sudo chown -R "$USER:$USER" "$R/system"
 
-# --- Pakete ---
-apt-mark showmanual > "$D/packages/apt.txt"
-flatpak list --app --columns=application > "$D/packages/flatpak.txt" 2>/dev/null || true
+say "4/5  Pakete"
+mkdir -p "$R/packages"
+apt-mark showmanual > "$R/packages/apt-manual.txt"
+dpkg --get-selections | awk '$2=="install"{print $1}' > "$R/packages/apt-alle.txt"
+flatpak list --app --columns=application > "$R/packages/flatpak.txt" 2>/dev/null
 
-# --- Xfce-Panel ---
-xfconf-query -c xfce4-panel -lv > "$D/xfce/panel.txt"
-xfconf-query -c xsettings   -lv > "$D/xfce/xsettings.txt"
+say "5/5  xfce4-panel"
+mkdir -p "$R/xfce/xfce-perchannel-xml"
+cp -a "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/." "$R/xfce/xfce-perchannel-xml/" 2>/dev/null
 
-cd "$D" && git add -A
-git commit -m "backup $(date +%F' '%H:%M)" || echo "nichts geaendert"
-git push
+cd "$R"
+git add -A
+git commit -m "backup $(date '+%F %H:%M')" && git push && say "gepusht" || say "nichts zu committen"

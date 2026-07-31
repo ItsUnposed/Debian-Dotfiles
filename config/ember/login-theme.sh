@@ -2,9 +2,7 @@
 . "$HOME/.config/ember/current.conf"
 WP="$WALLPAPER"
 [ -f "$WP" ] || WP="$HOME/Pictures/Wallpapers/Red.png"
-sudo convert "$WP" /usr/share/backgrounds/login-bg.png 2>/dev/null
-
-sudo convert "/home/unposed/Pictures/unposed.png" -gravity center -resize 96x96^ -extent 96x96 /usr/share/backgrounds/omen-avatar.png
+sudo convert "$WP" -brightness-contrast -30x0 /usr/share/backgrounds/login-bg.png 2>/dev/null
 
 sudo mkdir -p /usr/share/themes/Ember-Greeter/gtk-3.0
 sudo tee /usr/share/themes/Ember-Greeter/gtk-3.0/gtk.css > /dev/null << T
