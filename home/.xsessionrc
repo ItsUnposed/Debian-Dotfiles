@@ -1,7 +1,7 @@
 export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 
 export QT_QPA_PLATFORMTHEME=qt6ct
-feh --no-fehbg --bg-fill "$HOME/Pictures/Wallpapers/Black.png" 2>/dev/null
+feh --no-fehbg --bg-fill "$HOME/Pictures/Wallpapers/Pink.png" 2>/dev/null
 export GTK_THEME=Adwaita:dark
 xrdb -merge "$HOME/.Xresources"
 export QT_FONT_DPI=96

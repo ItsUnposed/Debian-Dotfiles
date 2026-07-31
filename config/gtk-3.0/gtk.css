@@ -1,15 +1,15 @@
 /* ===== Chroma GTK ===== */
 /* BG   #353535  mittleres Grau, wie die Bar   */
 /* BG2  #484848  etwas heller, Rinnen/Knoepfe  */
-/* AKZ  #E8E8E8  hellrot, Raender und Fuellung */
+/* AKZ  #FF8FC4  hellrot, Raender und Fuellung */
 /* FG   #F0EDEB  Text                          */
 
-@define-color theme_selected_bg_color #6E6E6E;
+@define-color theme_selected_bg_color #A83368;
 @define-color theme_selected_fg_color #F0EDEB;
-@define-color accent_bg_color #6E6E6E;
+@define-color accent_bg_color #A83368;
 @define-color accent_fg_color #F0EDEB;
-@define-color accent_color #E8E8E8;
-@define-color link_color #E8E8E8;
+@define-color accent_color #FF8FC4;
+@define-color link_color #FF8FC4;
 
 /* --- Menues und Popups: mittleres Grau --- */
 menu, .menu, .context-menu,
@@ -20,7 +20,7 @@ tooltip, tooltip.background {
     background-color: #353535;
     background-image: none;
     color: #F0EDEB;
-    border: 1px solid #E8E8E8;
+    border: 1px solid #FF8FC4;
     border-radius: 6px;
 }
 
@@ -42,12 +42,12 @@ menuitem, menu menuitem, popover modelbutton {
 }
 menuitem:hover, menu menuitem:hover, menu menuitem:selected,
 popover modelbutton:hover {
-    background-color: #6E6E6E;
+    background-color: #A83368;
     background-image: none;
     color: #F0EDEB;
 }
 menu separator, popover separator, window.popup separator {
-    background-color: #E8E8E8;
+    background-color: #FF8FC4;
 }
 
 /* --- Schieberegler: runder Knopf, schmale Rinne --- */
@@ -64,7 +64,7 @@ scale trough {
     border-radius: 3px;
 }
 scale trough highlight, scale highlight, scale fill {
-    background-color: #E8E8E8;
+    background-color: #FF8FC4;
     background-image: none;
     border: 0;
     border-radius: 3px;
@@ -74,9 +74,9 @@ scale slider {
     min-height: 13px;
     margin: -7px;
     border-radius: 50%;
-    background-color: #E8E8E8;
+    background-color: #FF8FC4;
     background-image: none;
-    border: 1px solid #E8E8E8;
+    border: 1px solid #FF8FC4;
     box-shadow: none;
 }
 scale slider:hover, scale slider:active {
@@ -91,7 +91,7 @@ progressbar trough, levelbar block.empty {
     border: 0;
 }
 progressbar progress, levelbar block.filled {
-    background-color: #E8E8E8;
+    background-color: #FF8FC4;
     background-image: none;
     border: 0;
 }
@@ -102,7 +102,7 @@ treeview.view:selected,
 iconview:selected,
 entry selection,
 textview text selection {
-    background-color: #6E6E6E;
+    background-color: #A83368;
     color: #F0EDEB;
 }
 
@@ -111,7 +111,7 @@ window.popup button, popover button {
     background-color: #484848;
     background-image: none;
     color: #F0EDEB;
-    border: 1px solid #E8E8E8;
+    border: 1px solid #FF8FC4;
     border-radius: 4px;
 }
 window.popup button:hover, popover button:hover {
@@ -122,36 +122,36 @@ window.popup button:hover, popover button:hover {
 /* --- Schalter --- */
 checkbutton check:checked, radiobutton radio:checked,
 switch:checked {
-    background-color: #6E6E6E;
+    background-color: #A83368;
 }
 
 /* --- Scrollleisten --- */
 scrollbar trough { background-color: #353535; }
-scrollbar slider { background-color: #6E6E6E; border-radius: 4px; }
-scrollbar slider:hover { background-color: #E8E8E8; }
+scrollbar slider { background-color: #A83368; border-radius: 4px; }
+scrollbar slider:hover { background-color: #FF8FC4; }
 
 /* --- Kalender im Uhr-Plugin --- */
 calendar {
-    background-color: #0A0A0A;
+    background-color: #110A0E;
     color: #F0EDEB;
 }
 calendar:selected,
 calendar.highlight {
-    background-color: #E8E8E8;
-    color: #0A0A0A;
+    background-color: #FF8FC4;
+    color: #110A0E;
     border-radius: 4px;
 }
 calendar.header {
-    color: #E8E8E8;
+    color: #FF8FC4;
 }
 calendar:indeterminate {
-    color: #3E3E3E;
+    color: #4A2F3E;
 }
 calendar.button {
-    color: #E8E8E8;
+    color: #FF8FC4;
     background-image: none;
     background-color: transparent;
 }
 calendar.button:hover {
-    background-color: #1C1C1C;
+    background-color: #221520;
 }
