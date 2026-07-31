@@ -1,13 +1,13 @@
-set $bg     #110A0E
+set $bg     #08110D
 set $fg     #F0EDEB
-set $red    #E05A9B
-set $orange #FF8FC4
-set $inact  #221520
-set $dim    #4A2F3E
-set $dkred  #A83368
-set $ltred  #FF8FC4
-set $dkred  #A83368
-set $ltred  #FF8FC4
+set $red    #3DD9A0
+set $orange #6BFFC4
+set $inact  #12221B
+set $dim    #2F4A40
+set $dkred  #1B9E6E
+set $ltred  #6BFFC4
+set $dkred  #1B9E6E
+set $ltred  #6BFFC4
 
 client.focused          $red     $bg      $ltred  $red      $red
 client.focused_inactive $inact   $bg      $ltred  $inact    $inact
@@ -17,7 +17,7 @@ client.urgent           $red     $bg      $ltred  $red      $red
 default_border normal 2
 default_floating_border normal 2
 
-exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Pink.png
+exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Green.png
 exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
@@ -116,13 +116,13 @@ smart_gaps off
 
 # Autostart
 exec_always --no-startup-id xfce4-panel
-exec --no-startup-id sh -c "pkill -x picom; sleep 1; picom -b"
+exec_always --no-startup-id sh -c "pkill -x picom; sleep 2; picom -b"
 exec --no-startup-id ~/.config/i3/hacker-startup.sh
 bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec_always --no-startup-id nm-applet
 bindsym $mod+n exec --restart nm-applet
 
-exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Pink.png"
+exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Green.png"
 # client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
 # client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
 # client.unfocused        #333333 #222222 #888888 #292d2e #222222
@@ -146,16 +146,16 @@ exec_always --no-startup-id xfce4-power-manager
 exec_always --no-startup-id ~/.config/i3/scripts/brightness-watch.sh
 
 # --- Workspaces, feste Zahlen statt Variablen ---
-bindsym $mod+1 workspace number 1
-bindsym $mod+2 workspace number 2
-bindsym $mod+3 workspace number 3
-bindsym $mod+4 workspace number 4
-bindsym $mod+5 workspace number 5
-bindsym $mod+6 workspace number 6
-bindsym $mod+7 workspace number 7
-bindsym $mod+8 workspace number 8
-bindsym $mod+9 workspace number 9
-bindsym $mod+0 workspace number 10
+bindsym $mod+1 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 1
+bindsym $mod+2 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 2
+bindsym $mod+3 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 3
+bindsym $mod+4 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 4
+bindsym $mod+5 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 5
+bindsym $mod+6 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 6
+bindsym $mod+7 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 7
+bindsym $mod+8 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 8
+bindsym $mod+9 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 9
+bindsym $mod+0 exec --no-startup-id ~/.config/i3/scripts/ws-go.sh 10
 
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
@@ -175,3 +175,6 @@ bindsym Mod1+Shift+minus [workspace="__min"] move workspace to current
 bindsym Control+minus exec --no-startup-id ~/.config/ember/menu.sh
 
 for_window [instance="matrix-xterm"] border normal 2
+for_window [class="jetbrains-.*" title="win0"] floating enable, border none
+for_window [class="jetbrains-.*" title="Welcome to .*"] floating enable
+for_window [class="jetbrains-toolbox"] floating enable

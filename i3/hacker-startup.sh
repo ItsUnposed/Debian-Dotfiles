@@ -37,8 +37,7 @@ launch_xterm() {
     [ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
     local h=${C_ACC:-#FF6B5E}; h=${h#\#}
     local FG="$(printf '%02x/%02x/%02x' $((0x${h:0:2})) $((0x${h:2:2})) $((0x${h:4:2})))"
-    local h2=${C_BG:-#0D0A09}; h2=${h2#\#}
-    local BG="$(printf '%02x/%02x/%02x' $((0x${h2:0:2})) $((0x${h2:2:2})) $((0x${h2:4:2})))"
+    local BG="00/00/00"
 
     before=$(wcount)
     xterm -name "matrix-xterm" -title "Matrix" \
