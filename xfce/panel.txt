@@ -1,0 +1,83 @@
+/configver                                    2
+/panels                                       [1]
+/panels/panel-1/enable-struts                 false
+/panels/panel-1/length                        100
+/panels/panel-1/plugin-ids                    [1,18,2,10,4,6,5,7,8,11,12,14,27,3,13,23,26,24,29,16,22,20,25,19,21,9]
+/panels/panel-1/position                      p=5;x=960;y=57
+/panels/panel-1/position-locked               true
+/panels/panel-1/size                          34
+/plugins/plugin-1                             whiskermenu
+/plugins/plugin-10                            separator
+/plugins/plugin-11                            tasklist
+/plugins/plugin-11/grouping                   1
+/plugins/plugin-11/middle-click               1
+/plugins/plugin-11/show-handle                false
+/plugins/plugin-11/show-labels                false
+/plugins/plugin-12                            separator
+/plugins/plugin-12/expand                     true
+/plugins/plugin-12/style                      0
+/plugins/plugin-13                            launcher
+/plugins/plugin-13/items                      [17851675891.desktop]
+/plugins/plugin-14                            systray
+/plugins/plugin-14/hide-new-items             false
+/plugins/plugin-14/known-items                [discord_status_icon_1,nm-tray,Onboard,chrome_status_icon_1,toolbox,Claude_status_icon_1]
+/plugins/plugin-14/known-legacy-items         [wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (62%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (90%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (42%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (41%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (50%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (84%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (72%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (71%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (82%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (83%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (86%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (75%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (85%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (79%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (80%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (100%),nm-tray,wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (73%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (74%),no network connection,claude-desktop,wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (70%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (81%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (78%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (76%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (77%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (61%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (60%),requesting a wi-fi network address for “fritz!box 7490”…,wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (55%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (57%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (63%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (67%),configuring wi-fi network connection “fritz!box 7490”…,wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (69%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (68%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (49%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (47%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (58%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (56%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (59%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (48%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (43%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (66%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (65%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (44%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (46%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (45%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (54%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (53%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (51%),wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (52%),polkit-mate-authentication-agent-1,onboard,networkmanager applet]
+/plugins/plugin-14/size-max                   22
+/plugins/plugin-14/square-icons               true
+/plugins/plugin-14/symbolic-icons             false
+/plugins/plugin-16                            pulseaudio
+/plugins/plugin-16/command                    /home/unposed/.config/i3/scripts/wifi.sh
+/plugins/plugin-16/enable-keyboard-shortcuts  true
+/plugins/plugin-16/enable-mpris               false
+/plugins/plugin-16/enable-multimedia-keys     false
+/plugins/plugin-16/enable-single-row          true
+/plugins/plugin-16/enable-wnck                false
+/plugins/plugin-16/font                       FiraCode Nerd Font Medium 11
+/plugins/plugin-16/known-players              Chromium;firefox;spotify
+/plugins/plugin-16/text                       
+/plugins/plugin-16/update-period              10000
+/plugins/plugin-16/use-label                  false
+/plugins/plugin-17/font                       FiraCode Nerd Font Medium 11
+/plugins/plugin-18                            separator
+/plugins/plugin-19                            clock
+/plugins/plugin-19/digital-layout             3
+/plugins/plugin-19/digital-time-font          Cantarell 11
+/plugins/plugin-19/digital-time-format        <span foreground="#E8E8E8" size="large"><b>%H:%M:%S</b></span>
+/plugins/plugin-19/timezone                   Europe/Berlin
+/plugins/plugin-1/button-icon                 emblem-debian-white
+/plugins/plugin-1/favorites                   []
+/plugins/plugin-1/recent                      [nm-connection-editor.desktop,com.anthropic.Claude.desktop]
+/plugins/plugin-1/view-mode                   2
+/plugins/plugin-2                             genmon
+/plugins/plugin-20                            separator
+/plugins/plugin-20/style                      0
+/plugins/plugin-21                            separator
+/plugins/plugin-22                            notification-plugin
+/plugins/plugin-23                            launcher
+/plugins/plugin-23/items                      [17851676342.desktop]
+/plugins/plugin-24                            separator
+/plugins/plugin-25                            separator
+/plugins/plugin-26                            launcher
+/plugins/plugin-26/items                      [17851676863.desktop]
+/plugins/plugin-27                            separator
+/plugins/plugin-29                            power-manager-plugin
+/plugins/plugin-3                             genmon
+/plugins/plugin-3/command                     /home/unposed/.config/i3/scripts/spotify-panel.sh
+/plugins/plugin-3/enable-single-row           true
+/plugins/plugin-3/font                        Fira Code Medium 8
+/plugins/plugin-3/text                        
+/plugins/plugin-3/update-period               1000
+/plugins/plugin-3/use-label                   false
+/plugins/plugin-4                             directorymenu
+/plugins/plugin-4/base-directory              /home/unposed
+/plugins/plugin-4/icon-name                   system-file-manager
+/plugins/plugin-5                             launcher
+/plugins/plugin-5/items                       [17851611611.desktop]
+/plugins/plugin-6                             launcher
+/plugins/plugin-6/items                       [17854112011.desktop]
+/plugins/plugin-7                             launcher
+/plugins/plugin-7/items                       [17851613795.desktop]
+/plugins/plugin-7/move-first                  true
+/plugins/plugin-8                             separator
+/plugins/plugin-9                             launcher
+/plugins/plugin-9/items                       [17853673871.desktop]

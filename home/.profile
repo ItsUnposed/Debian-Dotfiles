@@ -25,11 +25,14 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
+export QT_QPA_PLATFORMTHEME=qt6ct
+export GTK_THEME=Adwaita:dark
+export QT_QPA_PLATFORMTHEME=qt6ct
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 
 # Added by Toolbox App
 export PATH="$PATH:/home/unposed/.local/share/JetBrains/Toolbox/scripts"
 
-
-# Created by `pipx` on 2026-07-27 14:53:16
-export PATH="$PATH:/home/unposed/.local/bin"

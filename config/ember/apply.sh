@@ -118,8 +118,6 @@ notify-send -a ember "Theme gewechselt" "Palette: $NAME"
 
 
 # --- 13. matrix fest auf rot-steckplatz ---
-sed -i -E 's/-c [a-z]+/-c red/g; s/-C [a-z]+/-C red/g' "$HOME/.config/i3/scripts/win-matrix.sh"
-sed -i -E "s/(alias matrix=')[^']*/\1unimatrix -c red -o -s 95/" "$HOME/.bashrc"
 
 # --- 14. nano ---
 if [ -f "$HOME/.nanorc" ]; then
@@ -165,3 +163,9 @@ fi
 chmod 444 "$HOME/.config/qterminal.org/qterminal.ini" 2>/dev/null
 
 # --- 18. grub und login mitwechseln ---
+
+# --- 18. login mitwechseln ---
+sudo /usr/local/sbin/ember-boot-theme "$E/current.conf" "$WALLPAPER" >/dev/null 2>&1 &
+
+# --- 19. thunar neu laden ---
+thunar -q 2>/dev/null; pkill -f "thunar --daemon" 2>/dev/null

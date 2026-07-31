@@ -1,0 +1,36 @@
+@import url("/usr/share/themes/Adwaita-dark/gtk-3.0/gtk.css");
+#panel_window { background-color: #0A0A0A; color: #F0EDEB; border-bottom: 1px solid #E8E8E8; }
+#clock_label { color: #E8E8E8; font-weight: bold; }
+#login_window {
+    background-color: #0A0A0A;
+    border: 2px solid #E8E8E8;
+    border-radius: 14px;
+    color: #F0EDEB;
+    padding: 22px;
+}
+#user_image { border: 3px solid #E8E8E8; border-radius: 50%; padding: 3px; }
+entry {
+    background-color: #1C1C1C;
+    background-image: none;
+    color: #F0EDEB;
+    border: 1px solid #6E6E6E;
+    border-radius: 8px;
+    caret-color: #E8E8E8;
+    padding: 8px;
+}
+entry:focus { border-color: #E8E8E8; }
+button {
+    background-image: none;
+    background-color: #1C1C1C;
+    color: #E8E8E8;
+    border: 1px solid #E8E8E8;
+    border-radius: 8px;
+    padding: 6px 14px;
+}
+button:hover { background-color: #6E6E6E; color: #F0EDEB; }
+label { color: #F0EDEB; }
+#shutdown_dialog, #restart_dialog {
+    background-color: #0A0A0A;
+    border: 2px solid #E8E8E8;
+    border-radius: 12px;
+}
