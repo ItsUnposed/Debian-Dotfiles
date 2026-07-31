@@ -82,11 +82,8 @@ i3-msg '[con_mark="ff"]   focus; resize set height 35 ppt' >/dev/null
 i3-msg '[con_mark="left"] focus; resize set width  50 ppt' >/dev/null
 
 # 7) Titelleisten einschalten
-for m in left rtop ff cava; do
+for m in left rtop ff mx cava; do
     i3-msg "[con_mark=\"$m\"] border normal 2" >/dev/null
 done
 
 i3-msg '[con_mark="left"] focus' >/dev/null
-
-# Matrix: Rahmen ohne Titelleiste
-i3-msg '[con_mark="mx"] border pixel 2' >/dev/null
