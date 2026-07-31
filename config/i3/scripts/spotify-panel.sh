@@ -1,5 +1,5 @@
 #!/bin/bash
-[ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
+[ -f "$HOME/.config/chroma/current.conf" ] && . "$HOME/.config/chroma/current.conf"
 export PATH="/usr/local/bin:/usr/bin:/bin"
 [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && \
     export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"

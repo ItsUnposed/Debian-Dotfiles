@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -uo pipefail
 R="$(cd "$(dirname "$0")" && pwd)"
-# --- Farbe aus der aktiven Ember-Palette ---
+# --- Farbe aus der aktiven Chroma-Palette ---
 _h2a(){ printf '38;2;%d;%d;%d' 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}; }
-if [ -f "$HOME/.config/ember/current.conf" ]; then
-    . "$HOME/.config/ember/current.conf"
+if [ -f "$HOME/.config/chroma/current.conf" ]; then
+    . "$HOME/.config/chroma/current.conf"
     _C=$(_h2a "${C_ACC:-#FF6B5E}")
 else
     _C='38;2;255;107;94'
@@ -48,6 +48,6 @@ done
 say "6/6  xfce4-panel"
 mkdir -p "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml"
 cp -a "$R/xfce/xfce-perchannel-xml/." "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/" 2>/dev/null
-chmod +x "$HOME"/.config/i3/scripts/*.sh "$HOME"/.config/ember/*.sh 2>/dev/null
+chmod +x "$HOME"/.config/i3/scripts/*.sh "$HOME"/.config/chroma/*.sh 2>/dev/null
 
 say "Fertig. Jetzt abmelden und in i3 neu anmelden."

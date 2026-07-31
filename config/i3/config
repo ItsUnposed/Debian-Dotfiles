@@ -1,13 +1,13 @@
-set $bg     #080C11
+set $bg     #08110D
 set $fg     #F0EDEB
-set $red    #3D8FE0
-set $orange #6BB6FF
-set $inact  #121A22
-set $dim    #333F4A
-set $dkred  #1B5FA8
-set $ltred  #6BB6FF
-set $dkred  #1B5FA8
-set $ltred  #6BB6FF
+set $red    #3DD9A0
+set $orange #6BFFC4
+set $inact  #12221B
+set $dim    #2F4A40
+set $dkred  #1B9E6E
+set $ltred  #6BFFC4
+set $dkred  #1B9E6E
+set $ltred  #6BFFC4
 
 client.focused          $red     $bg      $ltred  $red      $red
 client.focused_inactive $inact   $bg      $ltred  $inact    $inact
@@ -17,7 +17,7 @@ client.urgent           $red     $bg      $ltred  $red      $red
 default_border normal 2
 default_floating_border normal 2
 
-exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Blue.png
+exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Green.png
 exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
@@ -40,7 +40,7 @@ bindsym $mod+q exec --no-startup-id ~/.config/i3/scripts/ws-close.sh
 
 # Programm-Starter (rofi)
 bindsym $mod+space exec ~/.config/i3/scripts/rofi-launcher.sh
-bindsym $mod+d exec --no-startup-id rofi -show drun -theme ~/.config/rofi/ember.rasi
+bindsym $mod+d exec --no-startup-id rofi -show drun -theme ~/.config/rofi/chroma.rasi
 
 # Fokus wechseln
 bindsym $mod+Left focus left
@@ -122,7 +122,7 @@ bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec_always --no-startup-id sh -c "pkill -x nm-applet; sleep 1; nm-applet"
 bindsym $mod+n exec --restart nm-applet
 
-exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Blue.png"
+exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Green.png"
 # client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
 # client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
 # client.unfocused        #333333 #222222 #888888 #292d2e #222222
@@ -172,7 +172,7 @@ bindsym $mod+Shift+0 move container to workspace number 10
 # --- Minimieren ---
 bindsym Mod1+m move to workspace __min
 bindsym Mod1+Shift+minus [workspace="__min"] move workspace to current
-bindsym Control+minus exec --no-startup-id ~/.config/ember/menu.sh
+bindsym Control+minus exec --no-startup-id ~/.config/chroma/menu.sh
 
 for_window [instance="matrix-xterm"] border normal 2
 for_window [class="jetbrains-.*" title="win0"] floating enable, border none

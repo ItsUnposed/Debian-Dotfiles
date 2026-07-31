@@ -1,7 +1,7 @@
 #!/bin/bash
-# ember/apply.sh <farbe>   -- setzt das gesamte System auf eine Palette
+# chroma/apply.sh <farbe>   -- setzt das gesamte System auf eine Palette
 export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin"
-E="$HOME/.config/ember"
+E="$HOME/.config/chroma"
 
 P="$E/palettes/$1.conf"
 [ -f "$P" ] || { echo "Palette $1 nicht gefunden"; exit 1; }
@@ -38,11 +38,11 @@ FF="$HOME/.config/fastfetch"
 [ -f "$FF/config.jsonc" ] && python3 "$E/ff-colors.py" "$FF/config.jsonc" "$C_ACC" "$C_ACC2" "$C_ACC3" invert >/dev/null 2>&1
 
 # --- 4. rofi ---
-if [ -f "$E/templates/ember.rasi" ]; then
+if [ -f "$E/templates/chroma.rasi" ]; then
   sed -e "s|@@BG@@|$C_BG|g" -e "s|@@BG2@@|$C_BG2|g" -e "s|@@DIM@@|$C_DIM|g" \
       -e "s|@@FG@@|$C_FG|g" -e "s|@@ACC@@|$C_ACC|g" -e "s|@@ACC2@@|$C_ACC2|g" \
       -e "s|@@ACC3@@|$C_ACC3|g" \
-      "$E/templates/ember.rasi" > "$HOME/.config/rofi/ember.rasi"
+      "$E/templates/chroma.rasi" > "$HOME/.config/rofi/chroma.rasi"
 fi
 
 # --- 5. GTK ---
@@ -58,7 +58,7 @@ fi
 if [ -f "$E/templates/notify.css" ]; then
   sed -e "s|@@BG2@@|$C_BG2|g" -e "s|@@FG@@|$C_FG|g" -e "s|@@ACC@@|$C_ACC|g" \
       -e "s|@@DIM@@|$C_DIM|g" \
-      "$E/templates/notify.css" > "$HOME/.themes/Ember/xfce-notify-4.0/gtk.css"
+      "$E/templates/notify.css" > "$HOME/.themes/Chroma/xfce-notify-4.0/gtk.css"
 fi
 
 # --- 7. btop ---
@@ -78,7 +78,7 @@ sed -i "s|Pictures/Wallpapers/[A-Za-z-]*\.png|Pictures/Wallpapers/$(basename $WA
 [ -f "$HOME/.xsessionrc" ] && sed -i "s|Pictures/Wallpapers/[A-Za-z-]*\.png|Pictures/Wallpapers/$(basename $WALLPAPER)|g" "$HOME/.xsessionrc"
 
 # --- 9. qterminal ---
-Q="$HOME/.local/share/qtermwidget6/color-schemes/Ember.colorscheme"
+Q="$HOME/.local/share/qtermwidget6/color-schemes/Chroma.colorscheme"
 if [ -f "$Q" ]; then
   sed -i -e "0,/^\[Background\]/{}" "$Q"
   python3 - "$Q" "$C_BG" "$C_FG" "$C_ACC" "$C_ACC2" << 'PY'
@@ -114,7 +114,7 @@ fi
 setsid xfce4-panel --disable-wm-check >/dev/null 2>&1 &
 i3-msg reload >/dev/null 2>&1
 
-notify-send -a ember "Theme gewechselt" "Palette: $NAME"
+notify-send -a chroma "Theme gewechselt" "Palette: $NAME"
 
 
 # --- 13. matrix fest auf rot-steckplatz ---
@@ -134,7 +134,7 @@ if [ -f "$HOME/.nano/i3.nanorc" ]; then
 fi
 
 # --- 15. Workspace 1 zuruecksetzen ---
-LOCK="/tmp/ember-ws-reset.lock"
+LOCK="/tmp/chroma-ws-reset.lock"
 if [ -x "$HOME/.config/i3/hacker-startup.sh" ] && mkdir "$LOCK" 2>/dev/null; then
   ( sleep 2
     i3-msg "workspace number 1" >/dev/null 2>&1

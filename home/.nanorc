@@ -5,7 +5,7 @@ include /usr/share/nano/extra/*.nanorc
 # --- eigene Regeln, muessen danach kommen ---
 include ~/.nano/i3.nanorc
 
-# --- Oberflaeche im Ember-Schema ---
+# --- Oberflaeche im Chroma-Schema ---
 set titlecolor    #111,#eee
 set statuscolor   #111,#eee
 set errorcolor    #eee,#666

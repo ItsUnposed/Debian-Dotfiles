@@ -7,6 +7,7 @@
   <property name="applications" type="empty">
     <property name="known_applications" type="array">
       <value type="string" value="brightness"/>
+      <value type="string" value="chroma"/>
       <value type="string" value="ember"/>
       <value type="string" value="firefox"/>
       <value type="string" value="flameshot"/>

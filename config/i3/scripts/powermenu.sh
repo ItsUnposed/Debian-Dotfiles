@@ -1,7 +1,7 @@
 #!/bin/bash
 CH=$(printf "Lock\nLog Out\nSuspend\nReboot\nPower Off\n" \
      | rofi -dmenu -i -no-custom -lines 5 -p "Power" \
-            -theme "$HOME/.config/rofi/ember")
+            -theme "$HOME/.config/rofi/chroma")
 
 case "$CH" in
     "Lock")      command -v i3lock >/dev/null && i3lock -c 0d0a09 || xset s activate ;;

@@ -1,1 +1,1 @@
-unposed ALL=(root) NOPASSWD: /usr/local/sbin/ember-boot-theme
+unposed ALL=(root) NOPASSWD: /usr/local/sbin/chroma-boot-theme

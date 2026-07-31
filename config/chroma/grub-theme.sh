@@ -1,6 +1,6 @@
 #!/bin/bash
-. "$HOME/.config/ember/current.conf"
-T="/boot/grub/themes/ember"
+. "$HOME/.config/chroma/current.conf"
+T="/boot/grub/themes/chroma"
 sudo mkdir -p "$T"
 sudo convert -size 1920x1200 gradient:"$C_BG"-"$C_ACC3" "$T/background.png" 2>/dev/null
 
@@ -58,6 +58,6 @@ T2
 
 [ -f "$T/firacode16.pf2" ] || sudo grub-mkfont -s 16 -o "$T/firacode16.pf2" /usr/share/fonts/truetype/firacode/FiraCode-Regular.ttf 2>/dev/null
 
-sudo sed -i 's|^GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/ember/theme.txt"|' /etc/default/grub
-grep -q "^GRUB_THEME=" /etc/default/grub || echo 'GRUB_THEME="/boot/grub/themes/ember/theme.txt"' | sudo tee -a /etc/default/grub >/dev/null
+sudo sed -i 's|^GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/chroma/theme.txt"|' /etc/default/grub
+grep -q "^GRUB_THEME=" /etc/default/grub || echo 'GRUB_THEME="/boot/grub/themes/chroma/theme.txt"' | sudo tee -a /etc/default/grub >/dev/null
 sudo update-grub 2>/dev/null

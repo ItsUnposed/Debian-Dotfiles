@@ -112,7 +112,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# --- Ember Prompt ---
+# --- Chroma Prompt ---
 ORANGE='\[\e[38;2;255;140;66m\]'
 LTRED='\[\e[38;2;255;107;94m\]'
 WHITE='\[\e[38;2;255;255;255m\]'
@@ -126,7 +126,7 @@ if [[ $- == *i* ]] && [[ -z "$NO_FASTFETCH" ]]; then
     fastfetch
 fi
 
-# --- Ember Prompt: Benutzername in hellerem Rot ---
+# --- Chroma Prompt: Benutzername in hellerem Rot ---
 LTRED='\[\e[38;2;255;107;94m\]'
 PS1="${LTRED}\u${WHITE}@${RED}\h${RESET}:${AMBER}\w${RESET}\$ "
 
@@ -135,7 +135,7 @@ if [[ $- == *i* ]]; then
     PROMPT_COMMAND='printf "\033]0;%s\007" "${WIN_TITLE:-Terminal}"'
 fi
 
-# --- Ember: ls-Farben ---
+# --- Chroma: ls-Farben ---
 if [ -r ~/.dircolors ]; then
     eval "$(dircolors -b ~/.dircolors)"
 fi
@@ -147,9 +147,9 @@ export PATH="$HOME/.local/bin:$PATH"
 alias matrix='unimatrix -c terminal -o -s 95'
 alias i3c='nano ~/.config/i3/config'
 
-# --- Ember: Prompt aus der aktiven Palette ---
-if [ -f "$HOME/.config/ember/current.conf" ]; then
-    . "$HOME/.config/ember/current.conf"
+# --- Chroma: Prompt aus der aktiven Palette ---
+if [ -f "$HOME/.config/chroma/current.conf" ]; then
+    . "$HOME/.config/chroma/current.conf"
     _h2a() { printf '38;2;%d;%d;%d' 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}; }
     _U="\[\e[$(_h2a ${C_ACC:-#FF6B5E})m\]"
     _W="\[\e[38;2;255;255;255m\]"
@@ -159,9 +159,9 @@ if [ -f "$HOME/.config/ember/current.conf" ]; then
     PS1="${_U}\u${_W}@${_H}\h${_R}:${_P}\w${_R}\$ "
 fi
 
-# --- Ember: grep-Farben aus der Palette ---
-if [ -f "$HOME/.config/ember/current.conf" ]; then
-    . "$HOME/.config/ember/current.conf"
+# --- Chroma: grep-Farben aus der Palette ---
+if [ -f "$HOME/.config/chroma/current.conf" ]; then
+    . "$HOME/.config/chroma/current.conf"
     _ga() { h=${1#\#}; printf '38;2;%d;%d;%d' 0x${h:0:2} 0x${h:2:2} 0x${h:4:2}; }
     export GREP_COLORS="mt=01;$(_ga $C_ACC):fn=$(_ga $C_ACC3):ln=$(_ga $C_ACC2)"
 fi

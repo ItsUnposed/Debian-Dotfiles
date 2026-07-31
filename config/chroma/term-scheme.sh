@@ -1,7 +1,7 @@
 #!/bin/bash
-# term-scheme.sh -- schreibt Ember.colorscheme aus der aktiven Palette
-. "$HOME/.config/ember/current.conf"
-OUT="$HOME/.local/share/qtermwidget6/color-schemes/Ember.colorscheme"
+# term-scheme.sh -- schreibt Chroma.colorscheme aus der aktiven Palette
+. "$HOME/.config/chroma/current.conf"
+OUT="$HOME/.local/share/qtermwidget6/color-schemes/Chroma.colorscheme"
 mkdir -p "$(dirname "$OUT")"
 
 mix() { # mix <hex> <anteil_bg_prozent>
@@ -16,7 +16,7 @@ rgb() { h=${1#\#}; printf '%d,%d,%d' 0x${h:0:2} 0x${h:2:2} 0x${h:4:2}; }
 
 cat > "$OUT" << T
 [General]
-Description=Ember
+Description=Chroma
 Opacity=1
 
 [Background]

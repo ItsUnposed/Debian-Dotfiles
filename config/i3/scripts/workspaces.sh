@@ -1,6 +1,6 @@
 #!/bin/bash
 export PATH="/usr/local/bin:/usr/bin:/bin"
-[ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
+[ -f "$HOME/.config/chroma/current.conf" ] && . "$HOME/.config/chroma/current.conf"
 
 ACC="${C_ACC:-#FF6B5E}"   # Theme-Farbe: Pille und alle inaktiven
 TXT="${C_BG:-#0D0A09}"    # Text in der Pille, dunkel fuer Kontrast

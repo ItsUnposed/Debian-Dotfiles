@@ -1,4 +1,4 @@
-# dotfiles — Ember
+# dotfiles — Chroma
 
 Debian 13 (Trixie) · i3wm · xfce4-panel · picom v12 · qterminal
 
@@ -53,7 +53,7 @@ Alle anderen werden von `save.sh` kopiert.
 ## Farbpaletten
 
 ```bash
-~/.config/ember/apply.sh red      # oder green, silver, ...
+~/.config/chroma/apply.sh red      # oder green, silver, ...
 ```
 
 `apply.sh` schreibt die Farben in i3, cava, rofi, qterminal, nano,

@@ -9,4 +9,4 @@ configuration {
     sidebar-mode:        false;
     terminal:            "qterminal";
 }
-@theme "~/.config/rofi/ember.rasi"
+@theme "~/.config/rofi/chroma.rasi"

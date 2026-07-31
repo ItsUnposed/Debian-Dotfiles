@@ -1,7 +1,7 @@
 #!/bin/bash
-# btop-theme.sh -- erzeugt ember.theme aus der aktiven Palette
-. "$HOME/.config/ember/current.conf"
-OUT="$HOME/.config/btop/themes/ember.theme"
+# btop-theme.sh -- erzeugt chroma.theme aus der aktiven Palette
+. "$HOME/.config/chroma/current.conf"
+OUT="$HOME/.config/btop/themes/chroma.theme"
 mkdir -p "$(dirname "$OUT")"
 
 cat > "$OUT" << T

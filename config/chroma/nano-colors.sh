@@ -1,5 +1,5 @@
 #!/bin/bash
-. "$HOME/.config/ember/current.conf"
+. "$HOME/.config/chroma/current.conf"
 
 h3() {
     h=${1#\#}

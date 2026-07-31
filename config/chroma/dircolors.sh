@@ -1,5 +1,5 @@
 #!/bin/bash
-. "$HOME/.config/ember/current.conf"
+. "$HOME/.config/chroma/current.conf"
 a()  { h=${1#\#}; printf '38;2;%d;%d;%d' 0x${h:0:2} 0x${h:2:2} 0x${h:4:2}; }
 ACC=$(a $C_ACC); ACC2=$(a $C_ACC2); ACC3=$(a $C_ACC3)
 FG=$(a $C_FG);   DIM=$(a $C_DIM)

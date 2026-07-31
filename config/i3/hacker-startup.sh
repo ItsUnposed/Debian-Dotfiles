@@ -34,7 +34,7 @@ launch() {
 # launch_xterm: startet xterm direkt mit Palettenfarbe
 launch_xterm() {
     local mark="$1" script="$2" wname="$3" before i
-    [ -f "$HOME/.config/ember/current.conf" ] && . "$HOME/.config/ember/current.conf"
+    [ -f "$HOME/.config/chroma/current.conf" ] && . "$HOME/.config/chroma/current.conf"
     local h=${C_ACC:-#FF6B5E}; h=${h#\#}
     local FG="$(printf '%02x/%02x/%02x' $((0x${h:0:2})) $((0x${h:2:2})) $((0x${h:4:2})))"
     local BG="00/00/00"

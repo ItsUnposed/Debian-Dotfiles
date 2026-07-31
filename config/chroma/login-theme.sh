@@ -1,11 +1,11 @@
 #!/bin/bash
-. "$HOME/.config/ember/current.conf"
+. "$HOME/.config/chroma/current.conf"
 WP="$WALLPAPER"
 [ -f "$WP" ] || WP="$HOME/Pictures/Wallpapers/Red.png"
 sudo convert "$WP" -brightness-contrast -30x0 /usr/share/backgrounds/login-bg.png 2>/dev/null
 
-sudo mkdir -p /usr/share/themes/Ember-Greeter/gtk-3.0
-sudo tee /usr/share/themes/Ember-Greeter/gtk-3.0/gtk.css > /dev/null << T
+sudo mkdir -p /usr/share/themes/Chroma-Greeter/gtk-3.0
+sudo tee /usr/share/themes/Chroma-Greeter/gtk-3.0/gtk.css > /dev/null << T
 @import url("/usr/share/themes/Adwaita-dark/gtk-3.0/gtk.css");
 #panel_window { background-color: $C_BG; color: $C_FG; border-bottom: 1px solid $C_ACC; }
 #clock_label { color: $C_ACC; font-weight: bold; }
@@ -47,7 +47,7 @@ T
 sudo tee /etc/lightdm/lightdm-gtk-greeter.conf > /dev/null << T
 [greeter]
 background=/usr/share/backgrounds/login-bg.png
-theme-name=Ember-Greeter
+theme-name=Chroma-Greeter
 icon-theme-name=Papirus-Dark
 font-name=Fira Code 11
 cursor-theme-name=Adwaita
