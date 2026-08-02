@@ -53,17 +53,23 @@ say "2/8  Weitere Pakete aus der Liste"
 # ======================================================================
 LIST="$R/packages/apt-manual.txt"
 if [ -f "$LIST" ]; then
-    FAIL=0; N=0
-    while read -r p; do
-        p="${p%%[[:space:]]*}"
-        [ -z "$p" ] && continue
-        case "$p" in \#*|kali*|gcc-16*) continue ;; esac
-        N=$((N+1))
-        printf "\r     %-40s" "$p"
-        sudo apt install -y "$p" >/dev/null 2>&1 || FAIL=$((FAIL+1))
-    done < "$LIST"
-    printf "\r%-50s\r" ""
-    ok "$((N-FAIL))/$N installiert"
+    # In Bloecken installieren statt einzeln - sonst dauert es ewig.
+    # Faellt ein Block, werden dessen Pakete einzeln nachgereicht.
+    mapfile -t PKGS < <(grep -v '^\s*#' "$LIST" | awk '{print $1}' \
+                        | grep -v '^$' | grep -v '^kali' | grep -v '^gcc-16' | sort -u)
+    TOTAL=${#PKGS[@]}; FAIL=0; i=0
+    while [ "$i" -lt "$TOTAL" ]; do
+        CHUNK=("${PKGS[@]:$i:40}")
+        printf "\r     %d/%d" "$i" "$TOTAL"
+        if ! sudo apt install -y "${CHUNK[@]}" >/dev/null 2>&1; then
+            for q in "${CHUNK[@]}"; do
+                sudo apt install -y "$q" >/dev/null 2>&1 || FAIL=$((FAIL+1))
+            done
+        fi
+        i=$((i+40))
+    done
+    printf "\r%-40s\r" ""
+    ok "$((TOTAL-FAIL))/$TOTAL installiert"
     [ "$FAIL" -gt 0 ] && warn "$FAIL nicht verfuegbar (uebersprungen)"
 else
     warn "packages/apt-manual.txt fehlt"
