@@ -27,6 +27,10 @@ CORE=(
     thunar thunar-archive-plugin gvfs gvfs-backends tumbler
     xfce4-panel xfce4-appfinder xfce4-whiskermenu-plugin xfce4-genmon-plugin
     xfce4-settings xfce4-power-manager xfce4-notifyd
+    xfce4-pulseaudio-plugin xfce4-clipman-plugin xfce4-systemload-plugin
+    xfce4-taskmanager
+    xfce4-pulseaudio-plugin xfce4-clipman-plugin xfce4-systemload-plugin
+    xfce4-taskmanager
     network-manager network-manager-gnome
     pulseaudio pavucontrol
     flameshot brightnessctl playerctl feh
@@ -55,8 +59,10 @@ if [ -f "$LIST" ]; then
         [ -z "$p" ] && continue
         case "$p" in \#*|kali*|gcc-16*) continue ;; esac
         N=$((N+1))
+        printf "\r     %-40s" "$p"
         sudo apt install -y "$p" >/dev/null 2>&1 || FAIL=$((FAIL+1))
     done < "$LIST"
+    printf "\r%-50s\r" ""
     ok "$((N-FAIL))/$N installiert"
     [ "$FAIL" -gt 0 ] && warn "$FAIL nicht verfuegbar (uebersprungen)"
 else
