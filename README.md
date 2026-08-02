@@ -83,7 +83,6 @@ Modifier ist die **Super-Taste** (Windows).
 | <kbd>Super</kbd>+<kbd>s</kbd> / <kbd>w</kbd>  | Stacking / Tabbed         |
 | <kbd>Super</kbd>+<kbd>a</kbd>                 | Elternfenster fokussieren |
 | <kbd>Super</kbd>+<kbd>Tab</kbd>               | Tiling/Floating wechseln  |
-| <kbd>Alt</kbd>+<kbd>m</kbd>                   | Fenster minimieren        |
 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>-</kbd>  | Minimiertes zurückholen   |
 
 ### Workspaces
@@ -99,6 +98,7 @@ Modifier ist die **Super-Taste** (Windows).
 |------------------------------------------------|---------------------------|
 | <kbd>Super</kbd>+<kbd>-</kbd>                  | Farbpaletten-Menü         |
 | <kbd>Super</kbd>+<kbd>o</kbd>                  | Hackerstartup-Layout      |
+| <kbd>Super</kbd>+<kbd>i</kbd>                  | Dev-Layout (IDE-Auswahl)  |
 | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>h</kbd> | Hackerstartup-Layout      |
 | <kbd>Super</kbd>+<kbd>p</kbd>                  | pipes (Theme-Farbe)       |
 | <kbd>Super</kbd>+<kbd>x</kbd>                  | unimatrix (Theme-Farbe)   |
@@ -124,6 +124,12 @@ Modifier ist die **Super-Taste** (Windows).
 
 Alle Fenster übernehmen die aktive Palettenfarbe und laufen mit
 picom-Transparenz.
+
+## Dev-Layout
+
+Super+i oeffnet ein Rofi mit PyCharm, IntelliJ IDEA und CLion. Die gewaehlte
+IDE startet links (82% Breite), rechts daneben laufen Matrix oben und pipes
+unten.
 
 ## Aufbau
 
