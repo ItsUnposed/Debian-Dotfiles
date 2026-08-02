@@ -21,7 +21,11 @@ git clone git@github.com:ItsUnposed/dotfiles.git ~/dotfiles
 ~/dotfiles/install.sh
 ```
 
-Danach abmelden und die Sitzung **i3** wählen.
+Der Installer richtet alles ein: i3, LightDM, picom, Panel, Themes und
+Farbpalette. Danach neu starten, im Anmeldebildschirm oben rechts die
+Sitzung **i3** wählen und anmelden.
+
+Getestet auf einer frischen Debian-13-Netinstall ohne Desktopumgebung.
 
 ## Farbsystem
 

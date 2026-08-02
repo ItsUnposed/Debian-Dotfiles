@@ -95,6 +95,7 @@
         <value type="string" value="Claude_status_icon_1"/>
       </property>
       <property name="known-legacy-items" type="array">
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (68%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (61%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (51%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (55%)"/>
