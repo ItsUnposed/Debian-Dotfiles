@@ -83,7 +83,6 @@ Modifier ist die **Super-Taste** (Windows).
 | <kbd>Super</kbd>+<kbd>s</kbd> / <kbd>w</kbd>  | Stacking / Tabbed         |
 | <kbd>Super</kbd>+<kbd>a</kbd>                 | Elternfenster fokussieren |
 | <kbd>Super</kbd>+<kbd>Tab</kbd>               | Tiling/Floating wechseln  |
-| <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>-</kbd>  | Minimiertes zurückholen   |
 
 ### Workspaces
 
