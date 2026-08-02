@@ -17,7 +17,7 @@ Panel, GRUB und der Login-Screen ziehen alle mit.
 
 ```bash
 sudo apt install -y git
-git clone git@github.com:ItsUnposed/dotfiles.git ~/dotfiles
+git clone https://github.com/ItsUnposed/Debian-Dotfiles.git ~/dotfiles
 ~/dotfiles/install.sh
 ```
 
