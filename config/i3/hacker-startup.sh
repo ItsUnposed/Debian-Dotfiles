@@ -8,6 +8,10 @@
 #  |                |  cava      65%|               |
 #  +----------------+---------------+---------------+
 
+# Warten bis picom laeuft, bevor irgendein Fenster geoeffnet wird
+while ! pgrep -x picom >/dev/null; do sleep 0.1; done
+sleep 0.3
+
 S="$HOME/.config/i3/scripts"
 WS="number 1"
 

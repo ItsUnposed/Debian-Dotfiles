@@ -41,7 +41,6 @@ GRUB_GFXMODE=2560x1440,auto
 # --- Ember ---
 
 GRUB_THEME="/usr/share/grub/themes/vimix/theme.txt"
-GRUB_GFXPAYLOAD_LINUX=keep
 GRUB_COLOR_NORMAL="white/black"
 GRUB_COLOR_HIGHLIGHT="black/white"
 GRUB_THEME="/usr/share/grub/themes/vimix/theme.txt"
@@ -50,3 +49,4 @@ GRUB_DISABLE_OS_PROBER=true
 GRUB_DISABLE_SUBMENU=n
 GRUB_DISABLE_OS_PROBER=false
 GRUB_GFXMODE=1920x1200,auto
+GRUB_GFXPAYLOAD_LINUX=keep

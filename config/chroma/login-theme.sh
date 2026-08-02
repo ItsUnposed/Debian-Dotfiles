@@ -2,7 +2,7 @@
 . "$HOME/.config/chroma/current.conf"
 WP="$WALLPAPER"
 [ -f "$WP" ] || WP="$HOME/Pictures/Wallpapers/Red.png"
-sudo convert "$WP" -brightness-contrast -30x0 /usr/share/backgrounds/login-bg.png 2>/dev/null
+sudo cp "$WP" /usr/share/backgrounds/login-bg.png
 
 sudo mkdir -p /usr/share/themes/Chroma-Greeter/gtk-3.0
 sudo tee /usr/share/themes/Chroma-Greeter/gtk-3.0/gtk.css > /dev/null << T
@@ -57,7 +57,7 @@ xft-hintstyle=hintslight
 user-background=false
 hide-user-image=false
 round-user-image=true
-default-user-image=/usr/share/backgrounds/omen-avatar.png
+default-user-image=/usr/share/backgrounds/user-avatar.png
 clock-format=%H:%M   %A, %d. %B
 indicators=~host;~spacer;~clock;~spacer;~session;~power
 position=50%,center 50%,center

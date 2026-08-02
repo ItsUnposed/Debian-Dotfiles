@@ -89,10 +89,28 @@
       <property name="symbolic-icons" type="bool" value="false"/>
       <property name="hide-new-items" type="bool" value="false"/>
       <property name="known-items" type="array">
+        <value type="string" value="vlc"/>
+        <value type="string" value="obs"/>
         <value type="string" value="discord_status_icon_1"/>
         <value type="string" value="Claude_status_icon_1"/>
       </property>
       <property name="known-legacy-items" type="array">
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (61%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (51%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (55%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (66%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (59%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (60%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (63%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (78%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (79%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (65%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (85%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (58%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (49%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (41%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (81%)"/>
+        <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (80%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (87%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (42%)"/>
         <value type="string" value="wi-fi network connection “fritz!box 7490” active: fritz!box 7490 (57%)"/>
@@ -114,7 +132,7 @@
     </property>
     <property name="plugin-19" type="string" value="clock">
       <property name="digital-layout" type="uint" value="3"/>
-      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#6BFFC4&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
+      <property name="digital-time-format" type="string" value="&lt;span foreground=&quot;#E8E8E8&quot; size=&quot;large&quot;&gt;&lt;b&gt;%H:%M:%S&lt;/b&gt;&lt;/span&gt;"/>
       <property name="digital-time-font" type="string" value="Cantarell 11"/>
       <property name="timezone" type="string" value="Europe/Berlin"/>
     </property>
@@ -162,7 +180,7 @@
       <property name="font" type="string" value="FiraCode Nerd Font Medium 11"/>
       <property name="enable-single-row" type="bool" value="true"/>
       <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
-      <property name="known-players" type="string" value="Chromium;firefox;spotify"/>
+      <property name="known-players" type="string" value="Chromium;firefox;spotify;vlc"/>
       <property name="enable-multimedia-keys" type="bool" value="false"/>
       <property name="enable-wnck" type="bool" value="false"/>
       <property name="enable-mpris" type="bool" value="false"/>

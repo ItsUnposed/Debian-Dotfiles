@@ -1,13 +1,13 @@
-set $bg     #08110D
+set $bg     #0A0A0A
 set $fg     #F0EDEB
-set $red    #3DD9A0
-set $orange #6BFFC4
-set $inact  #12221B
-set $dim    #2F4A40
-set $dkred  #1B9E6E
-set $ltred  #6BFFC4
-set $dkred  #1B9E6E
-set $ltred  #6BFFC4
+set $red    #B0B0B0
+set $orange #E8E8E8
+set $inact  #1C1C1C
+set $dim    #3E3E3E
+set $dkred  #6E6E6E
+set $ltred  #E8E8E8
+set $dkred  #6E6E6E
+set $ltred  #E8E8E8
 
 client.focused          $red     $bg      $ltred  $red      $red
 client.focused_inactive $inact   $bg      $ltred  $inact    $inact
@@ -17,14 +17,15 @@ client.urgent           $red     $bg      $ltred  $red      $red
 default_border normal 2
 default_floating_border normal 2
 
-exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Green.png
+exec_always --no-startup-id feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Black.png
 exec_always --no-startup-id export QT_QPA_PLATFORMTHEME=qt6ct
 exec_always --no-startup-id xfsettingsd
 exec --no-startup-id export XDG_DATA_DIRS="$HOME/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:$XDG_DATA_DIRS"
 
 # i3 config file
 # Mod-Taste: Alt
-set $mod Mod1
+set $mod Mod4
+bindsym $mod+m exec --no-startup-id xfce4-popup-whiskermenu
 
 # Schriftart für Fenstertitel
 font pango:DejaVu Sans Mono 10
@@ -32,11 +33,26 @@ font pango:DejaVu Sans Mono 10
 # Autostart
 floating_modifier $mod
 
+for_window [instance="matrix-xterm"] border none
+bindsym $mod+e exec --no-startup-id thunar
+# Terminal-Spielereien
+bindsym $mod+p exec --no-startup-id ~/.config/i3/scripts/hotkey-pipes.sh
+bindsym $mod+x exec --no-startup-id ~/.config/i3/scripts/hotkey-matrix.sh
+
+# Fenstergroesse aendern
+bindsym $mod+Control+Left  resize shrink width  10 px or 10 ppt
+bindsym $mod+Control+Right resize grow   width  10 px or 10 ppt
+bindsym $mod+Control+Up    resize shrink height 10 px or 10 ppt
+bindsym $mod+Control+Down  resize grow   height 10 px or 10 ppt
+
+
+# Fenstergroesse direkt aendern
+
 # Terminal starten
 bindsym $mod+Return exec qterminal
 
 # Fenster schließen
-bindsym $mod+q exec --no-startup-id ~/.config/i3/scripts/ws-close.sh
+bindsym $mod+q kill
 
 # Programm-Starter (rofi)
 bindsym $mod+space exec ~/.config/i3/scripts/rofi-launcher.sh
@@ -74,7 +90,6 @@ bindsym $mod+f fullscreen toggle
 # Layout
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
 
 # Floating toggle
 bindsym $mod+Shift+space floating toggle
@@ -94,17 +109,6 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Willst du wirklich ausloggen?' -B 'Ja' 'i3-msg exit'"
 
-# Fenstergröße ändern
-mode "resize" {
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
-
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-bindsym $mod+r mode "resize"
 
 # Fokus folgt Maus
 focus_follows_mouse yes
@@ -115,6 +119,7 @@ gaps outer 5
 smart_gaps off
 
 # Autostart
+exec_always --no-startup-id xset b off
 exec_always --no-startup-id xfce4-panel
 exec_always --no-startup-id sh -c "pkill -x picom; sleep 2; exec picom -b"
 exec --no-startup-id ~/.config/i3/hacker-startup.sh
@@ -122,7 +127,7 @@ bindsym $mod+Shift+h exec --no-startup-id ~/.config/i3/hacker-startup.sh
 exec_always --no-startup-id sh -c "pkill -x nm-applet; sleep 1; exec nm-applet"
 bindsym $mod+n exec --restart nm-applet
 
-exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Green.png"
+exec_always --no-startup-id sh -c "sleep 1; feh --no-fehbg --bg-fill $HOME/Pictures/Wallpapers/Black.png"
 # client.focused          #4C7899 #285577 #ffffff #2e9ef4 #285577
 # client.focused_inactive #333333 #5f676a #ffffff #484e50 #5f676a
 # client.unfocused        #333333 #222222 #888888 #292d2e #222222
@@ -137,9 +142,7 @@ bindsym $mod+Shift+x exec betterlockscreen -l blur
 bindsym $mod+o exec --no-startup-id ~/.config/i3/hacker-startup.sh
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
-bindsym Control+Mod1+m exec --no-startup-id xfce4-popup-whiskermenu
 exec_always --no-startup-id sh -c 'setxkbmap -layout deumlaut -option "" -option lv3:ralt_switch'
-exec_always --no-startup-id sh -c 'pkill xcape; sleep 1; xcape -e "Super_L=Control_L|Alt_L|m"'
 bindsym $mod+Shift+e exec --no-startup-id ~/.config/i3/scripts/powermenu.sh
 exec_always --no-startup-id sh -c "pkill -f xfce4-power-manager; sleep 1; exec xfce4-power-manager"
 
@@ -172,12 +175,8 @@ bindsym $mod+Shift+0 move container to workspace number 10
 # --- Minimieren ---
 bindsym Mod1+m move to workspace __min
 bindsym Mod1+Shift+minus [workspace="__min"] move workspace to current
-bindsym Control+minus exec --no-startup-id ~/.config/chroma/menu.sh
+bindsym $mod+minus exec --no-startup-id ~/.config/chroma/menu.sh
 
-for_window [instance="matrix-xterm"] border normal 2
-for_window [class="jetbrains-.*" title="win0"] floating enable, border none
-for_window [class="jetbrains-.*" title="Welcome to .*"] floating enable
-for_window [class="jetbrains-toolbox"] floating enable
 
 # --- Gaps: erzeugen den Rand beim Semi-Vollbild ---
 gaps inner 10
@@ -186,10 +185,10 @@ smart_gaps off
 
 # --- JetBrains ---
 # Splash und Menue-Fenster muessen schweben, sonst bleiben Menues leer
-for_window [class="^jetbrains-" title="^win0$"] floating enable, border none
+for_window [class="^jetbrains-" title="^splash$"] floating enable, border none
 # alle echten Fenster kacheln -> fuellen den Workspace, Gaps geben den Rand
-for_window [class="^jetbrains-" title="^(?!win0$).*"] floating disable
-bindsym Mod1+minus exec --no-startup-id ~/.config/i3/scripts/semifull.sh
+for_window [class="^jetbrains-" title="^(?!splash$).*"] floating disable
+bindsym $mod+t exec --no-startup-id ~/.config/i3/scripts/semifull.sh
 
 # --- Claude Desktop: i3 zeichnet die fehlende Titelleiste ---
 for_window [class="^com\.anthropic\.Claude$"] border normal 3

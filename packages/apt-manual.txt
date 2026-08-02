@@ -102,6 +102,7 @@ libapt-pkg7.0
 libattr1
 libaudit-common
 libaudit1
+libavif-bin
 libblkid1
 libbpf1
 libbsd0
@@ -193,6 +194,7 @@ manpages
 mawk
 media-types
 mount
+mugshot
 nano
 ncurses-base
 ncurses-bin
@@ -205,6 +207,7 @@ network-manager-gnome
 nftables
 nodejs
 npm
+obs-studio
 openssh-client
 openssl-provider-legacy
 os-prober
@@ -215,6 +218,7 @@ pciutils
 perl
 perl-base
 picom
+pipes-sh
 pipewire-audio
 pipewire-pulse
 playerctl
@@ -274,7 +278,6 @@ wtmpdb
 x11-utils
 x11-xkb-utils
 x11-xserver-utils
-xcape
 xclip
 xdotool
 xfce4-battery-plugin
