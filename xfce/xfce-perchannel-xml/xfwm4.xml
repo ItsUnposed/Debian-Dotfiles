@@ -12,7 +12,7 @@
       <value type="string" value="8"/>
       <value type="string" value="10"/>
     </property>
-    <property name="workspace_count" type="int" value="4"/>
+    <property name="workspace_count" type="int" value="5"/>
     <property name="margin_top" type="int" value="0"/>
   </property>
 </channel>
