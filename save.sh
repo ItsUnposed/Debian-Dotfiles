@@ -23,7 +23,7 @@ done
 
 say "2/5  Home"
 mkdir -p "$R/home"
-for F in .bashrc .bash_aliases .dircolors .face .gitconfig .xsessionrc .profile .Xresources; do
+for F in .bashrc .bash_aliases .dircolors .face .xsessionrc .profile .Xresources; do
     [ -e "$HOME/$F" ] && cp -a "$HOME/$F" "$R/home/$F" && echo "     $F"
 done
 
