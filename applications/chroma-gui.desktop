@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Chroma Control
+GenericName=Systemeinstellungen
+Comment=Farben, i3, picom, Tastenkuerzel und Layouts konfigurieren
+Exec=/home/unposed/.local/bin/chroma-gui
+Icon=preferences-desktop-theme
+Categories=Settings;DesktopSettings;
+Keywords=chroma;i3;picom;theme;farben;
+Terminal=false

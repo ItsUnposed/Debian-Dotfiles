@@ -1,0 +1,925 @@
+#!/usr/bin/env python3
+"""
+Chroma Control - a GUI for the i3 / picom / chroma desktop configuration.
+
+Nothing is written until you press an Apply button, and every file is
+backed up as <file>.bak-<timestamp> before it is changed.
+"""
+import gi, os, re, shutil, subprocess, glob, datetime
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, Gdk, GLib, Pango
+
+HOME    = os.path.expanduser("~")
+CFG     = f"{HOME}/.config"
+I3      = f"{CFG}/i3/config"
+PICOM   = f"{CFG}/picom.conf"
+CHROMA  = f"{CFG}/chroma"
+PALDIR  = f"{CHROMA}/palettes"
+SCRIPTS = f"{CFG}/i3/scripts"
+PIPES   = f"{SCRIPTS}/hotkey-pipes.sh"
+MATRIX  = f"{SCRIPTS}/hotkey-matrix.sh"
+HACKER  = f"{CFG}/i3/hacker-startup.sh"
+DEV     = f"{SCRIPTS}/dev-layout.sh"
+QTERM   = f"{CFG}/qterminal.org/qterminal.ini"
+GREETER = "/etc/lightdm/lightdm-gtk-greeter.conf"
+WALLDIR = f"{HOME}/Pictures/Wallpapers"
+
+GROUPS = [
+    ("Blues",           ["aqua", "blue", "darkblue"]),
+    ("Reds and pinks",  ["red", "pink", "purple"]),
+    ("Warm tones",      ["yellow", "orange"]),
+    ("Nature tones",    ["green", "brown"]),
+    ("Neutrals",        ["black", "gray", "silver", "white"]),
+]
+
+
+# --------------------------------------------------------------- helpers
+def read(path):
+    try:
+        with open(path) as f:
+            return f.read()
+    except Exception:
+        return ""
+
+
+def write(path, text):
+    if os.path.exists(path):
+        stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        try:
+            shutil.copy2(path, f"{path}.bak-{stamp}")
+        except Exception:
+            pass
+    try:
+        with open(path, "w") as f:
+            f.write(text)
+        return True
+    except Exception:
+        return False
+
+
+def run(*cmd):
+    try:
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL, start_new_session=True)
+        return True
+    except Exception:
+        return False
+
+
+def parse_conf(path):
+    out = {}
+    for line in read(path).splitlines():
+        line = line.strip()
+        if "=" in line and not line.startswith("#"):
+            k, _, v = line.partition("=")
+            out[k.strip()] = v.strip().strip('"').strip("'")
+    return out
+
+
+def rgba(h):
+    c = Gdk.RGBA()
+    c.parse(h if h.startswith("#") else f"#{h}")
+    return c
+
+
+# ---------------------------------------------------------------- window
+class App(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="Chroma Control")
+        self.set_default_size(940, 700)
+
+        outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.add(outer)
+
+        nb = Gtk.Notebook()
+        nb.set_border_width(10)
+        nb.set_scrollable(True)
+        outer.pack_start(nb, True, True, 0)
+
+        for build, title in (
+            (self.tab_colors,    "Colours"),
+            (self.tab_wm,        "Window manager"),
+            (self.tab_keys,      "Shortcuts"),
+            (self.tab_picom,     "Compositor"),
+            (self.tab_term,      "Terminal"),
+            (self.tab_layout,    "Layouts"),
+            (self.tab_fx,        "Effects"),
+            (self.tab_wall,      "Wallpaper"),
+            (self.tab_profile,   "Profile"),
+            (self.tab_auto,      "Startup"),
+            (self.tab_login,     "Login screen"),
+        ):
+            try:
+                nb.append_page(build(), Gtk.Label(label=title))
+            except Exception as e:
+                err = Gtk.Label(label=f"Could not build this tab:\n{e}")
+                nb.append_page(err, Gtk.Label(label=title))
+
+        self.status = Gtk.Label(label="Ready.", xalign=0)
+        self.status.set_margin_start(14)
+        self.status.set_margin_bottom(8)
+        outer.pack_start(self.status, False, False, 0)
+
+    def say(self, text):
+        self.status.set_markup(f"<small>{GLib.markup_escape_text(text)}</small>")
+
+    # small builders ----------------------------------------------------
+    def _spin(self, grid, row, label, value, lo, hi, step=1, digits=0):
+        grid.attach(Gtk.Label(label=label, xalign=0), 0, row, 1, 1)
+        adj = Gtk.Adjustment(value=value, lower=lo, upper=hi, step_increment=step)
+        sp = Gtk.SpinButton(adjustment=adj, numeric=True, digits=digits)
+        sp.set_halign(Gtk.Align.START)
+        grid.attach(sp, 1, row, 1, 1)
+        return sp
+
+    def _switch(self, grid, row, label, active):
+        grid.attach(Gtk.Label(label=label, xalign=0), 0, row, 1, 1)
+        sw = Gtk.Switch()
+        sw.set_active(active)
+        sw.set_halign(Gtk.Align.START)
+        grid.attach(sw, 1, row, 1, 1)
+        return sw
+
+    def _entry(self, grid, row, label, value, chars=26):
+        grid.attach(Gtk.Label(label=label, xalign=0), 0, row, 1, 1)
+        e = Gtk.Entry()
+        e.set_text(value)
+        e.set_width_chars(chars)
+        e.set_halign(Gtk.Align.START)
+        grid.attach(e, 1, row, 1, 1)
+        return e
+
+    def _apply(self, grid, row, cb, label="Apply"):
+        b = Gtk.Button(label=label)
+        b.connect("clicked", cb)
+        b.set_margin_top(12)
+        b.set_halign(Gtk.Align.START)
+        grid.attach(b, 0, row, 2, 1)
+        return b
+
+    def _grid(self):
+        g = Gtk.Grid(row_spacing=12, column_spacing=16)
+        g.set_border_width(18)
+        return g
+
+    def _head(self, grid, row, text):
+        l = Gtk.Label(xalign=0)
+        l.set_markup(f"<b>{text}</b>")
+        if row:
+            l.set_margin_top(18)
+        grid.attach(l, 0, row, 2, 1)
+
+    # -------------------------------------------------------- 1 Colours
+    def tab_colors(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_border_width(14)
+        box.pack_start(Gtk.Label(
+            label="Pick a palette. It recolours i3, Rofi, the terminal, "
+                  "cava, the panel and the login screen at once.",
+            xalign=0), False, False, 0)
+
+        sc = Gtk.ScrolledWindow()
+        sc.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        sc.add(col)
+        box.pack_start(sc, True, True, 0)
+
+        current = parse_conf(f"{CHROMA}/current.conf").get("C_ACC", "")
+        found = {os.path.basename(q)[:-5]: q
+                 for q in sorted(glob.glob(f"{PALDIR}/*.conf"))}
+        groups = list(GROUPS)
+        rest = sorted(set(found) - {n for _, ns in GROUPS for n in ns})
+        if rest:
+            groups.append(("Other", rest))
+
+        for title, names in groups:
+            present = [n for n in names if n in found]
+            if not present:
+                continue
+            l = Gtk.Label(xalign=0)
+            l.set_markup(f"<b>{title}</b>")
+            col.pack_start(l, False, False, 0)
+
+            flow = Gtk.FlowBox()
+            flow.set_valign(Gtk.Align.START)
+            flow.set_max_children_per_line(4)
+            flow.set_selection_mode(Gtk.SelectionMode.NONE)
+            flow.set_row_spacing(10)
+            flow.set_column_spacing(10)
+            col.pack_start(flow, False, False, 0)
+            for n in present:
+                flow.add(self._card(n, parse_conf(found[n]), current))
+        return box
+
+    def _card(self, name, vals, current):
+        card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        card.set_border_width(10)
+
+        sw = Gtk.Box(spacing=4)
+        for key in ("C_ACC", "C_ACC2", "C_ACC3", "C_BG", "C_FG"):
+            c = vals.get(key)
+            if not c:
+                continue
+            da = Gtk.DrawingArea()
+            da.set_size_request(26, 26)
+            da.connect("draw", self._swatch, c)
+            sw.pack_start(da, False, False, 0)
+        card.pack_start(sw, False, False, 0)
+
+        mark = "  &#8226; active" if vals.get("C_ACC") == current else ""
+        lbl = Gtk.Label()
+        lbl.set_markup(f"<b>{name}</b>{mark}")
+        card.pack_start(lbl, False, False, 0)
+
+        b = Gtk.Button(label="Apply")
+        b.connect("clicked", self.apply_palette, name)
+        card.pack_start(b, False, False, 0)
+
+        f = Gtk.Frame()
+        f.add(card)
+        return f
+
+    def _swatch(self, w, cr, colour):
+        c = rgba(colour)
+        cr.set_source_rgb(c.red, c.green, c.blue)
+        cr.rectangle(0, 0, w.get_allocated_width(), w.get_allocated_height())
+        cr.fill()
+        return False
+
+    def apply_palette(self, _b, name):
+        script = f"{CHROMA}/apply.sh"
+        if not os.access(script, os.X_OK):
+            self.say(f"{script} is not executable.")
+            return
+        run(script, name)
+        self.say(f"Applying palette '{name}'.")
+
+    # -------------------------------------------------- 2 Window manager
+    def tab_wm(self):
+        g = self._grid()
+        c = read(I3)
+
+        def num(pat, d):
+            m = re.search(pat, c, re.M)
+            return int(m.group(1)) if m else d
+
+        self._head(g, 0, "Spacing and borders")
+        self.wm_inner = self._spin(g, 1, "Inner gap", num(r"^gaps inner (\d+)", 10), 0, 60)
+        self.wm_outer = self._spin(g, 2, "Outer gap", num(r"^gaps outer (\d+)", 5), 0, 60)
+        self.wm_bord  = self._spin(g, 3, "Border width",
+                                   num(r"^default_border pixel (\d+)", 2), 0, 12)
+        self.wm_smart = self._switch(g, 4, "Gaps only with several windows",
+                                     "smart_gaps on" in c)
+
+        self._head(g, 5, "Behaviour")
+        self.wm_mouse = self._switch(g, 6, "Focus follows mouse",
+                                     "focus_follows_mouse yes" in c)
+        self.wm_wrap = self._switch(g, 7, "Wrap focus around screen edges",
+                                    "focus_wrapping yes" in c)
+
+        g.attach(Gtk.Label(label="Modifier key", xalign=0), 0, 8, 1, 1)
+        self.wm_mod = Gtk.ComboBoxText()
+        for m in ("Super", "Alt"):
+            self.wm_mod.append_text(m)
+        self.wm_mod.set_active(0 if re.search(r"^set \$mod Mod4", c, re.M) else 1)
+        self.wm_mod.set_halign(Gtk.Align.START)
+        g.attach(self.wm_mod, 1, 8, 1, 1)
+
+        g.attach(Gtk.Label(label="Default layout", xalign=0), 0, 9, 1, 1)
+        self.wm_lay = Gtk.ComboBoxText()
+        modes = ["default", "stacking", "tabbed"]
+        for m in modes:
+            self.wm_lay.append_text(m)
+        mm = re.search(r"^workspace_layout (\w+)", c, re.M)
+        self.wm_lay.set_active(modes.index(mm.group(1)) if mm and mm.group(1) in modes else 0)
+        self.wm_lay.set_halign(Gtk.Align.START)
+        g.attach(self.wm_lay, 1, 9, 1, 1)
+
+        self._apply(g, 10, self.save_wm, "Apply and reload i3")
+        return g
+
+    def save_wm(self, _b):
+        c = read(I3)
+        if not c:
+            self.say("Cannot read the i3 config.")
+            return
+        sub = [
+            (r"^gaps inner \d+", f"gaps inner {self.wm_inner.get_value_as_int()}"),
+            (r"^gaps outer \d+", f"gaps outer {self.wm_outer.get_value_as_int()}"),
+            (r"^default_border pixel \d+",
+             f"default_border pixel {self.wm_bord.get_value_as_int()}"),
+            (r"^smart_gaps (on|off)",
+             "smart_gaps " + ("on" if self.wm_smart.get_active() else "off")),
+            (r"^focus_follows_mouse (yes|no)",
+             "focus_follows_mouse " + ("yes" if self.wm_mouse.get_active() else "no")),
+            (r"^set \$mod Mod[14]",
+             "set $mod " + ("Mod4" if self.wm_mod.get_active() == 0 else "Mod1")),
+        ]
+        for pat, rep in sub:
+            c = re.sub(pat, rep, c, flags=re.M)
+
+        for key, val in (("focus_wrapping",
+                          "yes" if self.wm_wrap.get_active() else "no"),
+                         ("workspace_layout",
+                          self.wm_lay.get_active_text() or "default")):
+            if re.search(rf"^{key} \S+", c, re.M):
+                c = re.sub(rf"^{key} \S+", f"{key} {val}", c, flags=re.M)
+            else:
+                c = re.sub(r"^(gaps inner \d+)", rf"{key} {val}\n\1", c, count=1, flags=re.M)
+
+        write(I3, c)
+        run("i3-msg", "reload")
+        self.say("i3 config saved (a .bak copy sits next to it) and reloaded.")
+
+    # ------------------------------------------------------- 3 Shortcuts
+    def tab_keys(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        box.set_border_width(14)
+        box.pack_start(Gtk.Label(
+            label="Double-click a key combination or a command to edit it.",
+            xalign=0), False, False, 0)
+
+        self.kstore = Gtk.ListStore(str, str, int)
+        for i, line in enumerate(read(I3).splitlines()):
+            m = re.match(r"^bindsym\s+(\S+)\s+(.*)$", line)
+            if m:
+                self.kstore.append([m.group(1), m.group(2), i])
+
+        tree = Gtk.TreeView(model=self.kstore)
+        tree.set_enable_search(True)
+
+        r0 = Gtk.CellRendererText()
+        r0.set_property("family", "monospace")
+        r0.set_property("editable", True)
+        r0.connect("edited", self.edit_combo)
+        c0 = Gtk.TreeViewColumn("Key", r0, text=0)
+        c0.set_min_width(230)
+        tree.append_column(c0)
+
+        r1 = Gtk.CellRendererText()
+        r1.set_property("editable", True)
+        r1.set_property("ellipsize", Pango.EllipsizeMode.END)
+        r1.connect("edited", self.edit_cmd)
+        c1 = Gtk.TreeViewColumn("Command", r1, text=1)
+        c1.set_expand(True)
+        tree.append_column(c1)
+
+        sc = Gtk.ScrolledWindow()
+        sc.add(tree)
+        box.pack_start(sc, True, True, 0)
+
+        hint = Gtk.Label(xalign=0)
+        hint.set_markup("<small>Use i3 syntax, for example "
+                        "<tt>$mod+Shift+f</tt> or <tt>XF86AudioPlay</tt>.</small>")
+        box.pack_start(hint, False, False, 0)
+
+        b = Gtk.Button(label="Save and reload i3")
+        b.connect("clicked", self.save_keys)
+        b.set_halign(Gtk.Align.START)
+        box.pack_start(b, False, False, 0)
+        return box
+
+    def edit_cmd(self, _r, path, new):
+        self.kstore[path][1] = new
+
+    def edit_combo(self, _r, path, new):
+        new = new.strip()
+        if not new:
+            self.say("An empty key combination is not accepted.")
+            return
+        for i, row in enumerate(self.kstore):
+            if str(i) != str(path) and row[0] == new:
+                self.say(f"'{new}' is already taken by: {row[1]}")
+                return
+        self.kstore[path][0] = new
+
+    def save_keys(self, _b):
+        lines = read(I3).splitlines()
+        for row in self.kstore:
+            key, cmd, idx = row[0], row[1], row[2]
+            if 0 <= idx < len(lines):
+                lines[idx] = f"bindsym {key} {cmd}"
+        write(I3, "\n".join(lines) + "\n")
+        run("i3-msg", "reload")
+        self.say("Shortcuts saved and i3 reloaded.")
+
+    # ------------------------------------------------------ 4 Compositor
+    def tab_picom(self):
+        g = self._grid()
+        c = read(PICOM)
+
+        def num(pat, d):
+            m = re.search(pat, c, re.M)
+            return int(m.group(1)) if m else d
+
+        def fnum(pat, d):
+            m = re.search(pat, c, re.M)
+            return float(m.group(1)) if m else d
+
+        self._head(g, 0, "Appearance")
+        self.pc_corner = self._spin(g, 1, "Corner radius",
+                                    num(r"^\s*corner-radius\s*=\s*(\d+)", 0), 0, 40)
+        self.pc_blur = self._spin(g, 2, "Blur strength",
+                                  num(r"^\s*blur-strength\s*=\s*(\d+)", 5), 0, 20)
+        self.pc_shadow = self._switch(g, 3, "Shadows",
+                                      bool(re.search(r"^\s*shadow\s*=\s*true", c, re.M)))
+        self.pc_anim = self._switch(g, 4, "Animations",
+                                    bool(re.search(r"^\s*animations\s*=\s*true", c, re.M)))
+
+        self._head(g, 5, "Opacity")
+        self.pc_inact = self._spin(g, 6, "Inactive windows",
+                                   fnum(r"^\s*inactive-opacity\s*=\s*([\d.]+)", 1.0),
+                                   0.2, 1.0, 0.05, 2)
+        self.pc_act = self._spin(g, 7, "Active windows",
+                                 fnum(r"^\s*active-opacity\s*=\s*([\d.]+)", 1.0),
+                                 0.2, 1.0, 0.05, 2)
+        self.pc_fade = self._switch(g, 8, "Fade on open and close",
+                                    bool(re.search(r"^\s*fading\s*=\s*true", c, re.M)))
+
+        hint = Gtk.Label(xalign=0)
+        hint.set_markup("<small>Per-window rules still live in "
+                        "<tt>~/.config/picom.conf</tt>.</small>")
+        g.attach(hint, 0, 9, 2, 1)
+
+        self._apply(g, 10, self.save_picom, "Apply and restart picom")
+        return g
+
+    def save_picom(self, _b):
+        c = read(PICOM)
+        if not c:
+            self.say("Cannot read picom.conf.")
+            return
+
+        def setnum(txt, key, val):
+            if re.search(rf"^(\s*{key}\s*=\s*)[\d.]+", txt, re.M):
+                return re.sub(rf"^(\s*{key}\s*=\s*)[\d.]+", rf"\g<1>{val}", txt, flags=re.M)
+            return txt.rstrip() + f"\n{key} = {val};\n"
+
+        def setbool(txt, key, on):
+            v = "true" if on else "false"
+            if re.search(rf"^(\s*{key}\s*=\s*)(true|false)", txt, re.M):
+                return re.sub(rf"^(\s*{key}\s*=\s*)(true|false)", rf"\g<1>{v}",
+                              txt, flags=re.M)
+            return txt.rstrip() + f"\n{key} = {v};\n"
+
+        c = setnum(c, "corner-radius", self.pc_corner.get_value_as_int())
+        c = setnum(c, "blur-strength", self.pc_blur.get_value_as_int())
+        c = setnum(c, "inactive-opacity", f"{self.pc_inact.get_value():.2f}")
+        c = setnum(c, "active-opacity", f"{self.pc_act.get_value():.2f}")
+        c = setbool(c, "shadow", self.pc_shadow.get_active())
+        c = setbool(c, "animations", self.pc_anim.get_active())
+        c = setbool(c, "fading", self.pc_fade.get_active())
+
+        write(PICOM, c)
+        subprocess.run(["pkill", "-x", "picom"], capture_output=True)
+        GLib.timeout_add(1500, lambda: (run("picom", "-b"), False)[1])
+        self.say("picom.conf saved, compositor restarting.")
+
+    # -------------------------------------------------------- 5 Terminal
+    def tab_term(self):
+        g = self._grid()
+        c = read(QTERM)
+
+        def val(key, d):
+            m = re.search(rf"^{key}=(.*)$", c, re.M)
+            return m.group(1) if m else d
+
+        self._head(g, 0, "Font")
+        self.t_fam = self._entry(g, 1, "Family", val("fontFamily", "Fira Code"))
+        self.t_size = self._spin(g, 2, "Size", int(val("fontSize", "11") or 11), 6, 32)
+
+        self._head(g, 3, "Window")
+        self.t_trans = self._spin(g, 4, "Transparency (0-100)",
+                                  int(val("TerminalTransparency", "20") or 20), 0, 100)
+        self.t_scroll = self._spin(g, 5, "Scrollback lines",
+                                   int(val("HistoryLimitedTo", "1000") or 1000), 100, 100000, 100)
+        self.t_bell = self._switch(g, 6, "Audible bell",
+                                   val("AudibleBell", "false") == "true")
+
+        hint = Gtk.Label(xalign=0)
+        hint.set_markup("<small>Applies to terminals opened from now on.</small>")
+        g.attach(hint, 0, 7, 2, 1)
+
+        self._apply(g, 8, self.save_term)
+        return g
+
+    def save_term(self, _b):
+        c = read(QTERM)
+        if not c:
+            self.say("qterminal.ini not found.")
+            return
+        pairs = {
+            "fontFamily": self.t_fam.get_text(),
+            "fontSize": str(self.t_size.get_value_as_int()),
+            "TerminalTransparency": str(self.t_trans.get_value_as_int()),
+            "HistoryLimitedTo": str(self.t_scroll.get_value_as_int()),
+            "AudibleBell": "true" if self.t_bell.get_active() else "false",
+        }
+        for k, v in pairs.items():
+            if re.search(rf"^{k}=.*$", c, re.M):
+                c = re.sub(rf"^{k}=.*$", f"{k}={v}", c, flags=re.M)
+        write(QTERM, c)
+        self.say("Terminal settings saved.")
+
+    # --------------------------------------------------------- 6 Layouts
+    def tab_layout(self):
+        g = self._grid()
+
+        self._head(g, 0, "Hacker startup")
+        h = read(HACKER)
+        m = re.search(r'con_mark="left"\] focus; resize set width\s+(\d+) ppt', h)
+        self.l_left = self._spin(g, 1, "Left pane width (%)",
+                                 int(m.group(1)) if m else 50, 20, 90)
+        m = re.search(r'con_mark="ff"\]\s+focus; resize set height (\d+) ppt', h)
+        self.l_ff = self._spin(g, 2, "fastfetch block height (%)",
+                               int(m.group(1)) if m else 35, 10, 80)
+
+        self._head(g, 3, "Dev layout")
+        d = read(DEV)
+        m = re.search(r"resize set width (\d+) ppt", d)
+        self.l_ide = self._spin(g, 4, "IDE width (%)",
+                                int(m.group(1)) if m else 82, 40, 95)
+        m = re.search(r"sleep (\d+)\ni3-msg 'mark ide'", d)
+        self.l_wait = self._spin(g, 5, "Wait after IDE launch (s)",
+                                 int(m.group(1)) if m else 5, 1, 30)
+
+        self._apply(g, 6, self.save_layout)
+
+        row = Gtk.Box(spacing=8)
+        row.set_margin_top(18)
+        for label, path in (("Run hacker startup", HACKER),
+                            ("Run dev layout", DEV)):
+            b = Gtk.Button(label=label)
+            b.connect("clicked", lambda _b, q=path: run(q))
+            row.pack_start(b, False, False, 0)
+        g.attach(row, 0, 7, 2, 1)
+        return g
+
+    def save_layout(self, _b):
+        h = read(HACKER)
+        if h:
+            h = re.sub(r'(con_mark="left"\] focus; resize set width\s+)\d+',
+                       rf"\g<1>{self.l_left.get_value_as_int()}", h)
+            h = re.sub(r'(con_mark="ff"\]\s+focus; resize set height )\d+',
+                       rf"\g<1>{self.l_ff.get_value_as_int()}", h)
+            write(HACKER, h)
+            os.chmod(HACKER, 0o755)
+        d = read(DEV)
+        if d:
+            d = re.sub(r"(resize set width )\d+",
+                       rf"\g<1>{self.l_ide.get_value_as_int()}", d)
+            d = re.sub(r"sleep \d+\ni3-msg 'mark ide'",
+                       f"sleep {self.l_wait.get_value_as_int()}\ni3-msg 'mark ide'", d)
+            write(DEV, d)
+            os.chmod(DEV, 0o755)
+        self.say("Layout settings saved.")
+
+    # --------------------------------------------------------- 7 Effects
+    def tab_fx(self):
+        g = self._grid()
+
+        self._head(g, 0, "pipes")
+        m = re.search(r"PIPES_DELAY=([\d.]+)", read(PIPES))
+        self.fx_delay = self._spin(g, 1, "Frame delay (seconds)",
+                                   float(m.group(1)) if m else 0.075,
+                                   0.01, 0.60, 0.005, 3)
+        p = read(PIPES)
+        m = re.search(r"-p (\d+)", p)
+        self.fx_count = self._spin(g, 2, "Number of pipes",
+                                   int(m.group(1)) if m else 1, 1, 10)
+        h1 = Gtk.Label(xalign=0)
+        h1.set_markup("<small>A larger delay means slower movement.</small>")
+        g.attach(h1, 0, 3, 2, 1)
+
+        self._head(g, 4, "matrix")
+        m = re.search(r"unimatrix.*-s (\d+)", read(MATRIX))
+        self.fx_speed = self._spin(g, 5, "Speed (1-100)",
+                                   int(m.group(1)) if m else 97, 1, 100)
+        h2 = Gtk.Label(xalign=0)
+        h2.set_markup("<small>A larger value means faster rain.</small>")
+        g.attach(h2, 0, 6, 2, 1)
+
+        self._apply(g, 7, self.save_fx)
+
+        row = Gtk.Box(spacing=8)
+        row.set_margin_top(18)
+        for label, path in (("Try pipes", PIPES), ("Try matrix", MATRIX)):
+            b = Gtk.Button(label=label)
+            b.connect("clicked", lambda _b, q=path: run(q))
+            row.pack_start(b, False, False, 0)
+        g.attach(row, 0, 8, 2, 1)
+        return g
+
+    def save_fx(self, _b):
+        s = read(PIPES)
+        if s:
+            s = re.sub(r"PIPES_DELAY=[\d.]+",
+                       f"PIPES_DELAY={self.fx_delay.get_value():.3f}", s)
+            s = re.sub(r"-p \d+", f"-p {self.fx_count.get_value_as_int()}", s)
+            write(PIPES, s)
+            os.chmod(PIPES, 0o755)
+        s = read(MATRIX)
+        if s:
+            s = re.sub(r"(unimatrix.*-s )\d+",
+                       rf"\g<1>{self.fx_speed.get_value_as_int()}", s)
+            write(MATRIX, s)
+            os.chmod(MATRIX, 0o755)
+        self.say("Effect settings saved.")
+
+    # ------------------------------------------------------- 8 Wallpaper
+    def tab_wall(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_border_width(14)
+        box.pack_start(Gtk.Label(
+            label="Each palette owns one background image. Pick a new file and "
+                  "it replaces the old one, keeping the same name.",
+            xalign=0), False, False, 0)
+
+        sc = Gtk.ScrolledWindow()
+        sc.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        col = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        sc.add(col)
+        box.pack_start(sc, True, True, 0)
+
+        for q in sorted(glob.glob(f"{PALDIR}/*.conf")):
+            name = os.path.basename(q)[:-5]
+            vals = parse_conf(q)
+            target = os.path.expanduser(
+                vals.get("WALLPAPER", f"{WALLDIR}/{name.capitalize()}.png"))
+
+            row = Gtk.Box(spacing=12)
+            row.set_border_width(8)
+
+            img = Gtk.Image()
+            self._thumb(img, target)
+            row.pack_start(img, False, False, 0)
+
+            info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            t = Gtk.Label(xalign=0)
+            t.set_markup(f"<b>{name}</b>")
+            info.pack_start(t, False, False, 0)
+            sub = Gtk.Label(xalign=0)
+            sub.set_markup(f"<small><tt>{os.path.basename(target)}</tt></small>")
+            info.pack_start(sub, False, False, 0)
+            row.pack_start(info, True, True, 0)
+
+            b = Gtk.Button(label="Choose image")
+            b.set_valign(Gtk.Align.CENTER)
+            b.connect("clicked", self.pick_wall, target, img, name)
+            row.pack_start(b, False, False, 0)
+
+            b2 = Gtk.Button(label="Preview")
+            b2.set_valign(Gtk.Align.CENTER)
+            b2.connect("clicked", lambda _b, t=target: self.set_wall(t))
+            row.pack_start(b2, False, False, 0)
+
+            fr = Gtk.Frame()
+            fr.add(row)
+            col.pack_start(fr, False, False, 0)
+        return box
+
+    def _thumb(self, image, path, w=150, h=90):
+        try:
+            from gi.repository import GdkPixbuf
+            pb = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, w, h, True)
+            image.set_from_pixbuf(pb)
+        except Exception:
+            image.set_from_icon_name("image-missing", Gtk.IconSize.DIALOG)
+
+    def _chooser(self, title):
+        d = Gtk.FileChooserDialog(title=title, parent=self,
+                                  action=Gtk.FileChooserAction.OPEN)
+        d.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                      Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+        d.set_current_folder(os.path.expanduser("~/Pictures"))
+        f = Gtk.FileFilter()
+        f.set_name("Images and PDF")
+        for pat in ("*.png", "*.jpg", "*.jpeg", "*.webp", "*.avif", "*.pdf",
+                    "*.PNG", "*.JPG", "*.JPEG"):
+            f.add_pattern(pat)
+        d.add_filter(f)
+        return d
+
+    def _convert(self, src, dst, extra=None):
+        """Convert any supported image to a real PNG at dst."""
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        src_arg = src + "[0]" if src.lower().endswith(".pdf") else src
+        for tool in ("magick", "convert"):
+            cmd = [tool, src_arg] + (extra or []) + [dst]
+            try:
+                r = subprocess.run(cmd, capture_output=True, timeout=90)
+                if r.returncode == 0 and os.path.exists(dst):
+                    return True
+            except Exception:
+                continue
+        return False
+
+    def pick_wall(self, _b, target, image, name):
+        d = self._chooser(f"Background for '{name}'")
+        if d.run() == Gtk.ResponseType.OK:
+            src = d.get_filename()
+            d.destroy()
+            base = os.path.splitext(target)[0]
+            for old in glob.glob(base + ".*"):
+                if old != target:
+                    try:
+                        os.remove(old)
+                    except Exception:
+                        pass
+            if self._convert(src, target):
+                self._thumb(image, target)
+                self.say(f"Background for '{name}' replaced. "
+                         f"Re-apply the palette to see it.")
+            else:
+                self.say("Conversion failed. Is ImageMagick installed?")
+        else:
+            d.destroy()
+
+    def set_wall(self, path):
+        if not run("feh", "--bg-fill", path):
+            run("xwallpaper", "--zoom", path)
+        self.say(f"Background set to {os.path.basename(path)}.")
+
+    # --------------------------------------------------------- 9 Profile
+    def tab_profile(self):
+        g = self._grid()
+        self._head(g, 0, "Profile picture")
+
+        self.pf_img = Gtk.Image()
+        self._thumb(self.pf_img, f"{HOME}/.face", 128, 128)
+        self.pf_img.set_halign(Gtk.Align.START)
+        g.attach(self.pf_img, 0, 1, 2, 1)
+
+        hint = Gtk.Label(xalign=0)
+        hint.set_markup("<small>Shown on the login screen and in the panel. "
+                        "Any image or PDF works, it is squared to 256 pixels.</small>")
+        g.attach(hint, 0, 2, 2, 1)
+
+        b = Gtk.Button(label="Choose picture")
+        b.set_halign(Gtk.Align.START)
+        b.connect("clicked", self.pick_face)
+        g.attach(b, 0, 3, 2, 1)
+
+        self._head(g, 4, "Host name")
+        try:
+            host = subprocess.run(["hostname"], capture_output=True,
+                                  text=True).stdout.strip()
+        except Exception:
+            host = ""
+        self.pf_host = self._entry(g, 5, "Machine name", host)
+        h2 = Gtk.Label(xalign=0)
+        h2.set_markup("<small>Appears after the @ in your shell prompt and in "
+                      "fastfetch. Changing it asks for a password.</small>")
+        g.attach(h2, 0, 6, 2, 1)
+        self._apply(g, 7, self.save_host, "Rename machine (asks for password)")
+        return g
+
+    def pick_face(self, _b):
+        d = self._chooser("Profile picture")
+        if d.run() == Gtk.ResponseType.OK:
+            src = d.get_filename()
+            d.destroy()
+            tmp = "/tmp/chroma-face.png"
+            if not self._convert(src, tmp,
+                                 ["-resize", "256x256^", "-gravity", "center",
+                                  "-extent", "256x256"]):
+                self.say("Conversion failed. Is ImageMagick installed?")
+                return
+            shutil.copy2(tmp, f"{HOME}/.face")
+            self._thumb(self.pf_img, f"{HOME}/.face", 128, 128)
+            user = os.environ.get("USER", "")
+            ok = subprocess.run(
+                ["pkexec", "install", "-m", "644", tmp,
+                 f"/var/lib/AccountsService/icons/{user}"],
+                capture_output=True).returncode == 0
+            run("systemctl", "restart", "accounts-daemon") if ok else None
+            self.say("Profile picture updated." if ok else
+                     "Saved to ~/.face, but the login screen copy needs a password.")
+        else:
+            d.destroy()
+
+    def save_host(self, _b):
+        name = self.pf_host.get_text().strip()
+        if not re.fullmatch(r"[a-zA-Z0-9-]{1,63}", name):
+            self.say("Use letters, digits and hyphens only.")
+            return
+        ok = subprocess.run(["pkexec", "hostnamectl", "set-hostname", name],
+                            capture_output=True).returncode == 0
+        self.say(f"Machine renamed to '{name}'. Restart the terminal to see it."
+                 if ok else "Renaming was cancelled or failed.")
+
+    # --------------------------------------------------------- 9 Startup
+    def tab_auto(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        box.set_border_width(14)
+        box.pack_start(Gtk.Label(
+            label="Unticking an entry comments it out; nothing is deleted.",
+            xalign=0), False, False, 0)
+
+        self.astore = Gtk.ListStore(bool, str, int)
+        for i, line in enumerate(read(I3).splitlines()):
+            m = re.match(r"^(#\s*)?(exec(?:_always)?\s+.*)$", line)
+            if m:
+                self.astore.append([m.group(1) is None, m.group(2), i])
+
+        tree = Gtk.TreeView(model=self.astore)
+        rt = Gtk.CellRendererToggle()
+        rt.connect("toggled", self.toggle_auto)
+        tree.append_column(Gtk.TreeViewColumn("On", rt, active=0))
+        rx = Gtk.CellRendererText()
+        rx.set_property("editable", True)
+        rx.set_property("ellipsize", Pango.EllipsizeMode.END)
+        rx.connect("edited", lambda _r, p, n: self.astore.__setitem__(p, [self.astore[p][0], n, self.astore[p][2]]))
+        c = Gtk.TreeViewColumn("Command", rx, text=1)
+        c.set_expand(True)
+        tree.append_column(c)
+
+        sc = Gtk.ScrolledWindow()
+        sc.add(tree)
+        box.pack_start(sc, True, True, 0)
+
+        b = Gtk.Button(label="Save and reload i3")
+        b.connect("clicked", self.save_auto)
+        b.set_halign(Gtk.Align.START)
+        box.pack_start(b, False, False, 0)
+        return box
+
+    def toggle_auto(self, _r, path):
+        self.astore[path][0] = not self.astore[path][0]
+
+    def save_auto(self, _b):
+        lines = read(I3).splitlines()
+        for row in self.astore:
+            on, cmd, idx = row[0], row[1], row[2]
+            if 0 <= idx < len(lines):
+                lines[idx] = cmd if on else "# " + cmd
+        write(I3, "\n".join(lines) + "\n")
+        run("i3-msg", "reload")
+        self.say("Startup entries saved and i3 reloaded.")
+
+    # ---------------------------------------------------- 10 Login screen
+    def tab_login(self):
+        g = self._grid()
+        c = read(GREETER)
+
+        def val(key, d):
+            m = re.search(rf"^{key}=(.*)$", c, re.M)
+            return m.group(1) if m else d
+
+        self._head(g, 0, "LightDM greeter")
+        self.g_font = self._entry(g, 1, "Font", val("font-name", "Fira Code 11"))
+        self.g_clock = self._entry(g, 2, "Clock format",
+                                   val("clock-format", "%H:%M   %A, %d. %B"))
+        self.g_pos = self._entry(g, 3, "Position", val("position", "50%,center 50%,center"))
+        self.g_round = self._switch(g, 4, "Round user image",
+                                    val("round-user-image", "true") == "true")
+        self.g_hide = self._switch(g, 5, "Hide user image",
+                                   val("hide-user-image", "false") == "true")
+
+        g.attach(Gtk.Label(label="Panel position", xalign=0), 0, 6, 1, 1)
+        self.g_panel = Gtk.ComboBoxText()
+        for p in ("top", "bottom"):
+            self.g_panel.append_text(p)
+        self.g_panel.set_active(0 if val("panel-position", "top") == "top" else 1)
+        self.g_panel.set_halign(Gtk.Align.START)
+        g.attach(self.g_panel, 1, 6, 1, 1)
+
+        hint = Gtk.Label(xalign=0)
+        hint.set_markup("<small>Writing here needs administrator rights, so a "
+                        "password prompt appears. Colours come from the palette.</small>")
+        g.attach(hint, 0, 7, 2, 1)
+
+        self._apply(g, 8, self.save_login, "Apply (asks for password)")
+        return g
+
+    def save_login(self, _b):
+        c = read(GREETER)
+        if not c:
+            self.say("Cannot read the greeter config.")
+            return
+        pairs = {
+            "font-name": self.g_font.get_text(),
+            "clock-format": self.g_clock.get_text(),
+            "position": self.g_pos.get_text(),
+            "round-user-image": "true" if self.g_round.get_active() else "false",
+            "hide-user-image": "true" if self.g_hide.get_active() else "false",
+            "panel-position": self.g_panel.get_active_text() or "top",
+        }
+        for k, v in pairs.items():
+            if re.search(rf"^{k}=.*$", c, re.M):
+                c = re.sub(rf"^{k}=.*$", f"{k}={v}", c, flags=re.M)
+            else:
+                c = c.rstrip() + f"\n{k}={v}\n"
+        tmp = "/tmp/lightdm-gtk-greeter.conf.new"
+        with open(tmp, "w") as f:
+            f.write(c)
+        ok = subprocess.run(
+            ["pkexec", "cp", tmp, GREETER], capture_output=True).returncode == 0
+        self.say("Login screen saved." if ok
+                 else f"Could not write. Run manually: sudo cp {tmp} {GREETER}")
+
+
+win = App()
+win.connect("destroy", Gtk.main_quit)
+win.show_all()
+Gtk.main()

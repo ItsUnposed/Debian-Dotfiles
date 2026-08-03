@@ -65,7 +65,7 @@ sleep 0.5
 i3-msg 'mark pp' >/dev/null
 
 # --- 4) Groessen ---
-i3-msg '[con_mark="ide"] focus; resize set width 82 ppt' >/dev/null
+i3-msg '[con_mark="ide"] focus; resize set width 80 ppt' >/dev/null
 i3-msg '[con_mark="mx"]  focus; resize set height 50 ppt' >/dev/null
 
 # --- 5) Fokus auf die IDE ---
