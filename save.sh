@@ -46,4 +46,9 @@ cp -a "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/." "$R/xfce/xfce-perchanne
 
 cd "$R"
 git add -A
+# --- Wallpapers ---
+mkdir -p "$R/wallpaper"
+rsync -a --delete "$HOME/Pictures/Wallpapers/" "$R/wallpaper/" 2>/dev/null || cp -a "$HOME"/Pictures/Wallpapers/. "$R/wallpaper/"
+echo "     Wallpapers"
+
 git commit -m "backup $(date '+%F %H:%M')" && git push && say "gepusht" || say "nichts zu committen"

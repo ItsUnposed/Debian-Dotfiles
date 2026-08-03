@@ -8,10 +8,9 @@ Panel, GRUB und der Login-Screen ziehen alle mit.
 
 ## Screenshots
 
-<!-- Screenshots nach ~/dotfiles/screenshots/ legen und Pfade anpassen -->
-![Desktop](screenshots/desktop.png)
-![Hackerstartup](screenshots/hackerstartup.png)
-![Rofi](screenshots/rofi.png)
+![Desktop](screenshots/Desktop.png)
+![Hackerstartup](screenshots/Hacker.png)
+![Menue](screenshots/Menu.png)
 
 ## Schnellstart auf einem frischen System
 
