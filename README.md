@@ -134,6 +134,15 @@ Super+i oeffnet ein Rofi mit PyCharm, IntelliJ IDEA und CLion. Die gewaehlte
 IDE startet links (82% Breite), rechts daneben laufen Matrix oben und pipes
 unten.
 
+## Chroma Control
+
+Eine GUI fuer das gesamte Setup, erreichbar ueber Super+c oder aus Rofi.
+Zehn Reiter fuer Farbpaletten, i3, Tastenkuerzel, picom, Terminal, Layouts,
+Effekte, Wallpaper, Profilbild und Login-Screen. Vor jeder Aenderung legt
+sie automatisch eine .bak-Kopie der betroffenen Datei an.
+
+Braucht `python3-gi`, `gir1.2-gtk-3.0`, `python3-gi-cairo` und `imagemagick`.
+
 ## Aufbau
 
 | Ordner        | Inhalt                                    |
