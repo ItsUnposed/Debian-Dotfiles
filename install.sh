@@ -40,6 +40,8 @@ CORE=(
     plymouth plymouth-themes
     git curl wget jq bc nano
     python3 python3-pip pipx
+    python3-gi python3-gi-cairo gir1.2-gtk-3.0
+    imagemagick rsync policykit-1
     qt6ct
 )
 for p in "${CORE[@]}"; do
@@ -130,6 +132,22 @@ mkdir -p "$HOME/Pictures/Screenshots"
 mkdir -p "$HOME/.local/bin"
 [ -d "$R/local-bin" ] && cp -a "$R"/local-bin/. "$HOME/.local/bin/" 2>/dev/null
 chmod +x "$HOME"/.local/bin/* 2>/dev/null && ok "~/.local/bin"
+
+# Menueeintrag fuer Chroma Control
+if [ -f "$HOME/.local/bin/chroma-gui" ]; then
+    mkdir -p "$HOME/.local/share/applications"
+    cat > "$HOME/.local/share/applications/chroma-gui.desktop" << D
+[Desktop Entry]
+Type=Application
+Name=Chroma Control
+Comment=Colours, i3, picom, shortcuts and layouts
+Exec=$HOME/.local/bin/chroma-gui
+Icon=preferences-desktop-theme
+Categories=Settings;DesktopSettings;
+Terminal=false
+D
+    ok "Chroma Control"
+fi
 
 # PATH sicherstellen
 grep -q '.local/bin' "$HOME/.bashrc" 2>/dev/null \

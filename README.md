@@ -99,6 +99,7 @@ Modifier ist die **Super-Taste** (Windows).
 | Kombination                                    | Aktion                    |
 |------------------------------------------------|---------------------------|
 | <kbd>Super</kbd>+<kbd>-</kbd>                  | Farbpaletten-Menü         |
+| <kbd>Super</kbd>+<kbd>c</kbd>                  | Chroma Control (GUI)      |
 | <kbd>Super</kbd>+<kbd>o</kbd>                  | Hackerstartup-Layout      |
 | <kbd>Super</kbd>+<kbd>i</kbd>                  | Dev-Layout (IDE-Auswahl)  |
 | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>h</kbd> | Hackerstartup-Layout      |
