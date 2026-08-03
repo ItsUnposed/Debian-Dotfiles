@@ -27,6 +27,11 @@ for F in .bashrc .bash_aliases .dircolors .face .xsessionrc .profile .Xresources
     [ -e "$HOME/$F" ] && cp -a "$HOME/$F" "$R/home/$F" && echo "     $F"
 done
 
+# --- Wallpapers ---
+mkdir -p "$R/wallpaper"
+rsync -a --delete "$HOME/Pictures/Wallpapers/" "$R/wallpaper/" 2>/dev/null || cp -a "$HOME"/Pictures/Wallpapers/. "$R/wallpaper/"
+echo "     Wallpapers"
+
 say "3/5  /etc"
 mkdir -p "$R/system"
 for S in /etc/default/grub /etc/lightdm/lightdm.conf /etc/lightdm/lightdm-gtk-greeter.conf; do
@@ -46,9 +51,4 @@ cp -a "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/." "$R/xfce/xfce-perchanne
 
 cd "$R"
 git add -A
-# --- Wallpapers ---
-mkdir -p "$R/wallpaper"
-rsync -a --delete "$HOME/Pictures/Wallpapers/" "$R/wallpaper/" 2>/dev/null || cp -a "$HOME"/Pictures/Wallpapers/. "$R/wallpaper/"
-echo "     Wallpapers"
-
 git commit -m "backup $(date '+%F %H:%M')" && git push && say "gepusht" || say "nichts zu committen"
