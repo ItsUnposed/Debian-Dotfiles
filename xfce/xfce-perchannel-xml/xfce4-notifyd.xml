@@ -3,7 +3,7 @@
 <channel name="xfce4-notifyd" version="1.0">
   <property name="log-max-size-enabled" type="bool" value="true"/>
   <property name="do-not-disturb" type="bool" value="true"/>
-  <property name="theme" type="string" value="Ember"/>
+  <property name="theme" type="string" value="Chroma-Notify"/>
   <property name="applications" type="empty">
     <property name="known_applications" type="array">
       <value type="string" value="brightness"/>

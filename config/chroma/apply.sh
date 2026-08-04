@@ -165,3 +165,4 @@ fi
 chmod 444 "$HOME/.config/qterminal.org/qterminal.ini" 2>/dev/null
 
 # --- 18. grub und login mitwechseln ---
+"$HOME/.config/chroma/notify-theme.sh" 2>/dev/null

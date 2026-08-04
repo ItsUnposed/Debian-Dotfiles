@@ -28,8 +28,12 @@ for F in .bashrc .bash_aliases .dircolors .face .xsessionrc .profile .Xresources
 done
 
 # --- Wallpapers ---
+# Wallpapers-Repo holds the generated set that gets published.
+# Wallpapers itself may contain private images and stays local.
+WPSRC="$HOME/Pictures/Wallpapers-Repo"
+[ -d "$WPSRC" ] || WPSRC="$HOME/Pictures/Wallpapers"
 mkdir -p "$R/wallpaper"
-rsync -a --delete "$HOME/Pictures/Wallpapers/" "$R/wallpaper/" 2>/dev/null || cp -a "$HOME"/Pictures/Wallpapers/. "$R/wallpaper/"
+rsync -a --delete "$WPSRC/" "$R/wallpaper/" 2>/dev/null || cp -a "$WPSRC"/. "$R/wallpaper/"
 echo "     Wallpapers"
 
 say "3/5  /etc"
