@@ -1,18 +1,16 @@
-# dotfiles — Chroma
+# dotfiles - Chroma
 
-Debian 13 (Trixie) · i3wm · xfce4-panel · picom v12 · qterminal
+Debian 13 (Trixie) - i3wm - xfce4-panel - picom v12 - qterminal
 
-Dunkles Setup mit **14 umschaltbaren Farbpaletten**. Ein Hotkey wechselt
-die Akzentfarbe systemweit: i3-Rahmen, Rofi, Terminal, cava, nano, fastfetch,
-Panel, GRUB und der Login-Screen ziehen alle mit.
-
-## Screenshots
+A dark setup built around **14 switchable colour palettes**. One hotkey
+recolours everything at once: i3 borders, Rofi, the terminal, cava, nano,
+fastfetch, the panel, GRUB and the login screen.
 
 ![Desktop](screenshots/Desktop.png)
-![Hackerstartup](screenshots/Hacker.png)
-![Menue](screenshots/Menu.png)
+![Hacker startup](screenshots/Hacker.png)
+![Chroma Control](screenshots/Menu.png)
 
-## Schnellstart auf einem frischen System
+## Quick start on a fresh system
 
 ```bash
 sudo apt install -y git
@@ -20,178 +18,183 @@ git clone https://github.com/ItsUnposed/Debian-Dotfiles.git ~/dotfiles
 ~/dotfiles/install.sh
 ```
 
-Der Installer richtet alles ein: i3, LightDM, picom, Panel, Themes und
-Farbpalette. Danach neu starten, im Anmeldebildschirm oben rechts die
-Sitzung **i3** wählen und anmelden.
+The installer sets everything up: i3, LightDM, picom, the panel, themes and
+the colour palette. Reboot afterwards, pick the **i3** session in the top
+right corner of the login screen and log in.
 
-Getestet auf einer frischen Debian-13-Netinstall ohne Desktopumgebung.
+Tested on a plain Debian 13 netinstall without a desktop environment.
 
-## Farbsystem
+## Colour system
 
-Alle Paletten liegen als einfache Key-Value-Dateien in `config/chroma/palettes/`:
+Every palette is a plain key-value file in `config/chroma/palettes/`:
 
 ```
 aqua   black   blue   brown   darkblue   gray   green
 orange   pink   purple   red   silver   white   yellow
 ```
 
-Jede Palette definiert dieselben Variablen:
+Each palette defines the same variables:
 
-| Variable    | Bedeutung                          |
+| Variable    | Meaning                            |
 |-------------|------------------------------------|
-| `C_ACC`     | Hauptakzent (Rahmen, Highlights)   |
-| `C_ACC2`    | Zweitakzent (Keywords, Details)    |
-| `C_ACC3`    | Dritter Akzent (Rahmen, dezent)    |
-| `C_BG`      | Hintergrund                        |
-| `C_BG2`     | Hintergrund zweite Ebene           |
-| `C_DIM`     | Gedimmter Text                     |
-| `C_FG`      | Vordergrund / Standardtext         |
-| `C_TERM`    | Terminal-Basisfarbe                |
-| `WALLPAPER` | Zugehöriges Hintergrundbild        |
+| `C_ACC`     | Main accent (borders, highlights)  |
+| `C_ACC2`    | Secondary accent (keywords)        |
+| `C_ACC3`    | Third accent (subtle borders)      |
+| `C_BG`      | Background                         |
+| `C_BG2`     | Second level background            |
+| `C_DIM`     | Dimmed text                        |
+| `C_FG`      | Foreground / normal text           |
+| `C_TERM`    | Terminal base colour               |
+| `WALLPAPER` | Matching background image          |
 
-`config/chroma/apply.sh <name>` schreibt diese Werte über Templates in alle
-Zielkonfigurationen und lädt die betroffenen Programme neu. Die aktive Palette
-liegt in `current.conf` (nicht im Repo, wird lokal erzeugt).
+`config/chroma/apply.sh <name>` writes those values into every target
+configuration through templates and reloads the affected programs. The active
+palette lives in `current.conf`, which is generated locally and stays out of
+the repository.
 
-Umschalten per Menü: <kbd>Super</kbd>+<kbd>-</kbd>
+Switch palettes with <kbd>Super</kbd>+<kbd>-</kbd> or from Chroma Control.
 
-## Tastenkürzel
+## Chroma Control
 
-Modifier ist die **Super-Taste** (Windows).
+A GUI for the whole setup, reachable with <kbd>Super</kbd>+<kbd>c</kbd> or
+from Rofi. Twelve pages cover colours, wallpapers, i3, shortcuts, the
+compositor, per window opacity, the terminal, layouts, effects, animations,
+the profile picture, startup entries and the login screen. Every file is
+backed up as `<file>.bak-<timestamp>` before it is touched, and nothing is
+written until you press Apply.
 
-### Programme
+Needs `python3-gi`, `gir1.2-gtk-3.0`, `python3-gi-cairo` and `imagemagick`.
 
-| Kombination                       | Aktion                         |
+## Keyboard shortcuts
+
+The modifier is the **Super key**.
+
+### Programs
+
+| Combination                       | Action                         |
 |-----------------------------------|--------------------------------|
 | <kbd>Super</kbd>+<kbd>Return</kbd>| Terminal (qterminal)           |
-| <kbd>Super</kbd>+<kbd>e</kbd>     | Dateimanager (Thunar)          |
+| <kbd>Super</kbd>+<kbd>e</kbd>     | File manager (Thunar)          |
 | <kbd>Super</kbd>+<kbd>d</kbd>     | Rofi (drun)                    |
-| <kbd>Super</kbd>+<kbd>Space</kbd> | Rofi-Launcher mit Websuche     |
-| <kbd>Super</kbd>+<kbd>m</kbd>     | Whisker-Menü                   |
-| <kbd>Super</kbd>+<kbd>n</kbd>     | NetworkManager-Applet          |
-| <kbd>Druck</kbd>                  | Screenshot (Flameshot)         |
+| <kbd>Super</kbd>+<kbd>Space</kbd> | Rofi launcher with web search  |
+| <kbd>Super</kbd>+<kbd>m</kbd>     | Whisker menu                   |
+| <kbd>Super</kbd>+<kbd>n</kbd>     | NetworkManager applet          |
+| <kbd>Super</kbd>+<kbd>c</kbd>     | Chroma Control                 |
+| <kbd>Print</kbd>                  | Screenshot (Flameshot)         |
 
-### Fenster
+### Windows
 
-| Kombination                                   | Aktion                    |
-|-----------------------------------------------|---------------------------|
-| <kbd>Super</kbd>+<kbd>q</kbd>                 | Fenster schließen         |
-| <kbd>Super</kbd>+<kbd>f</kbd>                 | Vollbild                  |
-| <kbd>Super</kbd>+<kbd>t</kbd>                 | Semi-Vollbild             |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> | Floating an/aus      |
-| <kbd>Super</kbd>+<kbd>Pfeil</kbd>             | Fokus bewegen             |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>Pfeil</kbd> | Fenster verschieben  |
-| <kbd>Super</kbd>+<kbd>Strg</kbd>+<kbd>Pfeil</kbd> | Größe ändern          |
-| <kbd>Super</kbd>+<kbd>h</kbd> / <kbd>v</kbd>  | Horizontal / vertikal teilen |
-| <kbd>Super</kbd>+<kbd>s</kbd> / <kbd>w</kbd>  | Stacking / Tabbed         |
-| <kbd>Super</kbd>+<kbd>a</kbd>                 | Elternfenster fokussieren |
-| <kbd>Super</kbd>+<kbd>Tab</kbd>               | Tiling/Floating wechseln  |
+| Combination                                        | Action                    |
+|----------------------------------------------------|---------------------------|
+| <kbd>Super</kbd>+<kbd>q</kbd>                      | Close window              |
+| <kbd>Super</kbd>+<kbd>f</kbd>                      | Fullscreen                |
+| <kbd>Super</kbd>+<kbd>t</kbd>                      | Semi fullscreen           |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> | Toggle floating           |
+| <kbd>Super</kbd>+<kbd>Arrow</kbd>                  | Move focus                |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>Arrow</kbd> | Move window               |
+| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+<kbd>Arrow</kbd>  | Resize window             |
+| <kbd>Super</kbd>+<kbd>h</kbd> / <kbd>v</kbd>       | Split horizontal/vertical |
+| <kbd>Super</kbd>+<kbd>s</kbd> / <kbd>w</kbd>       | Stacking / tabbed         |
+| <kbd>Super</kbd>+<kbd>a</kbd>                      | Focus parent container    |
+| <kbd>Super</kbd>+<kbd>Tab</kbd>                    | Switch tiling/floating    |
 
 ### Workspaces
 
-| Kombination                                 | Aktion                       |
-|---------------------------------------------|------------------------------|
-| <kbd>Super</kbd>+<kbd>1</kbd>…<kbd>0</kbd>  | Workspace wechseln (animiert)|
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>…<kbd>0</kbd> | Fenster verschieben |
+| Combination                                                 | Action                    |
+|-------------------------------------------------------------|---------------------------|
+| <kbd>Super</kbd>+<kbd>1</kbd> to <kbd>0</kbd>               | Switch workspace          |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd> to <kbd>0</kbd> | Move window there      |
 
-### Spielereien und System
+### Toys and system
 
-| Kombination                                    | Aktion                    |
+| Combination                                    | Action                    |
 |------------------------------------------------|---------------------------|
-| <kbd>Super</kbd>+<kbd>-</kbd>                  | Farbpaletten-Menü         |
-| <kbd>Super</kbd>+<kbd>c</kbd>                  | Chroma Control (GUI)      |
-| <kbd>Super</kbd>+<kbd>o</kbd>                  | Hackerstartup-Layout      |
-| <kbd>Super</kbd>+<kbd>i</kbd>                  | Dev-Layout (IDE-Auswahl)  |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>h</kbd> | Hackerstartup-Layout      |
-| <kbd>Super</kbd>+<kbd>p</kbd>                  | pipes (Theme-Farbe)       |
-| <kbd>Super</kbd>+<kbd>x</kbd>                  | unimatrix (Theme-Farbe)   |
+| <kbd>Super</kbd>+<kbd>-</kbd>                  | Palette menu              |
+| <kbd>Super</kbd>+<kbd>o</kbd>                  | Hacker startup layout     |
+| <kbd>Super</kbd>+<kbd>i</kbd>                  | Dev layout (pick an IDE)  |
+| <kbd>Super</kbd>+<kbd>p</kbd>                  | pipes                     |
+| <kbd>Super</kbd>+<kbd>x</kbd>                  | unimatrix                 |
 | <kbd>Super</kbd>+<kbd>y</kbd>                  | cava                      |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>x</kbd> | Bildschirm sperren        |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>e</kbd> | Power-Menü                |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>c</kbd> | i3 neu laden              |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>r</kbd> | i3 neu starten            |
-| <kbd>Helligkeit +/-</kbd>                      | brightnessctl             |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>x</kbd> | Lock the screen           |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>e</kbd> | Power menu                |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>c</kbd> | Reload i3                 |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>r</kbd> | Restart i3                |
+| <kbd>Brightness +/-</kbd>                      | brightnessctl             |
 
-## Hackerstartup
+## Hacker startup
 
-<kbd>Super</kbd>+<kbd>o</kbd> baut ein fünfteiliges Layout auf:
+<kbd>Super</kbd>+<kbd>o</kbd> builds a five part layout:
 
 ```
 +----------------+-------------------------------+
-|                |          taskmanager          |
+|                |          task manager         |
 |   i3 config    +---------------+---------------+
-|   50% Breite   |  fastfetch    |               |
+|   50% width    |  fastfetch    |               |
 |                +---------------+    matrix     |
 |                |  cava         |               |
 +----------------+---------------+---------------+
 ```
 
-Alle Fenster übernehmen die aktive Palettenfarbe und laufen mit
-picom-Transparenz.
+Every window picks up the active palette colour and runs with picom
+transparency.
 
-## Dev-Layout
+## Dev layout
 
-Super+i oeffnet ein Rofi mit PyCharm, IntelliJ IDEA und CLion. Die gewaehlte
-IDE startet links (82% Breite), rechts daneben laufen Matrix oben und pipes
-unten.
+<kbd>Super</kbd>+<kbd>i</kbd> opens a Rofi menu with PyCharm, IntelliJ IDEA
+and CLion. The chosen IDE starts on the left at 82% width, with matrix above
+pipes on the right.
 
-## Chroma Control
+## Structure
 
-Eine GUI fuer das gesamte Setup, erreichbar ueber Super+c oder aus Rofi.
-Zehn Reiter fuer Farbpaletten, i3, Tastenkuerzel, picom, Terminal, Layouts,
-Effekte, Wallpaper, Profilbild und Login-Screen. Vor jeder Aenderung legt
-sie automatisch eine .bak-Kopie der betroffenen Datei an.
+| Folder         | Contents                                   |
+|----------------|--------------------------------------------|
+| `config/`      | symlinked into `~/.config/<name>`          |
+| `home/`        | files that go straight into `~`            |
+| `system/`      | `/etc/default/grub`, LightDM               |
+| `packages/`    | APT and Flatpak lists                      |
+| `xfce/`        | xfconf XML of the panel configuration      |
+| `themes/`      | GRUB and greeter themes                    |
+| `local-bin/`   | own scripts for `~/.local/bin`             |
+| `wallpaper/`   | one background image per palette           |
+| `screenshots/` | images used in this README                 |
 
-Braucht `python3-gi`, `gir1.2-gtk-3.0`, `python3-gi-cairo` und `imagemagick`.
+`config/i3`, `config/cava`, `config/fastfetch` and `config/rofi` are symlinks,
+so edits under `~/.config` land in the repository straight away. Everything
+else is copied by `save.sh`.
 
-## Aufbau
-
-| Ordner        | Inhalt                                    |
-|---------------|-------------------------------------------|
-| `config/`     | wird nach `~/.config/<name>` verlinkt      |
-| `home/`       | Dateien direkt in `~`                      |
-| `system/`     | `/etc/default/grub`, LightDM               |
-| `packages/`   | APT- und Flatpak-Listen                    |
-| `xfce/`       | xfconf-XML der Panel-Konfiguration         |
-| `themes/`     | GRUB- und Greeter-Themes                   |
-| `local-bin/`  | eigene Skripte für `~/.local/bin`          |
-| `wallpaper/`  | Hintergrundbilder je Palette               |
-
-`config/i3`, `config/cava`, `config/fastfetch` und `config/rofi` sind
-Symlinks — Änderungen unter `~/.config` landen sofort im Repo.
-Alle anderen werden von `save.sh` kopiert.
-
-## Sichern
+## Saving
 
 ```bash
 ~/dotfiles/save.sh
 ```
 
-Kopiert alle Nicht-Symlink-Configs ins Repo, aktualisiert die Paketlisten,
-committet und pusht.
+Copies every non symlinked config into the repository, refreshes the package
+lists, commits and pushes.
 
-## Stolpersteine
+## Things worth knowing
 
-Gesammelte Erkenntnisse aus dem Aufbau, damit sie nicht wieder gesucht werden
-müssen:
+Hard won lessons from building this, so they do not have to be found twice:
 
-- **picom v12** nutzt `rules = ()`; alte Optionen wie `opacity-rule`,
-  `shadow-exclude` oder `wintypes` werden dann komplett ignoriert.
-- **WM_CLASS-Matching ist case-sensitiv** — `qterminal`, nicht `QTerminal`.
-- **`exec` vs `exec_always`**: Dienste, die beim i3-Neustart wieder hochkommen
-  sollen, brauchen `exec_always`; das Hackerstartup dagegen `exec`, sonst
-  startet es doppelt.
-- **`quiet_boot` steht in Debians `/etc/grub.d/10_linux` fest auf `0`** — die
-  „Loading Linux …"-Zeilen verschwinden erst, wenn man es auf `1` patcht.
-  Ein `grub-common`-Update setzt das zurück.
-- **xterm ignoriert `-xrm` bei umbenannter Instanz**; Farbslots setzt man
-  stattdessen zur Laufzeit per OSC-Sequenz (`\033]4;1;#RRGGBB\007`).
-- **`pipes` ist ein Bash-Skript** und ignoriert SIGHUP; es muss im Hintergrund
-  mit `wait` laufen, damit ein `trap` beim Fensterschließen greift.
-- **Xfce-Tastenkürzel laufen parallel zu i3** und fangen Kombinationen ab,
-  bevor i3 sie sieht. Aufräumen mit
+- **picom v12 uses `rules = ()`**. Once it is present, older options such as
+  `opacity-rule`, `shadow-exclude` or `wintypes` are ignored completely, and
+  so is a top level `animations` list.
+- **picom applies the first matching rule only.** A general rule placed above
+  a specific one silently wins.
+- **WM_CLASS matching is case sensitive**: `qterminal`, not `QTerminal`.
+- **`exec` versus `exec_always`**: services that should come back after an i3
+  restart need `exec_always`; the hacker startup needs plain `exec` or it
+  launches twice.
+- **`quiet_boot` is hard wired to `0` in Debian's `/etc/grub.d/10_linux`.**
+  The "Loading Linux ..." lines only disappear after patching it to `1`, and a
+  `grub-common` update resets that.
+- **Closing animations get cut short in a tiling layout**, because i3 reflows
+  the remaining windows immediately. Floating windows animate reliably.
+- **cava must run in the foreground.** Backgrounding it inside a terminal
+  wrapper kills it instantly, unlike `pipes`, which needs exactly that.
+- **Xfce keyboard shortcuts run alongside i3** and swallow combinations before
+  i3 sees them. Inspect them with
   `xfconf-query -c xfce4-keyboard-shortcuts -l`.
 
-## Lizenz
+## Licence
 
-MIT — siehe [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).

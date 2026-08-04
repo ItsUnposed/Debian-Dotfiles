@@ -1,33 +1,34 @@
 # Notes
 
-Kleinkram, der nirgends sonst hinpasst. Alles Wichtige steht im README.
+Small things that do not fit anywhere else. Everything important is in the
+README.
 
-## Eigenes Tastaturlayout
+## Custom keyboard layout
 
-`system/deumlaut` nach `/usr/share/X11/xkb/symbols/` kopieren, dann:
+Copy `system/deumlaut` to `/usr/share/X11/xkb/symbols/`, then:
 
 ```bash
 setxkbmap -layout deumlaut -option lv3:ralt_switch
 ```
 
-Das Layout ist bewusst **nicht** in `xkb/rules` registriert. Das reine
-Kopieren nach `symbols/` genuegt, `setxkbmap` findet es dort.
+The layout is deliberately **not** registered in `xkb/rules`. Copying it into
+`symbols/` is enough, `setxkbmap` finds it there.
 
-## Schriften
+## Fonts
 
-Fira Code liegt unter `/usr/share/fonts/truetype/firacode/` und wird von
-i3, qterminal, dem Greeter und den xterm-Fenstern des Hackerstartups
-verwendet. In i3 heisst sie `pango:Fira Code 10`.
+Fira Code lives in `/usr/share/fonts/truetype/firacode/` and is used by i3,
+qterminal, the greeter and the xterm windows of the hacker startup. In i3 it
+is written as `pango:Fira Code 10`.
 
-## xfconf-Werte des Panels
+## Panel xfconf values
 
-Die vollstaendige Panel-Konfiguration liegt als XML unter `xfce/`. Einzelne
-Werte lassen sich zur Laufzeit pruefen und setzen:
+The full panel configuration is stored as XML under `xfce/`. Individual values
+can be inspected and set at runtime:
 
 ```bash
 xfconf-query -c xsettings -l -v
 xfconf-query -c xfce4-keyboard-shortcuts -l
 ```
 
-Der zweite Befehl ist wichtig, wenn ein i3-Tastenkuerzel nicht reagiert:
-Xfce-Zuweisungen greifen die Taste ab, bevor i3 sie sieht.
+The second command matters when an i3 shortcut does not react: Xfce bindings
+grab the key before i3 ever sees it.

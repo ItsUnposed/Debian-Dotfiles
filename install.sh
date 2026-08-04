@@ -9,13 +9,13 @@ say(){ printf "\033[${_C}m>> %s\033[0m\n" "$*"; }
 ok(){  printf "     %s\n" "$*"; }
 warn(){ printf "\033[38;2;255;180;0m   ! %s\033[0m\n" "$*"; }
 
-[ "$(id -u)" -eq 0 ] && { echo "Nicht als root ausfuehren."; exit 1; }
-command -v sudo >/dev/null || { echo "sudo fehlt. Als root: apt install sudo && adduser $USER sudo"; exit 1; }
+[ "$(id -u)" -eq 0 ] && { echo "Do not run this as root."; exit 1; }
+command -v sudo >/dev/null || { echo "sudo is missing. Als root: apt install sudo && adduser $USER sudo"; exit 1; }
 
 sudo -v || exit 1
 
 # ======================================================================
-say "1/8  Basis-Pakete"
+say "1/8  Base packages"
 # ======================================================================
 sudo apt update
 CORE=(
@@ -45,18 +45,18 @@ CORE=(
     qt6ct
 )
 for p in "${CORE[@]}"; do
-    sudo apt install -y "$p" >/dev/null 2>&1 && ok "$p" || warn "fehlgeschlagen: $p"
+    sudo apt install -y "$p" >/dev/null 2>&1 && ok "$p" || warn "failed: $p"
 done
 sudo apt install -y fastfetch >/dev/null 2>&1 && ok "fastfetch" \
-    || warn "fastfetch nicht im Repo"
+    || warn "fastfetch not in the repositories"
 
 # ======================================================================
-say "2/8  Weitere Pakete aus der Liste"
+say "2/8  Remaining packages from the list"
 # ======================================================================
 LIST="$R/packages/apt-manual.txt"
 if [ -f "$LIST" ]; then
     # In Bloecken installieren statt einzeln - sonst dauert es ewig.
-    # Faellt ein Block, werden dessen Pakete einzeln nachgereicht.
+    # Faellt ein Block, werden dessen Packages einzeln nachgereicht.
     mapfile -t PKGS < <(grep -v '^\s*#' "$LIST" | awk '{print $1}' \
                         | grep -v '^$' | grep -v '^kali' | grep -v '^gcc-16' | sort -u)
     TOTAL=${#PKGS[@]}; FAIL=0; i=0
@@ -71,10 +71,10 @@ if [ -f "$LIST" ]; then
         i=$((i+40))
     done
     printf "\r%-40s\r" ""
-    ok "$((TOTAL-FAIL))/$TOTAL installiert"
-    [ "$FAIL" -gt 0 ] && warn "$FAIL nicht verfuegbar (uebersprungen)"
+    ok "$((TOTAL-FAIL))/$TOTAL installed"
+    [ "$FAIL" -gt 0 ] && warn "$FAIL unavailable, skipped"
 else
-    warn "packages/apt-manual.txt fehlt"
+    warn "packages/apt-manual.txt missing"
 fi
 
 # ======================================================================
@@ -91,7 +91,7 @@ if [ -f "$R/packages/flatpak.txt" ]; then
 fi
 
 # ======================================================================
-say "4/8  Configs verlinken"
+say "4/8  Linking configs"
 # ======================================================================
 mkdir -p "$HOME/.config"
 for E in "$R"/config/*; do
@@ -101,17 +101,17 @@ for E in "$R"/config/*; do
     ln -s "$E" "$T"; ok "$N"
 done
 
-# nano-Syntax fuer die i3-Config
+# nano syntax fuer die i3-Config
 if [ -f "$R/i3.nanorc" ]; then
     mkdir -p "$HOME/.nano"
     cp "$R/i3.nanorc" "$HOME/.nano/"
     grep -q "i3.nanorc" "$HOME/.nanorc" 2>/dev/null \
         || echo 'include "~/.nano/i3.nanorc"' >> "$HOME/.nanorc"
-    ok "nano-Syntax"
+    ok "nano syntax"
 fi
 
 # ======================================================================
-say "5/8  Home, Wallpapers, eigene Skripte"
+say "5/8  Home files, wallpapers, own scripts"
 # ======================================================================
 for B in .bashrc .dircolors .face .xsessionrc .profile .Xresources; do
     [ -e "$R/home/$B" ] || continue
@@ -125,7 +125,7 @@ if [ -d "$R/wallpaper" ]; then
     cp -a "$R"/wallpaper/. "$HOME/Pictures/Wallpapers/"
     ok "Wallpapers -> ~/Pictures/Wallpapers"
 else
-    warn "wallpaper/ fehlt im Repo"
+    warn "wallpaper/ missing im Repo"
 fi
 mkdir -p "$HOME/Pictures/Screenshots"
 
@@ -133,7 +133,7 @@ mkdir -p "$HOME/.local/bin"
 [ -d "$R/local-bin" ] && cp -a "$R"/local-bin/. "$HOME/.local/bin/" 2>/dev/null
 chmod +x "$HOME"/.local/bin/* 2>/dev/null && ok "~/.local/bin"
 
-# Menueeintrag fuer Chroma Control
+# Menu entry for Chroma Control
 if [ -f "$HOME/.local/bin/chroma-gui" ]; then
     mkdir -p "$HOME/.local/share/applications"
     cat > "$HOME/.local/share/applications/chroma-gui.desktop" << D
@@ -170,7 +170,7 @@ if [ -f /usr/games/pipes ]; then
     chmod +x "$HOME/.local/bin/pipes-slow"
     ok "pipes-slow"
 else
-    warn "/usr/games/pipes fehlt"
+    warn "/usr/games/pipes missing"
 fi
 
 chmod +x "$HOME"/.config/i3/scripts/*.sh "$HOME"/.config/chroma/*.sh 2>/dev/null
@@ -185,9 +185,9 @@ sleep 1
 XD="$HOME/.config/xfce4/xfconf/xfce-perchannel-xml"
 mkdir -p "$XD"
 if [ -d "$R/xfce/xfce-perchannel-xml" ]; then
-    cp -a "$R/xfce/xfce-perchannel-xml/." "$XD/" && ok "Panel-Konfiguration"
+    cp -a "$R/xfce/xfce-perchannel-xml/." "$XD/" && ok "Panel configuration"
 else
-    warn "xfce/xfce-perchannel-xml fehlt"
+    warn "xfce/xfce-perchannel-xml missing"
 fi
 [ -d "$R/qt6ct" ] && mkdir -p "$HOME/.config/qt6ct" \
     && cp -a "$R"/qt6ct/. "$HOME/.config/qt6ct/" && ok "qt6ct"
@@ -197,8 +197,8 @@ say "7/8  System (GRUB, LightDM, Plymouth)"
 # ======================================================================
 if [ -d "$R/themes" ]; then
     sudo mkdir -p /usr/share/grub/themes /usr/share/themes
-    [ -d "$R/themes/grub" ]   && sudo cp -r "$R/themes/grub"/*   /usr/share/grub/themes/ 2>/dev/null && ok "GRUB-Theme"
-    [ -d "$R/themes/greeter" ] && sudo cp -r "$R/themes/greeter"/* /usr/share/themes/ 2>/dev/null && ok "Greeter-Theme"
+    [ -d "$R/themes/grub" ]   && sudo cp -r "$R/themes/grub"/*   /usr/share/grub/themes/ 2>/dev/null && ok "GRUB theme"
+    [ -d "$R/themes/greeter" ] && sudo cp -r "$R/themes/greeter"/* /usr/share/themes/ 2>/dev/null && ok "Greeter theme"
 fi
 
 G=""
@@ -220,7 +220,7 @@ if [ -f "$HOME/.face" ]; then
     sudo chmod 644 /var/lib/AccountsService/icons/"$USER"
     printf '[User]\nSession=\nXSession=i3\nIcon=/var/lib/AccountsService/icons/%s\nSystemAccount=false\n' \
         "$USER" | sudo tee /var/lib/AccountsService/users/"$USER" >/dev/null
-    ok "Profilbild"
+    ok "Profile picture"
 fi
 
 PS=$(command -v plymouth-set-default-theme || echo /usr/sbin/plymouth-set-default-theme)
@@ -228,10 +228,10 @@ PS=$(command -v plymouth-set-default-theme || echo /usr/sbin/plymouth-set-defaul
 
 sudo systemctl enable lightdm >/dev/null 2>&1
 sudo systemctl set-default graphical.target >/dev/null 2>&1
-ok "LightDM aktiviert"
+ok "LightDM enabled"
 
 # ======================================================================
-say "8/8  Farbpalette anwenden"
+say "8/8  Applying the colour palette"
 # ======================================================================
 A="$HOME/.config/chroma/apply.sh"
 if [ -x "$A" ]; then
@@ -242,9 +242,9 @@ else
 fi
 
 echo
-say "Fertig."
+say "Done."
 echo "   1. sudo reboot"
-echo "   2. Im Anmeldebildschirm oben rechts die Sitzung 'i3' waehlen"
-echo "   3. Anmelden. Farbe wechseln mit Super + Minus."
+echo "   2. Im Anmeldebildschirm oben rechts die Sitzung 'i3' in the top right of the login screen"
+echo "   3. Log in. Switch colours with Super + Minus."
 echo
-echo "   Falls das Panel leer ist: xfce4-panel -r"
+echo "   If the panel comes up empty: xfce4-panel -r"
