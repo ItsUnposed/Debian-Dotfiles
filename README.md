@@ -6,8 +6,6 @@ A dark setup built around **14 switchable colour palettes**. One hotkey
 recolours everything at once: i3 borders, Rofi, the terminal, cava, nano,
 fastfetch, the panel, GRUB and the login screen.
 
-![Palette switching](screenshots/palette-switch.gif)
-
 ![Desktop](screenshots/Desktop.png)
 ![Hacker startup](screenshots/Hacker.png)
 ![Chroma Control](screenshots/Menu.png)

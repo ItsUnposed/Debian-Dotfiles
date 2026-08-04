@@ -44,6 +44,7 @@ e2fsprogs
 fastfetch
 fdisk
 feh
+ffmpeg
 file
 findutils
 firefox

@@ -102,6 +102,7 @@ fakeroot
 fastfetch
 fdisk
 feh
+ffmpeg
 ffmpegthumbnailer
 file
 findutils
