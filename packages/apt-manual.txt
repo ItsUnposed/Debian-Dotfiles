@@ -208,6 +208,7 @@ netcat-traditional
 network-manager
 network-manager-gnome
 nftables
+no-risk-launcher
 nodejs
 npm
 obs-studio

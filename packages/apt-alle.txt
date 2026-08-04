@@ -16,6 +16,8 @@ apt-forktracer
 apt-listchanges
 apt-transport-https
 apt-utils
+aspell
+aspell-en
 at-spi2-common
 at-spi2-core
 avahi-daemon
@@ -95,6 +97,7 @@ e2fsprogs
 efibootmgr
 eject
 emacsen-common
+enchant-2
 eslint
 exfatprogs
 exo-utils
@@ -231,6 +234,7 @@ gzip
 handlebars
 hicolor-icon-theme
 hostname
+hunspell-en-us
 i3
 i3-wm
 i3blocks
@@ -304,6 +308,7 @@ libarpack2t64:amd64
 libasan8:amd64
 libasound2-data
 libasound2t64:amd64
+libaspell15:amd64
 libass9:amd64
 libassuan9:amd64
 libasync-interrupt-perl
@@ -466,6 +471,7 @@ libefivar1t64:amd64
 libegl-mesa0:amd64
 libegl1:amd64
 libelf1t64:amd64
+libenchant-2-2:amd64
 libencode-locale-perl
 libepoxy0:amd64
 liberror-perl
@@ -599,6 +605,7 @@ libgupnp-igd-1.6-0:amd64
 libgusb2:amd64
 libhandy-1-0:amd64
 libharfbuzz-gobject0:amd64
+libharfbuzz-icu0:amd64
 libharfbuzz-subset0:amd64
 libharfbuzz0b:amd64
 libhdf4-0-alt:amd64
@@ -609,6 +616,7 @@ libheif-plugin-dav1d:amd64
 libheif-plugin-libde265:amd64
 libheif-plugin-x265:amd64
 libheif1:amd64
+libhidapi-hidraw0:amd64
 libhogweed6t64:amd64
 libhtml-form-perl
 libhtml-format-perl
@@ -620,10 +628,12 @@ libhttp-daemon-perl
 libhttp-date-perl
 libhttp-message-perl
 libhttp-negotiate-perl
+libhunspell-1.7-0:amd64
 libhwasan0:amd64
 libhwloc-plugins:amd64
 libhwloc15:amd64
 libhwy1t64:amd64
+libhyphen0:amd64
 libibverbs1:amd64
 libice6:amd64
 libicu76:amd64
@@ -655,6 +665,7 @@ libiw30t64:amd64
 libixml11t64:amd64
 libjack-jackd2-0:amd64
 libjansson4:amd64
+libjavascriptcoregtk-4.1-0:amd64
 libjbig0:amd64
 libjbig2dec0:amd64
 libjemalloc2:amd64
@@ -824,6 +835,7 @@ libmagickcore-7.q16-10-extra:amd64
 libmagickwand-7.q16-10:amd64
 libmailtools-perl
 libmalcontent-0-0:amd64
+libmanette-0.2-0:amd64
 libmariadb3:amd64
 libmatroska7:amd64
 libmaxminddb0:amd64
@@ -1228,6 +1240,7 @@ libwayland-cursor0:amd64
 libwayland-egl1:amd64
 libwayland-server0:amd64
 libwbclient0:amd64
+libwebkit2gtk-4.1-0:amd64
 libwebp7:amd64
 libwebpdemux2:amd64
 libwebpmux3:amd64
@@ -1414,6 +1427,7 @@ network-manager-gnome
 network-manager-l10n
 nftables
 nm-connection-editor
+no-risk-launcher
 node-abbrev
 node-acorn
 node-agent-base

@@ -165,4 +165,6 @@ fi
 chmod 444 "$HOME/.config/qterminal.org/qterminal.ini" 2>/dev/null
 
 # --- 18. grub und login mitwechseln ---
+sudo -n /usr/bin/install -m 755 -o root -g root "$HOME/.config/chroma/login-theme.sh" /usr/local/sbin/chroma-login-theme 2>/dev/null
+sudo -n /usr/local/sbin/chroma-login-theme 2>/dev/null
 "$HOME/.config/chroma/notify-theme.sh" 2>/dev/null

@@ -55,4 +55,7 @@ cp -a "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/." "$R/xfce/xfce-perchanne
 
 cd "$R"
 git add -A
-git commit -m "backup $(date '+%F %H:%M')" && git push && say "pushed" || say "nothing to commit"
+printf "\033[${_C}m>> commit message (empty = timestamp): \033[0m"
+read -r COMMIT_MSG
+[ -z "$COMMIT_MSG" ] && COMMIT_MSG="backup $(date '+%F %H:%M')"
+git commit -m "$COMMIT_MSG" && git push && say "pushed" || say "nothing to commit"

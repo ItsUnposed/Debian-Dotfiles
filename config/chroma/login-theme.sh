@@ -1,11 +1,16 @@
 #!/bin/bash
+# Runs as root through sudo, so work out the real user's home first.
+U="${SUDO_USER:-${PKEXEC_UID:+$(id -nu "$PKEXEC_UID")}}"
+U="${U:-unposed}"
+H="$(getent passwd "$U" | cut -d: -f6)"
+HOME="$H"
 . "$HOME/.config/chroma/current.conf"
 WP="$WALLPAPER"
 [ -f "$WP" ] || WP="$HOME/Pictures/Wallpapers/Red.png"
-sudo cp "$WP" /usr/share/backgrounds/login-bg.png
+cp "$WP" /usr/share/backgrounds/login-bg.png
 
-sudo mkdir -p /usr/share/themes/Chroma-Greeter/gtk-3.0
-sudo tee /usr/share/themes/Chroma-Greeter/gtk-3.0/gtk.css > /dev/null << T
+mkdir -p /usr/share/themes/Chroma-Greeter/gtk-3.0
+tee /usr/share/themes/Chroma-Greeter/gtk-3.0/gtk.css > /dev/null << T
 @import url("/usr/share/themes/Adwaita-dark/gtk-3.0/gtk.css");
 #panel_window { background-color: $C_BG; color: $C_FG; border-bottom: 1px solid $C_ACC; }
 #clock_label { color: $C_ACC; font-weight: bold; }
@@ -44,7 +49,7 @@ label { color: $C_FG; }
 }
 T
 
-sudo tee /etc/lightdm/lightdm-gtk-greeter.conf > /dev/null << T
+tee /etc/lightdm/lightdm-gtk-greeter.conf > /dev/null << T
 [greeter]
 background=/usr/share/backgrounds/login-bg.png
 theme-name=Chroma-Greeter
