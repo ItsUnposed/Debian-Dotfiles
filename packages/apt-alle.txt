@@ -19,6 +19,7 @@ apt-utils
 at-spi2-common
 at-spi2-core
 avahi-daemon
+avahi-utils
 base-files
 base-passwd
 bash
@@ -56,6 +57,7 @@ cpp-14-x86-64-linux-gnu
 cpp-x86-64-linux-gnu
 cron
 cron-daemon-common
+cups-pk-helper
 curl
 dash
 dbus
@@ -100,6 +102,7 @@ fakeroot
 fastfetch
 fdisk
 feh
+ffmpegthumbnailer
 file
 findutils
 firefox
@@ -141,6 +144,7 @@ g++
 g++-14
 g++-14-x86-64-linux-gnu
 g++-x86-64-linux-gnu
+galternatives
 gawk
 gcc
 gcc-14
@@ -167,9 +171,14 @@ gir1.2-gst-plugins-base-1.0:amd64
 gir1.2-gstreamer-1.0:amd64
 gir1.2-gtk-3.0:amd64
 gir1.2-gtkclutter-1.0:amd64
+gir1.2-handy-1:amd64
 gir1.2-harfbuzz-0.0:amd64
 gir1.2-json-1.0:amd64
+gir1.2-notify-0.7:amd64
+gir1.2-packagekitglib-1.0
 gir1.2-pango-1.0:amd64
+gir1.2-polkit-1.0
+gir1.2-secret-1:amd64
 git
 git-man
 glib-networking:amd64
@@ -214,6 +223,7 @@ gvfs:amd64
 gvfs-backends
 gvfs-common
 gvfs-daemons
+gvfs-fuse
 gvfs-libs:amd64
 gyp
 gzip
@@ -419,6 +429,7 @@ libdbus-1-3:amd64
 libdbus-glib-1-2:amd64
 libdbusmenu-glib4:amd64
 libdbusmenu-gtk3-4:amd64
+libdbusmenu-lxqt0:amd64
 libdc1394-25:amd64
 libdca0:amd64
 libdconf1:amd64
@@ -473,6 +484,7 @@ libfdisk1:amd64
 libfdt1:amd64
 libffado2:amd64
 libffi8:amd64
+libffmpegthumbnailer4v5:amd64
 libfftw3-double3:amd64
 libfftw3-single3:amd64
 libfido2-1:amd64
@@ -484,6 +496,9 @@ libfile-mimeinfo-perl
 libflac14:amd64
 libflite1:amd64
 libfluidsynth3:amd64
+libfm-extra4t64:amd64
+libfm-qt-l10n
+libfm-qt6-15:amd64
 libfmt10:amd64
 libfont-afm-perl
 libfontconfig1:amd64
@@ -581,6 +596,7 @@ libgudev-1.0-0:amd64
 libgupnp-1.6-0:amd64
 libgupnp-igd-1.6-0:amd64
 libgusb2:amd64
+libhandy-1-0:amd64
 libharfbuzz-gobject0:amd64
 libharfbuzz-subset0:amd64
 libharfbuzz0b:amd64
@@ -704,6 +720,7 @@ libkf6iconthemes-bin
 libkf6iconthemes-data
 libkf6iconthemes6:amd64
 libkf6iconwidgets6:amd64
+libkf6idletime6:amd64
 libkf6itemmodels6:amd64
 libkf6itemviews-data
 libkf6itemviews6:amd64
@@ -724,6 +741,8 @@ libkf6parts6:amd64
 libkf6pty-data
 libkf6pty6:amd64
 libkf6runner6:amd64
+libkf6screen8:amd64
+libkf6screendpms8:amd64
 libkf6service-bin
 libkf6service-data
 libkf6service6:amd64
@@ -757,6 +776,8 @@ libkmod2:amd64
 libkrb5-3:amd64
 libkrb5support0:amd64
 libksba8:amd64
+libkscreen-bin
+libkscreen-data
 liblapack3:amd64
 liblastlog2-2:amd64
 liblayershellqtinterface6:amd64
@@ -787,6 +808,10 @@ libluajit-5.1-2:amd64
 libluajit-5.1-common
 liblwp-mediatypes-perl
 liblwp-protocol-https-perl
+liblxqt-backlight-helper
+liblxqt-globalkeys2:amd64
+liblxqt-l10n
+liblxqt2:amd64
 liblz4-1:amd64
 liblzma5:amd64
 liblzo2-2:amd64
@@ -809,6 +834,8 @@ libmbim-proxy
 libmbim-utils
 libmd0:amd64
 libmd4c0:amd64
+libmenu-cache-bin
+libmenu-cache3:amd64
 libminizip1t64:amd64
 libmjpegutils-2.1-0t64:amd64
 libmm-glib0:amd64
@@ -901,6 +928,7 @@ libopus0:amd64
 liborc-0.4-0t64:amd64
 libostree-1-1:amd64
 libp11-kit0:amd64
+libpackagekit-glib2-18:amd64
 libpam-gnome-keyring:amd64
 libpam-modules:amd64
 libpam-modules-bin
@@ -1003,10 +1031,13 @@ libqt6quickwidgets6:amd64
 libqt6sql6:amd64
 libqt6sql6-sqlite:amd64
 libqt6svg6:amd64
+libqt6svgwidgets6:amd64
 libqt6waylandclient6:amd64
 libqt6waylandcompositor6:amd64
 libqt6widgets6:amd64
 libqt6wlshellintegration6:amd64
+libqt6xdg4:amd64
+libqt6xdgiconloader4:amd64
 libqt6xml6:amd64
 libqtermwidget6-2:amd64
 libquadmath0:amd64
@@ -1221,6 +1252,7 @@ libxaw7:amd64
 libxcb-composite0:amd64
 libxcb-cursor0:amd64
 libxcb-damage0:amd64
+libxcb-dpms0:amd64
 libxcb-dri2-0:amd64
 libxcb-dri3-0:amd64
 libxcb-ewmh2:amd64
@@ -1330,6 +1362,24 @@ lsof
 lua-lpeg:amd64
 lua-luv:amd64
 luit
+lximage-qt
+lximage-qt-l10n
+lxqt-config
+lxqt-config-l10n
+lxqt-menu-data
+lxqt-notificationd
+lxqt-notificationd-l10n
+lxqt-policykit
+lxqt-policykit-l10n
+lxqt-powermanagement
+lxqt-powermanagement-l10n
+lxqt-qtplugin:amd64
+lxqt-session
+lxqt-session-l10n
+lxqt-sudo
+lxqt-sudo-l10n
+lxqt-system-theme
+lxqt-themes
 make
 man-db
 manpages
@@ -1759,6 +1809,8 @@ patch
 pavucontrol
 pci.ids
 pciutils
+pcmanfm-qt
+pcmanfm-qt-l10n
 perl
 perl-base
 perl-modules-5.40
@@ -1772,11 +1824,13 @@ pipewire-alsa:amd64
 pipewire-audio
 pipewire-bin
 pipewire-pulse
+pkexec
 plasma-activities-bin
 playerctl
 plymouth
 plymouth-label
 plymouth-themes
+pnp.ids
 pocketsphinx-en-us
 polkitd
 poppler-data
@@ -1795,6 +1849,9 @@ python3-cairo
 python3-certifi
 python3-chardet
 python3-charset-normalizer
+python3-cups:amd64
+python3-cupshelpers
+python3-dbus
 python3-debconf
 python3-debian
 python3-debianbts
@@ -1815,9 +1872,11 @@ python3-pynvim
 python3-reportbug
 python3-requests
 python3-setuptools-whl
+python3-smbc
 python3-urllib3
 python3-venv
 python3-wheel
+python3-xdg
 python3-xlib
 python3.13
 python3.13-dev
@@ -1831,6 +1890,7 @@ qemu-system-modules-opengl
 qemu-system-modules-spice
 qemu-system-x86
 qemu-utils
+qlipper
 qml6-module-org-kde-kirigami:amd64
 qml6-module-qtqml:amd64
 qml6-module-qtqml-models:amd64
@@ -1841,6 +1901,7 @@ qml6-module-qtquick-layouts:amd64
 qml6-module-qtquick-shapes:amd64
 qml6-module-qtquick-templates:amd64
 qml6-module-qtquick-window:amd64
+qps
 qt5-gtk-platformtheme:amd64
 qt6-gtk-platformtheme:amd64
 qt6-image-formats-plugins
@@ -1884,6 +1945,9 @@ suckless-tools
 sudo
 switcheroo-control
 sysstat
+system-config-printer
+system-config-printer-common
+system-config-printer-udev
 systemd
 systemd-sysv
 systemd-timesyncd
@@ -1963,6 +2027,7 @@ xcvt
 xdg-dbus-proxy
 xdg-desktop-portal
 xdg-desktop-portal-gtk
+xdg-desktop-portal-lxqt
 xdg-user-dirs
 xdg-utils
 xdotool
@@ -2006,6 +2071,7 @@ xserver-xorg-video-qxl
 xserver-xorg-video-radeon
 xserver-xorg-video-vesa
 xserver-xorg-video-vmware
+xsettingsd
 xss-lock
 xssproxy
 xterm

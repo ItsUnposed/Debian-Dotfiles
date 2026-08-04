@@ -190,6 +190,7 @@ login.defs
 logrotate
 logsave
 lsof
+lxqt-policykit
 man-db
 manpages
 mawk

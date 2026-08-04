@@ -124,6 +124,7 @@ gaps outer 5
 smart_gaps off
 
 # Autostart
+exec --no-startup-id lxqt-policykit-agent
 exec_always --no-startup-id xset b off
 exec_always --no-startup-id xfce4-panel
 exec_always --no-startup-id sh -c "pkill -x picom; sleep 2; exec picom -b"

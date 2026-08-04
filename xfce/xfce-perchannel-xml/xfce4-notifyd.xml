@@ -9,6 +9,7 @@
       <value type="string" value="brightness"/>
       <value type="string" value="chroma"/>
       <value type="string" value="Chroma"/>
+      <value type="string" value="com.discordapp.Discord"/>
       <value type="string" value="firefox"/>
       <value type="string" value="flameshot"/>
       <value type="string" value="NetworkManager(nm-tray)"/>
