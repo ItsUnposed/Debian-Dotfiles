@@ -105,6 +105,7 @@ Modifier ist die **Super-Taste** (Windows).
 | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>h</kbd> | Hackerstartup-Layout      |
 | <kbd>Super</kbd>+<kbd>p</kbd>                  | pipes (Theme-Farbe)       |
 | <kbd>Super</kbd>+<kbd>x</kbd>                  | unimatrix (Theme-Farbe)   |
+| <kbd>Super</kbd>+<kbd>y</kbd>                  | cava                      |
 | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>x</kbd> | Bildschirm sperren        |
 | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>e</kbd> | Power-Menü                |
 | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>c</kbd> | i3 neu laden              |
