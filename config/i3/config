@@ -37,6 +37,8 @@ for_window [instance="matrix-xterm"] border none
 bindsym $mod+e exec --no-startup-id thunar
 bindsym $mod+i exec --no-startup-id ~/.config/i3/scripts/dev-layout.sh
 bindsym $mod+c exec --no-startup-id ~/.local/bin/chroma-gui
+bindsym $mod+y exec --no-startup-id ~/.config/i3/scripts/hotkey-cava.sh
+for_window [instance="CavaSolo"] border none
 # Terminal-Spielereien
 bindsym $mod+p exec --no-startup-id ~/.config/i3/scripts/hotkey-pipes.sh
 bindsym $mod+x exec --no-startup-id ~/.config/i3/scripts/hotkey-matrix.sh
@@ -88,6 +90,7 @@ bindsym $mod+v split v
 
 # Vollbild
 bindsym $mod+f fullscreen toggle
+bindsym Escape fullscreen disable
 
 # Layout
 bindsym $mod+s layout stacking

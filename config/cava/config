@@ -4,6 +4,8 @@
 # Remove the ; to change parameters.
 
 [general]
+sensitivity = 100
+framerate = 60
 
 # Auto reload config if the configuration file has changed. 1 = on, 0 = off.
 ; live-config = 0

@@ -7,3 +7,4 @@
 .cache/
 current.conf
 home/.gitconfig
+chroma-gui.bak-*
