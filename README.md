@@ -56,14 +56,37 @@ Switch palettes with <kbd>Super</kbd>+<kbd>-</kbd> or from Chroma Control.
 
 ## Chroma Control
 
-A GUI for the whole setup, reachable with <kbd>Super</kbd>+<kbd>c</kbd> or
-from Rofi. Twelve pages cover colours, wallpapers, i3, shortcuts, the
-compositor, per window opacity, the terminal, layouts, effects, animations,
-the profile picture, startup entries and the login screen. Every file is
-backed up as `<file>.bak-<timestamp>` before it is touched, and nothing is
-written until you press Apply.
+A GUI for the whole setup, reachable with <kbd>Super</kbd>+<kbd>c</kbd> or from
+Rofi. Sixteen pages, grouped by topic:
 
-Needs `python3-gi`, `gir1.2-gtk-3.0`, `python3-gi-cairo` and `imagemagick`.
+| Area          | Pages                                              |
+|---------------|----------------------------------------------------|
+| Appearance    | Colours, New palette, Wallpaper                    |
+| Windows       | Window manager, Shortcuts, Displays, Layouts       |
+| Compositing   | Compositor, Animations, Opacity rules              |
+| Programs      | Terminal, Effects                                  |
+| System        | Profile, Login screen, Startup, Backups            |
+
+A few things worth calling out:
+
+- **Colours** shows every palette as a card with swatches. The tick box next to
+  Apply decides whether it appears straight away in the <kbd>Super</kbd>+<kbd>-</kbd>
+  menu or behind `More ...`.
+- **New palette** builds a palette from colour pickers, copying another one as a
+  starting point, and files it under a group of your choosing. Groups live in
+  `config/chroma/groups.conf`, so new ones can be created by typing a name.
+- **Displays** reads the connected screens from `xrandr` and lets you click
+  which workspace belongs to which screen. Without a saved assignment they are
+  spread evenly: two screens give 1-5 and 6-0, three give 1-3, 4-6 and 7-0. The
+  layout itself can be stored with `autorandr` so it comes back on docking.
+- **Backups** lists every timestamped copy the app has written, restores one
+  with a click, and can take a fresh snapshot of all managed files on demand.
+
+Nothing is written until an Apply button is pressed, and every file is copied to
+`<file>.bak-<timestamp>` beforehand.
+
+Needs `python3-gi`, `gir1.2-gtk-3.0`, `python3-gi-cairo`, `imagemagick` and,
+for the display page, `autorandr`.
 
 ## Keyboard shortcuts
 
@@ -157,6 +180,7 @@ pipes on the right.
 | `local-bin/`   | own scripts for `~/.local/bin`             |
 | `wallpaper/`   | one background image per palette           |
 | `screenshots/` | images used in this README                 |
+| `scripts/`     | helper scripts that are not part of the desktop |
 
 `config/i3`, `config/cava`, `config/fastfetch` and `config/rofi` are symlinks,
 so edits under `~/.config` land in the repository straight away. Everything

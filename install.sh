@@ -41,7 +41,7 @@ CORE=(
     git curl wget jq bc nano
     python3 python3-pip pipx
     python3-gi python3-gi-cairo gir1.2-gtk-3.0
-    imagemagick rsync policykit-1
+    imagemagick rsync policykit-1 lxqt-policykit autorandr
     qt6ct
 )
 for p in "${CORE[@]}"; do
