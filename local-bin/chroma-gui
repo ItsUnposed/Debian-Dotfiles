@@ -24,6 +24,10 @@ QTERM   = f"{CFG}/qterminal.org/qterminal.ini"
 CAVA    = f"{CFG}/cava/config"
 CAVASH  = f"{SCRIPTS}/hotkey-cava.sh"
 MENUSH  = f"{CHROMA}/menu.sh"
+
+# Everything Chroma Control may write to, used by the backup page.
+MANAGED = [I3, PICOM, QTERM, PIPES, MATRIX, HACKER, DEV, MENUSH, CAVA,
+           f"{CHROMA}/current.conf", f"{CHROMA}/groups.conf"]
 GREETER = "/etc/lightdm/lightdm-gtk-greeter.conf"
 WALLDIR = f"{HOME}/Pictures/Wallpapers"
 
@@ -292,21 +296,26 @@ class App(Gtk.Window):
         body.pack_start(stack, True, True, 0)
 
         for build, title in (
+            # look and feel
             (self.tab_colors,    "Colours"),
             (self.tab_newpal,    "New palette"),
             (self.tab_wall,      "Wallpaper"),
-            (self.tab_displays,  "Displays"),
+            # window management
             (self.tab_wm,        "Window manager"),
-            (self.tab_keys,      "Shortcuts"),
-            (self.tab_picom,     "Compositor"),
-            (self.tab_opacity,   "Opacity rules"),
-            (self.tab_term,      "Terminal"),
+            (self.tab_shortcuts, "Shortcuts"),
+            (self.tab_displays,  "Displays"),
             (self.tab_layout,    "Layouts"),
+            # compositing
+            (self.tab_picom,     "Compositor"),
+            (self.tab_swipe,     "Animations"),
+            (self.tab_opacity,   "Opacity rules"),
+            # programs
+            (self.tab_term,      "Terminal"),
             (self.tab_fx,        "Effects"),
-            (self.tab_swipe,     "Swipe"),
+            # system
             (self.tab_profile,   "Profile"),
-            (self.tab_auto,      "Startup"),
             (self.tab_login,     "Login screen"),
+            (self.tab_auto,      "Startup"),
             (self.tab_backups,   "Backups"),
         ):
             try:
@@ -563,7 +572,7 @@ class App(Gtk.Window):
         self.say("i3 config saved (a .bak copy sits next to it) and reloaded.")
 
     # ------------------------------------------------------- 3 Shortcuts
-    def tab_keys(self):
+    def tab_shortcuts(self):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         box.set_border_width(14)
         box.pack_start(Gtk.Label(
@@ -1837,9 +1846,12 @@ class App(Gtk.Window):
 
         self.bstore = Gtk.ListStore(str, str, str)   # file, when, full path
         found = []
+        for f in MANAGED:
+            found += glob.glob(f"{f}.bak-*")
         for d in (f"{CFG}/i3", f"{CFG}/i3/scripts", CHROMA, CFG,
-                  f"{CFG}/qterminal.org", f"{CFG}/cava", HOME):
+                  f"{CFG}/qterminal.org", f"{CFG}/cava"):
             found += glob.glob(f"{d}/*.bak-*")
+        found = sorted(set(found))
         for f in sorted(found, key=os.path.getmtime, reverse=True):
             base = os.path.basename(f)
             orig, _, stamp = base.rpartition(".bak-")
@@ -1861,6 +1873,9 @@ class App(Gtk.Window):
         box.pack_start(sc, True, True, 0)
 
         row = Gtk.Box(spacing=8)
+        mk = Gtk.Button(label="Back up everything now")
+        mk.connect("clicked", self.bak_now)
+        row.pack_start(mk, False, False, 0)
         cl = Gtk.Button(label="Delete all backups")
         cl.connect("clicked", self.bak_clear)
         row.pack_start(cl, False, False, 0)
@@ -1870,6 +1885,24 @@ class App(Gtk.Window):
         row.pack_end(b, False, False, 0)
         box.pack_start(row, False, False, 0)
         return box
+
+    def bak_now(self, _b):
+        stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        made = 0
+        for f in MANAGED:
+            if not os.path.isfile(f):
+                continue
+            try:
+                shutil.copy2(f, f"{f}.bak-{stamp}")
+                made += 1
+            except Exception:
+                pass
+        when = datetime.datetime.now().strftime("%d.%m. %H:%M")
+        for f in MANAGED:
+            if os.path.isfile(f"{f}.bak-{stamp}"):
+                self.bstore.insert(0, [os.path.basename(f), when,
+                                       f"{f}.bak-{stamp}"])
+        self.say(f"{made} files backed up.")
 
     def bak_restore(self, _b):
         model, it = self.btree.get_selection().get_selected()
