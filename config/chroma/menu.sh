@@ -5,7 +5,7 @@ APPLY="$CHROMA/apply.sh"
 THEME="$HOME/.config/rofi/chroma.rasi"
 PAL="$CHROMA/palettes"
 
-HAUPT_ORDER=(black blue white purple)
+HAUPT_ORDER=(black blue white purple red green)
 
 farbe_von() {
     local f="$PAL/$1.conf" c=""

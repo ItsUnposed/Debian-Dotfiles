@@ -8,6 +8,7 @@ apt-forktracer
 apt-listchanges
 apt-transport-https
 apt-utils
+autorandr
 base-files
 base-passwd
 bash
@@ -67,6 +68,8 @@ gh
 ghostscript
 gir1.2-gtk-3.0
 git
+gnome-software
+gnome-software-plugin-flatpak
 gnome-themes-extra
 gnupg
 gpg

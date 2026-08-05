@@ -1,1 +1,3 @@
 com.discordapp.Discord
+io.github.cosmic_utils.camera
+io.gitlab.ilshat_apps.manuscript

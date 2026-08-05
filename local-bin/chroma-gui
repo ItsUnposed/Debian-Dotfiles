@@ -21,16 +21,43 @@ MATRIX  = f"{SCRIPTS}/hotkey-matrix.sh"
 HACKER  = f"{CFG}/i3/hacker-startup.sh"
 DEV     = f"{SCRIPTS}/dev-layout.sh"
 QTERM   = f"{CFG}/qterminal.org/qterminal.ini"
+CAVA    = f"{CFG}/cava/config"
+CAVASH  = f"{SCRIPTS}/hotkey-cava.sh"
+MENUSH  = f"{CHROMA}/menu.sh"
 GREETER = "/etc/lightdm/lightdm-gtk-greeter.conf"
 WALLDIR = f"{HOME}/Pictures/Wallpapers"
 
-GROUPS = [
+DEFAULT_GROUPS = [
     ("Blues",           ["aqua", "blue", "darkblue"]),
     ("Reds and pinks",  ["red", "pink", "purple"]),
     ("Warm tones",      ["yellow", "orange"]),
     ("Nature tones",    ["green", "brown"]),
     ("Neutrals",        ["black", "gray", "silver", "white"]),
 ]
+GROUPFILE = f"{CHROMA}/groups.conf"
+
+
+def load_groups():
+    """Read the group file, fall back to the built in list."""
+    text = read(GROUPFILE)
+    if not text.strip():
+        return [(t, list(n)) for t, n in DEFAULT_GROUPS]
+    out = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or ":" not in line:
+            continue
+        title, _, rest = line.partition(":")
+        out.append((title.strip(), rest.split()))
+    return out or [(t, list(n)) for t, n in DEFAULT_GROUPS]
+
+
+def save_groups(groups):
+    body = "# One group per line:  Title: palette palette ...\n"
+    for title, names in groups:
+        if names:
+            body += f"{title}: {' '.join(names)}\n"
+    write(GROUPFILE, body)
 
 
 # --------------------------------------------------------------- helpers
@@ -82,43 +109,217 @@ def rgba(h):
     return c
 
 
+# ------------------------------------------------------------------ style
+CSS_TEMPLATE = """
+window { background: @BG@; }
+headerbar { background: @BG2@; border-bottom: 1px solid @LINE@; }
+headerbar label.title { color: @FG@; font-weight: 600; }
+headerbar label.subtitle { color: @DIM@; font-size: 11px; }
+
+stacksidebar list { background: @BG2@; }
+stacksidebar list row { padding: 11px 18px; color: @DIM@; border-radius: 0; }
+stacksidebar list row:selected {
+    background: @ACC3@;
+    color: @FG@;
+    box-shadow: inset 3px 0 0 @ACC@;
+}
+stacksidebar list row:hover { background: @HOVER@; color: @FG@; }
+
+label { color: @FG@; }
+.dim, .dim label { color: @DIM@; }
+.section {
+    color: @ACC@;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+}
+.card {
+    background: @BG2@;
+    border: 1px solid @LINE@;
+    border-radius: 10px;
+    padding: 6px;
+}
+frame, frame > border { border: none; background: transparent; }
+
+button {
+    background: @BG2@;
+    color: @FG@;
+    border: 1px solid @LINE@;
+    border-radius: 8px;
+    padding: 6px 14px;
+    box-shadow: none;
+}
+button:hover { border-color: @ACC@; color: @ACC@; }
+button:active { background: @ACC3@; }
+button.suggested-action,
+button.primary {
+    background: @ACC3@;
+    color: @ACC@;
+    border: 1px solid @ACC@;
+    font-weight: 600;
+    padding: 7px 20px;
+}
+button.suggested-action:hover, button.primary:hover {
+    background: @HOVER@;
+    border-color: @ACC2@;
+    color: @ACC2@;
+}
+button.primary:active { background: @ACC3@; }
+
+entry, spinbutton {
+    background: @BG@;
+    color: @FG@;
+    border: 1px solid @LINE@;
+    border-radius: 8px;
+    padding: 5px 8px;
+    caret-color: @ACC@;
+}
+entry:focus, spinbutton:focus { border-color: @ACC@; }
+
+switch { background: @LINE@; border-radius: 14px; }
+switch:checked { background: @ACC@; }
+switch slider { background: @FG@; border-radius: 12px; }
+
+treeview { background: @BG@; color: @FG@; }
+treeview:selected { background: @ACC3@; color: @FG@; }
+treeview header button {
+    background: @BG2@;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid @LINE@;
+    color: @DIM@;
+    font-weight: 600;
+}
+scrolledwindow { border: none; }
+
+button.wsbtn {
+    background: @BG@;
+    color: @DIM@;
+    border: 1px solid @LINE@;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0;
+}
+button.wsbtn:hover { border-color: @ACC3@; color: @FG@; }
+button.wsbtn:checked {
+    background: @ACC3@;
+    color: @ACC@;
+    border: 2px solid @ACC@;
+}
+button.wsbtn:checked:hover { background: @HOVER@; }
+
+.footer {
+    background: @BG2@;
+    border-top: 1px solid @LINE@;
+    padding: 7px 16px;
+}
+.footer label { color: @DIM@; }
+"""
+
+
+def mix(a, b, t):
+    """Blend two #rrggbb colours, t = 0..1 towards b."""
+    a, b = a.lstrip("#"), b.lstrip("#")
+    try:
+        out = []
+        for i in (0, 2, 4):
+            x, y = int(a[i:i + 2], 16), int(b[i:i + 2], 16)
+            out.append(int(x + (y - x) * t))
+        return "#%02x%02x%02x" % tuple(out)
+    except Exception:
+        return "#" + a
+
+
+def load_css():
+    v = parse_conf(f"{CHROMA}/current.conf")
+    bg   = v.get("C_BG",   "#101014")
+    bg2  = v.get("C_BG2",  mix(bg, "#ffffff", 0.06))
+    fg   = v.get("C_FG",   "#e8e8e8")
+    dim  = v.get("C_DIM",  mix(fg, bg, 0.45))
+    acc  = v.get("C_ACC",  "#ff6b5e")
+    acc2 = v.get("C_ACC2", acc)
+    acc3 = v.get("C_ACC3", mix(bg, acc, 0.22))
+    css = (CSS_TEMPLATE
+           .replace("@BG2@", bg2).replace("@BG@", bg)
+           .replace("@FG@", fg).replace("@DIM@", dim)
+           .replace("@ACC3@", acc3).replace("@ACC2@", acc2)
+           .replace("@ACC@", acc)
+           .replace("@LINE@", mix(bg, fg, 0.16))
+           .replace("@HOVER@", mix(bg2, fg, 0.07)))
+    prov = Gtk.CssProvider()
+    try:
+        prov.load_from_data(css.encode())
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), prov,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    except Exception:
+        pass
+
+
 # ---------------------------------------------------------------- window
 class App(Gtk.Window):
     def __init__(self):
         super().__init__(title="Chroma Control")
         self.set_default_size(940, 700)
 
+        self.set_default_size(1020, 720)
+        load_css()
+
+        hb = Gtk.HeaderBar()
+        hb.set_show_close_button(True)
+        hb.set_title("Chroma Control")
+        pal = parse_conf(f"{CHROMA}/current.conf")
+        hb.set_subtitle(f"palette {pal.get('NAME', '')}".strip()
+                        or "desktop configuration")
+        self.set_titlebar(hb)
+
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(outer)
 
-        nb = Gtk.Notebook()
-        nb.set_border_width(10)
-        nb.set_scrollable(True)
-        outer.pack_start(nb, True, True, 0)
+        body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        outer.pack_start(body, True, True, 0)
+
+        stack = Gtk.Stack()
+        stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+        stack.set_transition_duration(140)
+
+        side = Gtk.StackSidebar()
+        side.set_stack(stack)
+        side.set_size_request(190, -1)
+        body.pack_start(side, False, False, 0)
+
+        sep = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
+        body.pack_start(sep, False, False, 0)
+        body.pack_start(stack, True, True, 0)
 
         for build, title in (
             (self.tab_colors,    "Colours"),
+            (self.tab_newpal,    "New palette"),
+            (self.tab_wall,      "Wallpaper"),
+            (self.tab_displays,  "Displays"),
             (self.tab_wm,        "Window manager"),
             (self.tab_keys,      "Shortcuts"),
             (self.tab_picom,     "Compositor"),
+            (self.tab_opacity,   "Opacity rules"),
             (self.tab_term,      "Terminal"),
             (self.tab_layout,    "Layouts"),
             (self.tab_fx,        "Effects"),
-            (self.tab_wall,      "Wallpaper"),
+            (self.tab_swipe,     "Swipe"),
             (self.tab_profile,   "Profile"),
             (self.tab_auto,      "Startup"),
             (self.tab_login,     "Login screen"),
+            (self.tab_backups,   "Backups"),
         ):
             try:
-                nb.append_page(build(), Gtk.Label(label=title))
+                page = build()
             except Exception as e:
-                err = Gtk.Label(label=f"Could not build this tab:\n{e}")
-                nb.append_page(err, Gtk.Label(label=title))
+                page = Gtk.Label(label=f"Could not build this page:\n{e}")
+            stack.add_titled(page, title.lower().replace(" ", "-"), title)
 
+        foot = Gtk.Box()
+        foot.get_style_context().add_class("footer")
         self.status = Gtk.Label(label="Ready.", xalign=0)
-        self.status.set_margin_start(14)
-        self.status.set_margin_bottom(8)
-        outer.pack_start(self.status, False, False, 0)
+        foot.pack_start(self.status, True, True, 0)
+        outer.pack_start(foot, False, False, 0)
 
     def say(self, text):
         self.status.set_markup(f"<small>{GLib.markup_escape_text(text)}</small>")
@@ -152,21 +353,23 @@ class App(Gtk.Window):
     def _apply(self, grid, row, cb, label="Apply"):
         b = Gtk.Button(label=label)
         b.connect("clicked", cb)
-        b.set_margin_top(12)
+        b.get_style_context().add_class("primary")
+        b.set_margin_top(18)
         b.set_halign(Gtk.Align.START)
         grid.attach(b, 0, row, 2, 1)
         return b
 
     def _grid(self):
-        g = Gtk.Grid(row_spacing=12, column_spacing=16)
-        g.set_border_width(18)
+        g = Gtk.Grid(row_spacing=14, column_spacing=22)
+        g.set_border_width(26)
         return g
 
     def _head(self, grid, row, text):
-        l = Gtk.Label(xalign=0)
-        l.set_markup(f"<b>{text}</b>")
+        l = Gtk.Label(label=text.upper(), xalign=0)
+        l.get_style_context().add_class("section")
         if row:
-            l.set_margin_top(18)
+            l.set_margin_top(22)
+        l.set_margin_bottom(2)
         grid.attach(l, 0, row, 2, 1)
 
     # -------------------------------------------------------- 1 Colours
@@ -184,11 +387,15 @@ class App(Gtk.Window):
         sc.add(col)
         box.pack_start(sc, True, True, 0)
 
+        m = re.search(r"^HAUPT_ORDER=\(([^)]*)\)", read(MENUSH), re.M)
+        self.menu_order = m.group(1).split() if m else []
+        self.menu_checks = {}
+
         current = parse_conf(f"{CHROMA}/current.conf").get("C_ACC", "")
         found = {os.path.basename(q)[:-5]: q
                  for q in sorted(glob.glob(f"{PALDIR}/*.conf"))}
-        groups = list(GROUPS)
-        rest = sorted(set(found) - {n for _, ns in GROUPS for n in ns})
+        groups = load_groups()
+        rest = sorted(set(found) - {n for _, ns in groups for n in ns})
         if rest:
             groups.append(("Other", rest))
 
@@ -209,6 +416,20 @@ class App(Gtk.Window):
             col.pack_start(flow, False, False, 0)
             for n in present:
                 flow.add(self._card(n, parse_conf(found[n]), current))
+
+        foot = Gtk.Box(spacing=10)
+        foot.set_margin_top(6)
+        hint = Gtk.Label(xalign=0)
+        hint.get_style_context().add_class("dim")
+        hint.set_markup("<small>A ticked palette appears straight away in the "
+                        "Super+Minus menu, the rest sit behind "
+                        "<tt>More ...</tt>.</small>")
+        foot.pack_start(hint, True, True, 0)
+        b = Gtk.Button(label="Save menu layout")
+        b.get_style_context().add_class("primary")
+        b.connect("clicked", self.save_menu)
+        foot.pack_end(b, False, False, 0)
+        box.pack_start(foot, False, False, 0)
         return box
 
     def _card(self, name, vals, current):
@@ -231,10 +452,20 @@ class App(Gtk.Window):
         lbl.set_markup(f"<b>{name}</b>{mark}")
         card.pack_start(lbl, False, False, 0)
 
+        row = Gtk.Box(spacing=6)
         b = Gtk.Button(label="Apply")
         b.connect("clicked", self.apply_palette, name)
-        card.pack_start(b, False, False, 0)
+        row.pack_start(b, True, True, 0)
 
+        chk = Gtk.CheckButton()
+        chk.set_active(name in self.menu_order)
+        chk.set_tooltip_text("Show directly in the Super+Minus menu")
+        chk.set_valign(Gtk.Align.CENTER)
+        self.menu_checks[name] = chk
+        row.pack_end(chk, False, False, 0)
+        card.pack_start(row, False, False, 0)
+
+        card.get_style_context().add_class("card")
         f = Gtk.Frame()
         f.add(card)
         return f
@@ -369,6 +600,7 @@ class App(Gtk.Window):
         box.pack_start(sc, True, True, 0)
 
         hint = Gtk.Label(xalign=0)
+        hint.get_style_context().add_class("dim")
         hint.set_markup("<small>Use i3 syntax, for example "
                         "<tt>$mod+Shift+f</tt> or <tt>XF86AudioPlay</tt>.</small>")
         box.pack_start(hint, False, False, 0)
@@ -423,25 +655,21 @@ class App(Gtk.Window):
                                   num(r"^\s*blur-strength\s*=\s*(\d+)", 5), 0, 20)
         self.pc_shadow = self._switch(g, 3, "Shadows",
                                       bool(re.search(r"^\s*shadow\s*=\s*true", c, re.M)))
-        self.pc_anim = self._switch(g, 4, "Animations",
-                                    bool(re.search(r"^\s*animations\s*=\s*true", c, re.M)))
-
-        self._head(g, 5, "Opacity")
-        self.pc_inact = self._spin(g, 6, "Inactive windows",
+        self._head(g, 4, "Opacity")
+        self.pc_inact = self._spin(g, 5, "Inactive windows",
                                    fnum(r"^\s*inactive-opacity\s*=\s*([\d.]+)", 1.0),
                                    0.2, 1.0, 0.05, 2)
-        self.pc_act = self._spin(g, 7, "Active windows",
+        self.pc_act = self._spin(g, 6, "Active windows",
                                  fnum(r"^\s*active-opacity\s*=\s*([\d.]+)", 1.0),
                                  0.2, 1.0, 0.05, 2)
-        self.pc_fade = self._switch(g, 8, "Fade on open and close",
-                                    bool(re.search(r"^\s*fading\s*=\s*true", c, re.M)))
-
         hint = Gtk.Label(xalign=0)
-        hint.set_markup("<small>Per-window rules still live in "
+        hint.get_style_context().add_class("dim")
+        hint.set_markup("<small>Opening, closing and workspace animations now "
+                        "live on the Swipe page. Per-window rules stay in "
                         "<tt>~/.config/picom.conf</tt>.</small>")
-        g.attach(hint, 0, 9, 2, 1)
+        g.attach(hint, 0, 7, 2, 1)
 
-        self._apply(g, 10, self.save_picom, "Apply and restart picom")
+        self._apply(g, 8, self.save_picom, "Apply and restart picom")
         return g
 
     def save_picom(self, _b):
@@ -467,13 +695,27 @@ class App(Gtk.Window):
         c = setnum(c, "inactive-opacity", f"{self.pc_inact.get_value():.2f}")
         c = setnum(c, "active-opacity", f"{self.pc_act.get_value():.2f}")
         c = setbool(c, "shadow", self.pc_shadow.get_active())
-        c = setbool(c, "animations", self.pc_anim.get_active())
-        c = setbool(c, "fading", self.pc_fade.get_active())
 
         write(PICOM, c)
+        self._restart_picom("picom.conf saved")
+
+    def _restart_picom(self, ok_msg):
+        """Restart picom and say what happened, instead of failing silently."""
         subprocess.run(["pkill", "-x", "picom"], capture_output=True)
-        GLib.timeout_add(1500, lambda: (run("picom", "-b"), False)[1])
-        self.say("picom.conf saved, compositor restarting.")
+
+        def go():
+            r = subprocess.run(["picom", "-b"], capture_output=True, text=True)
+            alive = subprocess.run(["pgrep", "-x", "picom"],
+                                   capture_output=True).returncode == 0
+            if alive:
+                self.say(f"{ok_msg}, picom restarted.")
+            else:
+                err = (r.stderr or r.stdout or "").strip().splitlines()
+                detail = err[-1] if err else "no error message"
+                self.say(f"picom refused to start: {detail}")
+            return False
+
+        GLib.timeout_add(900, go)
 
     # -------------------------------------------------------- 5 Terminal
     def tab_term(self):
@@ -497,6 +739,7 @@ class App(Gtk.Window):
                                    val("AudibleBell", "false") == "true")
 
         hint = Gtk.Label(xalign=0)
+        hint.get_style_context().add_class("dim")
         hint.set_markup("<small>Applies to terminals opened from now on.</small>")
         g.attach(hint, 0, 7, 2, 1)
 
@@ -599,15 +842,34 @@ class App(Gtk.Window):
         h2.set_markup("<small>A larger value means faster rain.</small>")
         g.attach(h2, 0, 6, 2, 1)
 
-        self._apply(g, 7, self.save_fx)
+        self._head(g, 7, "cava")
+        cv = read(CAVA)
+        def cval(key, d):
+            m = re.search(rf"^{key}\s*=\s*(\S+)", cv, re.M)
+            return m.group(1) if m else d
+
+        self.fx_bars = self._spin(g, 8, "Number of bars (0 = automatic)",
+                                  int(cval("bars", "0") or 0), 0, 200)
+        self.fx_fps = self._spin(g, 9, "Framerate", int(cval("framerate", "60") or 60),
+                                 10, 144)
+        self.fx_sens = self._spin(g, 10, "Sensitivity",
+                                  int(cval("sensitivity", "100") or 100), 10, 500, 10)
+        h3 = Gtk.Label(xalign=0)
+        h3.get_style_context().add_class("dim")
+        h3.set_markup("<small>Colours follow the active palette and are rewritten "
+                      "on every palette change.</small>")
+        g.attach(h3, 0, 11, 2, 1)
+
+        self._apply(g, 12, self.save_fx)
 
         row = Gtk.Box(spacing=8)
         row.set_margin_top(18)
-        for label, path in (("Try pipes", PIPES), ("Try matrix", MATRIX)):
+        for label, path in (("Try pipes", PIPES), ("Try matrix", MATRIX),
+                            ("Try cava", CAVASH)):
             b = Gtk.Button(label=label)
             b.connect("clicked", lambda _b, q=path: run(q))
             row.pack_start(b, False, False, 0)
-        g.attach(row, 0, 8, 2, 1)
+        g.attach(row, 0, 13, 2, 1)
         return g
 
     def save_fx(self, _b):
@@ -624,6 +886,18 @@ class App(Gtk.Window):
                        rf"\g<1>{self.fx_speed.get_value_as_int()}", s)
             write(MATRIX, s)
             os.chmod(MATRIX, 0o755)
+
+        cv = read(CAVA)
+        if cv:
+            for key, val in (("bars", self.fx_bars.get_value_as_int()),
+                             ("framerate", self.fx_fps.get_value_as_int()),
+                             ("sensitivity", self.fx_sens.get_value_as_int())):
+                if re.search(rf"^{key}\s*=.*$", cv, re.M):
+                    cv = re.sub(rf"^{key}\s*=.*$", f"{key} = {val}", cv, flags=re.M)
+                elif re.search(r"^\[general\]", cv, re.M):
+                    cv = re.sub(r"^\[general\]", f"[general]\n{key} = {val}",
+                                cv, count=1, flags=re.M)
+            write(CAVA, cv)
         self.say("Effect settings saved.")
 
     # ------------------------------------------------------- 8 Wallpaper
@@ -673,6 +947,7 @@ class App(Gtk.Window):
             b2.connect("clicked", lambda _b, t=target: self.set_wall(t))
             row.pack_start(b2, False, False, 0)
 
+            row.get_style_context().add_class("card")
             fr = Gtk.Frame()
             fr.add(row)
             col.pack_start(fr, False, False, 0)
@@ -751,6 +1026,7 @@ class App(Gtk.Window):
         g.attach(self.pf_img, 0, 1, 2, 1)
 
         hint = Gtk.Label(xalign=0)
+        hint.get_style_context().add_class("dim")
         hint.set_markup("<small>Shown on the login screen and in the panel. "
                         "Any image or PDF works, it is squared to 256 pixels.</small>")
         g.attach(hint, 0, 2, 2, 1)
@@ -885,6 +1161,7 @@ class App(Gtk.Window):
         g.attach(self.g_panel, 1, 6, 1, 1)
 
         hint = Gtk.Label(xalign=0)
+        hint.get_style_context().add_class("dim")
         hint.set_markup("<small>Writing here needs administrator rights, so a "
                         "password prompt appears. Colours come from the palette.</small>")
         g.attach(hint, 0, 7, 2, 1)
@@ -917,6 +1194,713 @@ class App(Gtk.Window):
             ["pkexec", "cp", tmp, GREETER], capture_output=True).returncode == 0
         self.say("Login screen saved." if ok
                  else f"Could not write. Run manually: sudo cp {tmp} {GREETER}")
+
+
+    # ----------------------------------------------------------- Swipe
+    OPEN_PRESETS = {
+        "None": None,
+        "Fade in": {"opacity": ("0", "window-raw-opacity")},
+        "Slide up": {"opacity": ("0", "window-raw-opacity"),
+                     "offset-y": ("60", "0")},
+        "Slide down": {"opacity": ("0", "window-raw-opacity"),
+                       "offset-y": ("-60", "0")},
+        "Grow": {"opacity": ("0", "window-raw-opacity"),
+                 "scale-x": ("0.86", "1"), "scale-y": ("0.86", "1")},
+    }
+    CLOSE_PRESETS = {
+        "None": None,
+        "Fade out": {"opacity": ("window-raw-opacity-before", "0")},
+        "Slide down": {"opacity": ("window-raw-opacity-before", "0"),
+                       "offset-y": ("0", "60")},
+        "Slide up": {"opacity": ("window-raw-opacity-before", "0"),
+                     "offset-y": ("0", "-60")},
+        "Shrink": {"opacity": ("window-raw-opacity-before", "0"),
+                   "scale-x": ("1", "0.86"), "scale-y": ("1", "0.86")},
+    }
+    WS_PRESETS = ["None", "Slide sideways", "Fade"]
+
+    MARK_A = "# >>> chroma-swipe (managed by Chroma Control)"
+    MARK_B = "# <<< chroma-swipe"
+
+    def tab_swipe(self):
+        g = self._grid()
+        cfg = read(PICOM)
+        cur = self._read_swipe(cfg)
+
+        self._head(g, 0, "Window animations")
+
+        g.attach(Gtk.Label(label="When a window opens", xalign=0), 0, 1, 1, 1)
+        self.sw_open = Gtk.ComboBoxText()
+        for k in self.OPEN_PRESETS:
+            self.sw_open.append_text(k)
+        self._select(self.sw_open, list(self.OPEN_PRESETS), cur.get("open", "Fade in"))
+        self.sw_open.set_halign(Gtk.Align.START)
+        g.attach(self.sw_open, 1, 1, 1, 1)
+
+        g.attach(Gtk.Label(label="When a window closes", xalign=0), 0, 2, 1, 1)
+        self.sw_close = Gtk.ComboBoxText()
+        for k in self.CLOSE_PRESETS:
+            self.sw_close.append_text(k)
+        self._select(self.sw_close, list(self.CLOSE_PRESETS), cur.get("close", "None"))
+        self.sw_close.set_halign(Gtk.Align.START)
+        g.attach(self.sw_close, 1, 2, 1, 1)
+
+        self.sw_dur_o = self._spin(g, 3, "Opening duration (seconds)",
+                                   float(cur.get("dur_open", 0.25)),
+                                   0.05, 2.00, 0.05, 2)
+        self.sw_dur_c = self._spin(g, 4, "Closing duration (seconds)",
+                                   float(cur.get("dur_close", 0.25)),
+                                   0.05, 2.00, 0.05, 2)
+        self.sw_dist = self._spin(g, 5, "Slide distance (pixels)",
+                                  int(cur.get("distance", 60)), 10, 400, 10)
+
+        self._head(g, 6, "Workspace switching")
+        g.attach(Gtk.Label(label="Transition", xalign=0), 0, 7, 1, 1)
+        self.sw_ws = Gtk.ComboBoxText()
+        for k in self.WS_PRESETS:
+            self.sw_ws.append_text(k)
+        self._select(self.sw_ws, self.WS_PRESETS, cur.get("ws", "Slide sideways"))
+        self.sw_ws.set_halign(Gtk.Align.START)
+        g.attach(self.sw_ws, 1, 7, 1, 1)
+
+        self.sw_dur_w = self._spin(g, 8, "Switching duration (seconds)",
+                                   float(cur.get("dur_ws", 0.30)),
+                                   0.05, 2.00, 0.05, 2)
+
+        note = Gtk.Label(xalign=0)
+        note.get_style_context().add_class("dim")
+        note.set_markup("<small>Settings are written into a marked block at the "
+                        "end of picom.conf, so hand-written rules stay "
+                        "untouched.</small>")
+        g.attach(note, 0, 9, 2, 1)
+
+        self._head(g, 10, "Leaving fullscreen")
+        g.attach(Gtk.Label(label="Key that exits fullscreen", xalign=0), 0, 11, 1, 1)
+        i3c = read(I3)
+        m = re.search(r"^bindsym (\S+) fullscreen disable", i3c, re.M)
+        self.sw_fskey = Gtk.ComboBoxText.new_with_entry()
+        for k in ("Escape", "F11", "$mod+f", "$mod+Escape"):
+            self.sw_fskey.append_text(k)
+        self.sw_fskey.get_child().set_text(m.group(1) if m else "Escape")
+        self.sw_fskey.set_halign(Gtk.Align.START)
+        g.attach(self.sw_fskey, 1, 11, 1, 1)
+
+        note2 = Gtk.Label(xalign=0)
+        note2.get_style_context().add_class("dim")
+        note2.set_markup("<small>Some programs swallow F11 themselves. A key "
+                         "bound in i3 always wins, so Escape is a safe way out "
+                         "of a stuck fullscreen window.</small>")
+        g.attach(note2, 0, 12, 2, 1)
+
+        self._apply(g, 13, self.save_swipe, "Apply and restart picom")
+        return g
+
+    def _select(self, combo, items, value):
+        combo.set_active(items.index(value) if value in items else 0)
+
+    def _read_swipe(self, cfg):
+        out = {}
+        m = re.search(re.escape(self.MARK_A) + r"(.*?)" + re.escape(self.MARK_B),
+                      cfg, re.S)
+        if m:
+            for key in ("open", "close", "ws", "dur_open", "dur_close", "dur_ws", "distance"):
+                mm = re.search(rf"#\s*{key}\s*=\s*(.+)", m.group(1))
+                if mm:
+                    out[key] = mm.group(1).strip()
+        return out
+
+    def _anim_block(self, triggers, preset, dur, dist):
+        if not preset:
+            return ""
+        lines = []
+        for prop, (a, b) in preset.items():
+            aa = a.replace("60", str(dist)).replace("-60", "-" + str(dist))
+            bb = b.replace("60", str(dist)).replace("-60", "-" + str(dist))
+            q = lambda v: f'"{v}"'
+            lines.append(f'        {prop} = {{ curve = "cubic-bezier(0.22,1,0.36,1)"; '
+                         f'duration = {dur}; start = {q(aa)}; end = {q(bb)}; }};')
+        body = "\n".join(lines)
+        trig = ", ".join(f'"{t}"' for t in triggers)
+        return ("      {\n"
+                f"        triggers = [ {trig} ];\n"
+                f"{body}\n"
+                '        blur-opacity = "opacity";\n'
+                '        shadow-opacity = "opacity";\n'
+                "      },\n")
+
+    def _drop_top_animations(self, cfg):
+        """Remove an existing top-level animations = ( ... ); list."""
+        m = re.search(r"^animations\s*=\s*\(", cfg, re.M)
+        if not m:
+            return cfg
+        i = cfg.index("(", m.start())
+        depth = 0
+        for j in range(i, len(cfg)):
+            if cfg[j] in "([{":
+                depth += 1
+            elif cfg[j] in ")]}":
+                depth -= 1
+                if depth == 0:
+                    end = j + 1
+                    while end < len(cfg) and cfg[end] in ";\n":
+                        end += 1
+                    return cfg[:m.start()] + cfg[end:]
+        return cfg
+
+    def _insert_into_rules(self, cfg, entry):
+        """Append our entry as the last item of rules = ( ... ), or None."""
+        m = re.search(r"^rules\s*=\s*\(", cfg, re.M)
+        if not m:
+            return None
+        i = cfg.index("(", m.start())
+        depth = 0
+        for j in range(i, len(cfg)):
+            if cfg[j] in "([{":
+                depth += 1
+            elif cfg[j] in ")]}":
+                depth -= 1
+                if depth == 0:
+                    return cfg[:j] + entry + cfg[j:]
+        return None
+
+    def save_swipe(self, _b):
+        cfg = read(PICOM)
+        if not cfg:
+            self.say("Cannot read picom.conf.")
+            return
+
+        o = self.sw_open.get_active_text() or "None"
+        c = self.sw_close.get_active_text() or "None"
+        w = self.sw_ws.get_active_text() or "None"
+        do = f"{self.sw_dur_o.get_value():.2f}"
+        dc = f"{self.sw_dur_c.get_value():.2f}"
+        dw = f"{self.sw_dur_w.get_value():.2f}"
+        dist = self.sw_dist.get_value_as_int()
+
+        anims = ""
+        anims += self._anim_block(["open"], self.OPEN_PRESETS.get(o), do, dist)
+        anims += self._anim_block(["close"], self.CLOSE_PRESETS.get(c), dc, dist)
+        head = (f"  {self.MARK_A}\n"
+                f"  # open = {o}\n  # close = {c}\n  # ws = {w}\n"
+                f"  # dur_open = {do}\n  # dur_close = {dc}\n"
+                f"  # dur_ws = {dw}\n"
+                f"  # distance = {dist}\n")
+        entry = head
+        if anims:
+            # one catch-all rule so every window animates, not just some
+            entry += ("  {\n"
+                      "    animations = (\n"
+                      + anims +
+                      "    );\n"
+                      "  },\n")
+        entry += f"  {self.MARK_B}\n"
+
+        # remove our previous entry wherever it sits
+        pat = re.escape(self.MARK_A) + r".*?" + re.escape(self.MARK_B) + r"\n?"
+        cfg = re.sub(r"[ \t]*" + pat, "", cfg, flags=re.S)
+        cfg = re.sub(r"^\s*fading\s*=\s*(true|false)\s*;?\s*$", "", cfg, flags=re.M)
+
+        # a rule right before ours must keep its separating comma
+        cfg = re.sub(r"\}\s*\n(\s*)\)", r"},\n\1)", cfg)
+        cfg = re.sub(r"\},\s*,", "},", cfg)
+
+        if not self._insert_into_rules(cfg, entry):
+            # no rules list in this config, fall back to top level
+            top = entry.replace("  " + self.MARK_A, self.MARK_A)
+            if anims:
+                cfg = self._drop_top_animations(cfg)
+                cfg = cfg.rstrip() + "\n\n" + self.MARK_A + "\nanimations = (\n" \
+                      + anims + ");\n" + self.MARK_B + "\n"
+            else:
+                cfg = cfg.rstrip() + "\n\n" + self.MARK_A + "\n" + self.MARK_B + "\n"
+            write(PICOM, cfg)
+        else:
+            cfg = self._insert_into_rules(cfg, entry)
+            write(PICOM, cfg)
+
+        # the workspace slide lives in the older _MY_CUSTOM_WORKSPACE_SWITCH
+        # rules, which sit before our block and therefore win
+        cfg2 = read(PICOM)
+        if "_MY_CUSTOM_WORKSPACE_SWITCH" in cfg2:
+            cfg2 = re.sub(r"(_MY_CUSTOM_WORKSPACE_SWITCH.*?)\n\s*\},\n",
+                          lambda m: re.sub(r"duration = [\d.]+",
+                                           f"duration = {dw}", m.group(0)),
+                          cfg2, flags=re.S)
+            write(PICOM, cfg2)
+
+        key = self.sw_fskey.get_child().get_text().strip()
+        if key:
+            i3c = read(I3)
+            line = f"bindsym {key} fullscreen disable"
+            if re.search(r"^bindsym \S+ fullscreen disable", i3c, re.M):
+                i3c = re.sub(r"^bindsym \S+ fullscreen disable", line, i3c, flags=re.M)
+            else:
+                i3c = re.sub(r"^(bindsym \$mod\+f fullscreen toggle)",
+                             rf"\1\n{line}", i3c, count=1, flags=re.M)
+            write(I3, i3c)
+            run("i3-msg", "reload")
+
+        self._restart_picom("Animations saved")
+
+
+    # --------------------------------------------------- Opacity rules
+    def tab_opacity(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        box.set_border_width(18)
+
+        head = Gtk.Label(label="PER WINDOW OPACITY", xalign=0)
+        head.get_style_context().add_class("section")
+        box.pack_start(head, False, False, 0)
+
+        note = Gtk.Label(xalign=0)
+        note.get_style_context().add_class("dim")
+        note.set_markup("<small>picom uses the first matching rule, so order "
+                        "matters. Double-click a value to change it.</small>")
+        box.pack_start(note, False, False, 0)
+
+        self.ostore = Gtk.ListStore(str, str, int)   # match, opacity, line
+        for i, line in enumerate(read(PICOM).splitlines()):
+            m = re.match(r'\s*\{\s*match\s*=\s*"([^"]+)".*opacity\s*=\s*([\d.]+)', line)
+            if m:
+                self.ostore.append([m.group(1), m.group(2), i])
+
+        tree = Gtk.TreeView(model=self.ostore)
+        tree.set_enable_search(True)
+
+        r0 = Gtk.CellRendererText()
+        r0.set_property("family", "monospace")
+        r0.set_property("editable", True)
+        r0.set_property("ellipsize", Pango.EllipsizeMode.END)
+        r0.connect("edited", lambda _r, path, new: self.ostore.__setitem__(
+            path, [new, self.ostore[path][1], self.ostore[path][2]]))
+        c0 = Gtk.TreeViewColumn("Match", r0, text=0)
+        c0.set_expand(True)
+        tree.append_column(c0)
+
+        r1 = Gtk.CellRendererText()
+        r1.set_property("editable", True)
+        r1.connect("edited", self.edit_opacity)
+        c1 = Gtk.TreeViewColumn("Opacity", r1, text=1)
+        c1.set_min_width(110)
+        tree.append_column(c1)
+
+        sc = Gtk.ScrolledWindow()
+        sc.add(tree)
+        box.pack_start(sc, True, True, 0)
+
+        row = Gtk.Box(spacing=8)
+        b = Gtk.Button(label="Save and restart picom")
+        b.get_style_context().add_class("primary")
+        b.connect("clicked", self.save_opacity)
+        row.pack_start(b, False, False, 0)
+
+        b2 = Gtk.Button(label="Reload list")
+        b2.connect("clicked", lambda _b: self.say(
+            "Close and reopen Chroma Control to reload the list."))
+        row.pack_start(b2, False, False, 0)
+        box.pack_start(row, False, False, 0)
+        return box
+
+    def edit_opacity(self, _r, path, new):
+        try:
+            v = float(new.replace(",", "."))
+        except ValueError:
+            self.say("Opacity must be a number between 0.1 and 1.0.")
+            return
+        v = min(max(v, 0.1), 1.0)
+        self.ostore[path][1] = f"{v:.2f}"
+
+    def save_opacity(self, _b):
+        lines = read(PICOM).splitlines()
+        for row in self.ostore:
+            match, val, idx = row[0], row[1], row[2]
+            if not (0 <= idx < len(lines)):
+                continue
+            line = lines[idx]
+            line = re.sub(r'match\s*=\s*"[^"]+"', f'match = "{match}"', line, count=1)
+            line = re.sub(r"opacity\s*=\s*[\d.]+", f"opacity = {val}", line, count=1)
+            lines[idx] = line
+        write(PICOM, "\n".join(lines) + "\n")
+        self._restart_picom("Opacity rules saved")
+
+
+    def save_menu(self, _b):
+        ticked = {n for n, c in self.menu_checks.items() if c.get_active()}
+        main = [n for n in self.menu_order if n in ticked]
+        main += [n for n in sorted(ticked) if n not in main]
+        if not main:
+            self.say("At least one palette has to stay in the direct list.")
+            return
+        t = read(MENUSH)
+        if not t:
+            self.say("menu.sh not found.")
+            return
+        line = "HAUPT_ORDER=(" + " ".join(main) + ")"
+        if re.search(r"^HAUPT_ORDER=\([^)]*\)", t, re.M):
+            t = re.sub(r"^HAUPT_ORDER=\([^)]*\)", line, t, count=1, flags=re.M)
+        else:
+            self.say("HAUPT_ORDER line not found in menu.sh.")
+            return
+        write(MENUSH, t)
+        os.chmod(MENUSH, 0o755)
+        self.menu_order = main
+        self.say(f"Menu layout saved: {len(main)} shown directly, "
+                 f"{len(self.menu_checks) - len(main)} behind More.")
+
+
+    # ------------------------------------------------------ New palette
+    FIELDS = [("C_ACC", "Main accent"), ("C_ACC2", "Secondary accent"),
+              ("C_ACC3", "Third accent"), ("C_BG", "Background"),
+              ("C_BG2", "Second background"), ("C_DIM", "Dimmed text"),
+              ("C_FG", "Foreground")]
+
+    def tab_newpal(self):
+        g = self._grid()
+        self._head(g, 0, "Create a palette")
+
+        self.np_name = self._entry(g, 1, "Name (lowercase, no spaces)", "")
+
+        g.attach(Gtk.Label(label="Copy colours from", xalign=0), 0, 2, 1, 1)
+        self.np_base = Gtk.ComboBoxText()
+        names = sorted(os.path.basename(q)[:-5]
+                       for q in glob.glob(f"{PALDIR}/*.conf"))
+        for n in names:
+            self.np_base.append_text(n)
+        if names:
+            self.np_base.set_active(0)
+        self.np_base.connect("changed", self.np_load)
+        self.np_base.set_halign(Gtk.Align.START)
+        g.attach(self.np_base, 1, 2, 1, 1)
+
+        self._head(g, 3, "Colours")
+        self.np_btns = {}
+        row = 4
+        for key, label in self.FIELDS:
+            g.attach(Gtk.Label(label=label, xalign=0), 0, row, 1, 1)
+            b = Gtk.ColorButton()
+            b.set_halign(Gtk.Align.START)
+            self.np_btns[key] = b
+            g.attach(b, 1, row, 1, 1)
+            row += 1
+
+        self.np_term = self._entry(g, row, "Terminal base colour name", "white")
+        row += 1
+        self.np_wall = self._entry(g, row, "Wallpaper file name", "")
+        row += 1
+
+        g.attach(Gtk.Label(label="Group on the Colours page", xalign=0), 0, row, 1, 1)
+        self.np_group = Gtk.ComboBoxText.new_with_entry()
+        for t, _ in load_groups():
+            self.np_group.append_text(t)
+        self.np_group.get_child().set_text(load_groups()[0][0] if load_groups() else "Other")
+        self.np_group.set_halign(Gtk.Align.START)
+        g.attach(self.np_group, 1, row, 1, 1)
+        row += 1
+
+        gnote = Gtk.Label(xalign=0)
+        gnote.get_style_context().add_class("dim")
+        gnote.set_markup("<small>Pick an existing group or type a new name to "
+                         "create one, for example <tt>Pastels</tt>.</small>")
+        g.attach(gnote, 0, row, 2, 1)
+        row += 1
+
+        note = Gtk.Label(xalign=0)
+        note.get_style_context().add_class("dim")
+        note.set_markup("<small>The wallpaper is looked up in "
+                        "<tt>~/Pictures/Wallpapers</tt>. Leave it empty to reuse "
+                        "the one from the palette you copied.</small>")
+        g.attach(note, 0, row, 2, 1)
+        row += 1
+
+        self._apply(g, row, self.np_save, "Create palette")
+        if names:
+            self.np_load(self.np_base)
+        return g
+
+    def np_load(self, combo):
+        name = combo.get_active_text()
+        if not name:
+            return
+        v = parse_conf(f"{PALDIR}/{name}.conf")
+        for key, _ in self.FIELDS:
+            if v.get(key):
+                self.np_btns[key].set_rgba(rgba(v[key]))
+        if hasattr(self, "np_term"):
+            self.np_term.set_text(v.get("C_TERM", "white"))
+
+    def np_save(self, _b):
+        name = self.np_name.get_text().strip().lower()
+        if not re.fullmatch(r"[a-z0-9-]{2,20}", name):
+            self.say("Use two to twenty lowercase letters, digits or hyphens.")
+            return
+        target = f"{PALDIR}/{name}.conf"
+        if os.path.exists(target):
+            self.say(f"A palette called '{name}' already exists.")
+            return
+
+        def hexof(btn):
+            c = btn.get_rgba()
+            return "#%02X%02X%02X" % (int(c.red * 255), int(c.green * 255),
+                                      int(c.blue * 255))
+
+        base = parse_conf(f"{PALDIR}/{self.np_base.get_active_text()}.conf")
+        wall = self.np_wall.get_text().strip()
+        wallpath = (f"{WALLDIR}/{wall}" if wall
+                    else base.get("WALLPAPER", f"{WALLDIR}/{name.capitalize()}.png"))
+
+        lines = [f'NAME={name}']
+        for key, _ in self.FIELDS:
+            lines.append(f'{key}="{hexof(self.np_btns[key])}"')
+        lines.append(f'C_TERM={self.np_term.get_text().strip() or "white"}')
+        lines.append(f'WALLPAPER={wallpath}')
+        with open(target, "w") as f:
+            f.write("\n".join(lines) + "\n")
+        group = self.np_group.get_child().get_text().strip() or "Other"
+        groups = load_groups()
+        groups = [(t, [x for x in ns if x != name]) for t, ns in groups]
+        for i, (t, ns) in enumerate(groups):
+            if t.lower() == group.lower():
+                ns.append(name)
+                break
+        else:
+            groups.append((group, [name]))
+        save_groups(groups)
+
+        self.say(f"Palette '{name}' created in group '{group}'. "
+                 f"Reopen Chroma Control to see it.")
+
+    # --------------------------------------------------------- Displays
+    def _outputs(self):
+        try:
+            out = subprocess.run(["xrandr", "--query"], capture_output=True,
+                                 text=True).stdout
+        except Exception:
+            return []
+        res = []
+        for line in out.splitlines():
+            m = re.match(r"^(\S+) connected(?: primary)?\s*(\d+x\d+)?", line)
+            if m:
+                res.append((m.group(1), m.group(2) or "off"))
+        return res
+
+    def tab_displays(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        box.set_border_width(24)
+
+        head = Gtk.Label(label="WORKSPACES PER SCREEN", xalign=0)
+        head.get_style_context().add_class("section")
+        box.pack_start(head, False, False, 0)
+
+        note = Gtk.Label(xalign=0)
+        note.get_style_context().add_class("dim")
+        note.set_markup("<small>Click a number to move that workspace to the "
+                        "screen; the highlighted ones belong to it. Each "
+                        "workspace sits on exactly one screen. Without a "
+                        "saved assignment they are spread evenly: with two "
+                        "screens 1-5 and 6-0, with three 1-3, 4-6 and "
+                        "7-0.</small>")
+        box.pack_start(note, False, False, 0)
+
+        outs = self._outputs()
+        if not outs:
+            box.pack_start(Gtk.Label(label="No connected screens found."),
+                           False, False, 0)
+            return box
+
+        cfg = read(I3)
+        self.ws_map = {}
+        for m in re.finditer(r"^workspace\s+(\S+)\s+output\s+(\S+)", cfg, re.M):
+            self.ws_map[m.group(1)] = m.group(2)
+
+        names = [o[0] for o in outs]
+        for i in range(1, 11):
+            k = str(i % 10) if i == 10 else str(i)
+            if self.ws_map.get(k) not in names:
+                self.ws_map[k] = names[min((i - 1) * len(names) // 10,
+                                           len(names) - 1)]
+
+        self.ws_buttons = {}
+        for out, mode in outs:
+            frame = Gtk.Frame()
+            card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+            card.set_border_width(12)
+            card.get_style_context().add_class("card")
+
+            t = Gtk.Label(xalign=0)
+            t.set_markup(f"<b>{out}</b>  <small>{mode}</small>")
+            card.pack_start(t, False, False, 0)
+
+            grid = Gtk.Box(spacing=6)
+            for i in range(1, 11):
+                k = "0" if i == 10 else str(i)
+                b = Gtk.ToggleButton(label=k)
+                b.get_style_context().add_class("wsbtn")
+                b.set_size_request(48, 38)
+                b.set_tooltip_text(f"Workspace {k} on {out}")
+                b.set_active(self.ws_map.get(k) == out)
+                b.connect("toggled", self.ws_click, k, out)
+                self.ws_buttons[(k, out)] = b
+                grid.pack_start(b, False, False, 0)
+            card.pack_start(grid, False, False, 0)
+            frame.add(card)
+            box.pack_start(frame, False, False, 0)
+
+        row = Gtk.Box(spacing=8)
+        row.set_margin_top(12)
+        ev = Gtk.Button(label="Distribute evenly")
+        ev.connect("clicked", self.ws_even, names)
+        row.pack_start(ev, False, False, 0)
+
+        ar = Gtk.Button(label="Remember this arrangement")
+        ar.set_tooltip_text("Stores the current xrandr layout with autorandr")
+        ar.connect("clicked", self.ar_save)
+        row.pack_start(ar, False, False, 0)
+
+        b = Gtk.Button(label="Apply and reload i3")
+        b.get_style_context().add_class("primary")
+        b.connect("clicked", self.save_displays)
+        row.pack_end(b, False, False, 0)
+        box.pack_start(row, False, False, 0)
+        return box
+
+    def ws_click(self, btn, ws, out):
+        if getattr(self, "_ws_busy", False):
+            return
+        if not btn.get_active():
+            if self.ws_map.get(ws) == out:
+                btn.set_active(True)
+            return
+        self._ws_busy = True
+        self.ws_map[ws] = out
+        for (k, o), b in self.ws_buttons.items():
+            if k == ws and o != out:
+                b.set_active(False)
+        self._ws_busy = False
+
+    def ws_even(self, _b, names):
+        self._ws_busy = True
+        for i in range(1, 11):
+            k = "0" if i == 10 else str(i)
+            target = names[min((i - 1) * len(names) // 10, len(names) - 1)]
+            self.ws_map[k] = target
+            for (kk, o), b in self.ws_buttons.items():
+                if kk == k:
+                    b.set_active(o == target)
+        self._ws_busy = False
+        self.say("Workspaces spread evenly across the screens.")
+
+    def ar_save(self, _b):
+        if not shutil.which("autorandr"):
+            self.say("autorandr is not installed: sudo apt install autorandr")
+            return
+        name = "-".join(o for o, _ in self._outputs()).lower()[:40] or "layout"
+        r = subprocess.run(["autorandr", "--save", name, "--force"],
+                           capture_output=True, text=True)
+        self.say(f"Arrangement stored as '{name}'." if r.returncode == 0
+                 else "autorandr could not store the arrangement.")
+
+    def save_displays(self, _b):
+        cfg = read(I3)
+        if not cfg:
+            self.say("Cannot read the i3 config.")
+            return
+        cfg = re.sub(r"^workspace\s+\S+\s+output\s+\S+.*\n", "", cfg, flags=re.M)
+        cfg = re.sub(r"\n*# >>> chroma-displays.*?# <<< chroma-displays\n", "\n",
+                     cfg, flags=re.S)
+
+        block = ["", "# >>> chroma-displays (managed by Chroma Control)"]
+        for i in range(1, 11):
+            k = "0" if i == 10 else str(i)
+            out = self.ws_map.get(k)
+            if out:
+                block.append(f"workspace {k} output {out}")
+        block.append("# <<< chroma-displays")
+        cfg = cfg.rstrip() + "\n" + "\n".join(block) + "\n"
+        write(I3, cfg)
+        run("i3-msg", "reload")
+        self.say("Workspace assignment saved and i3 reloaded.")
+
+    # ---------------------------------------------------------- Backups
+    def tab_backups(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        box.set_border_width(18)
+
+        head = Gtk.Label(label="RESTORE A BACKUP", xalign=0)
+        head.get_style_context().add_class("section")
+        box.pack_start(head, False, False, 0)
+
+        note = Gtk.Label(xalign=0)
+        note.get_style_context().add_class("dim")
+        note.set_markup("<small>Every change made here writes a timestamped "
+                        "copy first. Pick one to roll back to.</small>")
+        box.pack_start(note, False, False, 0)
+
+        self.bstore = Gtk.ListStore(str, str, str)   # file, when, full path
+        found = []
+        for d in (f"{CFG}/i3", f"{CFG}/i3/scripts", CHROMA, CFG,
+                  f"{CFG}/qterminal.org", f"{CFG}/cava", HOME):
+            found += glob.glob(f"{d}/*.bak-*")
+        for f in sorted(found, key=os.path.getmtime, reverse=True):
+            base = os.path.basename(f)
+            orig, _, stamp = base.rpartition(".bak-")
+            when = datetime.datetime.fromtimestamp(
+                os.path.getmtime(f)).strftime("%d.%m. %H:%M")
+            self.bstore.append([orig, when, f])
+
+        tree = Gtk.TreeView(model=self.bstore)
+        r0 = Gtk.CellRendererText()
+        r0.set_property("family", "monospace")
+        c0 = Gtk.TreeViewColumn("File", r0, text=0)
+        c0.set_expand(True)
+        tree.append_column(c0)
+        tree.append_column(Gtk.TreeViewColumn("Saved", Gtk.CellRendererText(), text=1))
+        self.btree = tree
+
+        sc = Gtk.ScrolledWindow()
+        sc.add(tree)
+        box.pack_start(sc, True, True, 0)
+
+        row = Gtk.Box(spacing=8)
+        cl = Gtk.Button(label="Delete all backups")
+        cl.connect("clicked", self.bak_clear)
+        row.pack_start(cl, False, False, 0)
+        b = Gtk.Button(label="Restore selected")
+        b.get_style_context().add_class("primary")
+        b.connect("clicked", self.bak_restore)
+        row.pack_end(b, False, False, 0)
+        box.pack_start(row, False, False, 0)
+        return box
+
+    def bak_restore(self, _b):
+        model, it = self.btree.get_selection().get_selected()
+        if not it:
+            self.say("Pick a backup first.")
+            return
+        src = model[it][2]
+        dst = src.rsplit(".bak-", 1)[0]
+        try:
+            shutil.copy2(dst, dst + ".before-restore")
+            shutil.copy2(src, dst)
+        except Exception as e:
+            self.say(f"Could not restore: {e}")
+            return
+        if dst.endswith("i3/config"):
+            run("i3-msg", "reload")
+        elif dst.endswith("picom.conf"):
+            self._restart_picom("Backup restored")
+            return
+        self.say(f"Restored {os.path.basename(dst)}.")
+
+    def bak_clear(self, _b):
+        n = 0
+        for row in self.bstore:
+            try:
+                os.remove(row[2])
+                n += 1
+            except Exception:
+                pass
+        self.bstore.clear()
+        self.say(f"{n} backups deleted.")
 
 
 win = App()
